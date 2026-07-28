@@ -55,7 +55,7 @@ flowchart TD
 ### 2. Installation
 ```bash
 # Clone repository
-git clone https://github.com/YOUR_USERNAME/AI-Resume-Screening-System.git
+git clone https://github.com/Shaaan2005/AI-Resume-Screening-and-RAG-Evaluation-System.git
 cd AI-Resume-Screening-System
 
 # Install dependencies
