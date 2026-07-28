@@ -1,0 +1,270 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Search Results</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet">
+<style>
+*{margin:0;padding:0;box-sizing:border-box}
+body{
+    font-family:'Inter',sans-serif;
+    background:#1a2e39;
+    min-height:100vh;
+    color:#f7fafc;
+    -webkit-font-smoothing:antialiased;
+    background-image:
+        radial-gradient(rgba(255,255,255,0.015) 1px,transparent 1px);
+    background-size:24px 24px
+}
+.nav{
+    position:fixed;top:0;left:0;right:0;z-index:100;
+    display:flex;align-items:center;justify-content:space-between;
+    padding:0 32px;height:72px;
+    background:#13232d;
+    border-bottom:1px solid rgba(255,255,255,0.04)
+}
+.nav::after{
+    content:'';position:absolute;bottom:-2px;left:50%;transform:translateX(-50%);
+    width:200px;height:2px;background:linear-gradient(90deg,transparent,#009393,transparent);
+    border-radius:2px
+}
+.nav-left{display:flex;align-items:center}
+.nav-logo{display:flex;align-items:center;gap:10px;text-decoration:none}
+.nav-logo svg{width:36px;height:36px}
+.nav-logo span{font-size:18px;font-weight:700;color:#f7fafc;letter-spacing:-0.2px}
+.nav-right{display:flex;align-items:center;gap:10px}
+.nav-right .btn-login{
+    padding:8px 18px;background:#3178f6;color:#fff;
+    border:none;border-radius:6px;
+    font-family:'Inter',sans-serif;font-size:13px;font-weight:600;
+    cursor:pointer;transition:all 0.15s;text-decoration:none
+}
+.nav-right .btn-login:hover{background:#1475e1}
+.nav-right .btn-register{
+    padding:8px 18px;background:#009393;color:#13232d;
+    border:none;border-radius:6px;
+    font-family:'Inter',sans-serif;font-size:13px;font-weight:700;
+    cursor:pointer;transition:all 0.15s;text-decoration:none
+}
+.nav-right .btn-register:hover{background:#007a7a}
+.content{max-width:1200px;margin:0 auto;padding:100px 32px 60px}
+.breadcrumb{display:flex;align-items:center;gap:8px;margin-bottom:18px;font-size:14px}
+.breadcrumb a{color:#e2eef4;text-decoration:none}
+.breadcrumb a:hover{color:#009393}
+.breadcrumb span{color:rgba(255,255,255,0.08)}
+.breadcrumb .current{color:#e2eef4}
+.breadcrumb .back-btn{display:inline-flex;align-items:center;gap:4px;color:#3178f6;font-weight:600}
+.breadcrumb .back-btn:hover{color:#1475e1}
+.breadcrumb::before{
+    content:'';display:inline-block;width:3px;height:14px;
+    background:#3178f6;border-radius:2px;margin-right:4px
+}
+.search-badge{
+    display:flex;align-items:center;gap:10px;
+    background:#203743;border-radius:6px;padding:12px 18px;margin-bottom:20px;
+    font-size:14px;color:#e2eef4;font-weight:500;
+    border-left:3px solid #009393;box-shadow:0 1px 3px rgba(0,0,0,0.12);flex-wrap:wrap
+}
+.search-badge .dot{width:6px;height:6px;background:#009393;border-radius:50%}
+.search-badge .cat-tag{
+    background:rgba(0,147,147,0.12);color:#009393;
+    font-size:11px;font-weight:700;padding:3px 10px;border-radius:4px;
+    text-transform:uppercase;letter-spacing:0.4px
+}
+.search-badge .count-tag{
+    background:rgba(255,255,255,0.03);color:#e2eef4;
+    font-size:11px;font-weight:600;padding:3px 10px;border-radius:4px
+}
+.card{
+    background:#203743;border-radius:6px;padding:16px 16px 16px 20px;margin-bottom:10px;
+    position:relative;border-left:3px solid rgba(0,147,147,0.2);
+    box-shadow:0 1px 3px rgba(0,0,0,0.12)
+}
+.card-header{display:flex;align-items:center;justify-content:space-between;margin-bottom:8px}
+.card-header h3{font-size:14px;font-weight:600;color:#f7fafc}
+.card-header .count{background:rgba(255,255,255,0.03);color:#e2eef4;font-size:11px;font-weight:600;padding:2px 8px;border-radius:4px}
+.jd-box{font-size:13px;color:#e2eef4;line-height:1.6;padding:4px 0;white-space:pre-wrap}
+.jd-toggle{
+    cursor:pointer;font-size:12px;color:#e2eef4;
+    transition:color 0.15s;user-select:none;
+    padding:2px 6px;border-radius:3px;background:rgba(255,255,255,0.02)
+}
+.jd-toggle:hover{color:#009393}
+.table-wrap{border-radius:6px;overflow:hidden}
+table{width:100%;border-collapse:collapse}
+th, td{border:1px solid #f0f8ff}
+th{
+    text-align:left;padding:10px 14px;
+    font-size:11px;font-weight:600;text-transform:uppercase;
+    letter-spacing:0.4px;color:#e2eef4;
+    background:rgba(0,0,0,0.1);
+    border-bottom:1px solid #f0f8ff
+}
+td{padding:10px 14px;font-size:13px;color:#e2eef4;border-bottom:1px solid #f0f8ff}
+tr:nth-child(even) td{background:rgba(255,255,255,0.02)}
+tr:last-child td{border-bottom:1px solid #f0f8ff}
+.rank-num{
+    display:inline-flex;align-items:center;justify-content:center;
+    width:22px;height:22px;border-radius:4px;
+    font-size:12px;font-weight:700;
+    background:rgba(255,255,255,0.02);color:#e2eef4
+}
+.rank-1{background:rgba(255,183,0,0.04);color:#ffb700}
+.rank-2{background:rgba(148,163,184,0.04);color:#94a3b8}
+.rank-3{background:rgba(255,140,0,0.04);color:#ff8c00}
+.rname{font-weight:500;color:#f7fafc;font-size:13px}
+.dist{font-size:13px;font-weight:600}
+.dist.green{color:#69f0ae}
+.dist.yellow{color:#ffd54f}
+.dist.red{color:#ff6b6b}
+.no-data{color:#e2eef4;font-size:13px;padding:4px 0}
+.actions{display:flex;gap:10px;margin-top:18px;padding-top:16px;border-top:1px solid rgba(255,255,255,0.04)}
+.btn-primary{
+    display:inline-flex;align-items:center;justify-content:center;gap:6px;
+    padding:12px 26px;background:#3178f6;color:#fff;
+    font-family:'Inter',sans-serif;font-size:14px;font-weight:600;
+    border:none;border-radius:6px;cursor:pointer;transition:all 0.15s;
+    text-decoration:none
+}
+.btn-primary:hover{background:#1475e1}
+.btn-secondary{
+    display:inline-flex;align-items:center;justify-content:center;gap:6px;
+    padding:12px 26px;background:transparent;color:#3178f6;
+    font-family:'Inter',sans-serif;font-size:14px;font-weight:600;
+    border:1px solid rgba(49,120,246,0.15);border-radius:6px;
+    cursor:pointer;transition:all 0.15s;text-decoration:none
+}
+.btn-secondary:hover{background:rgba(49,120,246,0.04);border-color:rgba(49,120,246,0.2)}
+.btn-green{display:inline-flex;align-items:center;justify-content:center;gap:6px;padding:12px 26px;background:#009393;color:#fff;font-family:'Inter',sans-serif;font-size:14px;font-weight:600;border:none;border-radius:6px;cursor:pointer;transition:all 0.15s;text-decoration:none}
+.btn-green:hover{background:#007a7a}
+.footer{
+    background:#13232d;
+    border-top:1px solid rgba(255,255,255,0.04);
+    padding:40px 32px 32px;
+    margin-top:48px;
+    text-align:center
+}
+.footer p{font-size:12px;color:#e2eef4;margin-bottom:4px}
+.footer .brand{color:#e2eef4;font-size:11px}
+.footer .brand span{color:#009393;font-weight:600}
+.footer-desc{font-size:15px;color:#f0f8ff;line-height:1.5;margin-bottom:16px;font-weight:400}
+@media(max-width:860px){
+    .nav-links{display:none}
+    .actions{flex-direction:column}
+    .content{padding:90px 16px 40px}
+}
+</style>
+</head>
+<body>
+
+<div class="nav">
+    <div class="nav-left">
+        <a href="/" class="nav-logo">
+            <svg viewBox="0 0 36 36" fill="none"><rect width="36" height="36" rx="8" fill="#009393"/><text x="50%" y="55%" dominant-baseline="middle" text-anchor="middle" fill="#13232d" font-size="16" font-weight="800" font-family="Inter">AI</text></svg>
+            <span>AI Resume Screening</span>
+        </a>
+    </div>
+    <div class="nav-right">
+        {% if user %}
+        <a href="/evaluate" style="font-size:13px;color:#009393;font-weight:600;text-decoration:none;margin-right:15px;transition:opacity 0.2s" onmouseover="this.style.opacity=0.8" onmouseout="this.style.opacity=1">📊 Evaluation Dashboard</a>
+        <span style="font-size:13px;color:#e2eef4;font-weight:500;margin-right:15px">Hi {{ user.username }}</span>
+        <a href="{{ url_for('logout') }}" class="btn-login">Log Out</a>
+        {% else %}
+        <a href="{{ url_for('login') }}" class="btn-login">Log In</a>
+        <a href="{{ url_for('register') }}" class="btn-register">Register</a>
+        {% endif %}
+    </div>
+
+</div>
+
+<div class="content">
+    <div class="breadcrumb">
+        <a href="/" class="back-btn">&#8592; Back</a>
+        <span>/</span>
+        <span class="current">Search Results</span>
+    </div>
+
+    <div class="search-badge">
+        <span class="dot"></span>
+        Smart Search
+        {% if category %}
+        <span class="cat-tag">{{ category }}</span>
+        {% endif %}
+        <span class="count-tag">{{ rankings|length }} candidates</span>
+    </div>
+
+    {% if msg %}
+    <div style="background:rgba(255,183,0,0.08);border:1px solid rgba(255,183,0,0.2);color:#ffd54f;border-radius:6px;padding:10px 16px;margin-bottom:16px;font-size:13px;font-weight:500">{{ msg }}</div>
+    {% endif %}
+    {% if multi_msg %}
+    <div style="background:rgba(0,147,147,0.08);border:1px solid rgba(0,147,147,0.2);color:#009393;border-radius:6px;padding:10px 16px;margin-bottom:16px;font-size:13px;font-weight:500">{{ multi_msg }}</div>
+    {% endif %}
+
+    <div class="card">
+        <div class="card-header">
+            <h3>Job Description</h3>
+            <span class="jd-toggle" onclick="const el=this.parentElement.nextElementSibling;el.style.display=el.style.display==='none'?'block':'none';this.textContent=el.style.display==='none'?'\u25BC show':'\u25B2 hide'">&#9660;</span>
+        </div>
+        <div class="jd-box" style="display:block">{{ job_description }}</div>
+    </div>
+
+    <div class="card">
+        <div class="card-header">
+            <h3>Candidate Rankings</h3>
+            <div style="display:flex;align-items:center;gap:8px">
+                <select id="recFilter" onchange="filterRankings()" style="background:#13232d;color:#e2eef4;border:1px solid rgba(255,255,255,0.1);border-radius:4px;padding:4px 8px;font-family:'Inter',sans-serif;font-size:11px;outline:none;cursor:pointer">
+                    <option value="ALL">All</option>
+                    <option value="SHORTLIST">SHORTLIST</option>
+                    <option value="CONSIDER">CONSIDER</option>
+                    <option value="REJECT">REJECT</option>
+                </select>
+            </div>
+        </div>
+        {% if rankings %}
+        <div class="table-wrap">
+        <table id="rankingsTable">
+            <thead>
+                <tr><th>Rank</th><th>Resume</th><th>Department</th><th>Score <span style="font-weight:500;font-size:10px;color:#9fbed0">= cos(θ)×100</span></th><th>Rec</th><th>Match</th><th>File</th></tr>
+            </thead>
+            <tbody>
+                {% for r in rankings %}
+                <tr data-recommendation="{{ r['recommendation'] }}">
+                    <td><span class="rank-num {% if r['rank'] == 1 %}rank-1{% elif r['rank'] == 2 %}rank-2{% elif r['rank'] == 3 %}rank-3{% endif %}">{% if r['rank'] == 1 %}&#129351;{% elif r['rank'] == 2 %}&#129352;{% elif r['rank'] == 3 %}&#129353;{% else %}{{ r['rank'] }}{% endif %}</span></td>
+                    <td><span class="rname">{{ r['resume'] }}</span></td>
+                    <td><span style="font-size:11px;color:#9fbed0;font-weight:500">{{ r['category'] }}</span></td>
+                    <td><span class="dist {% if r['rank'] <= 2 %}green{% elif r['rank'] <= 4 %}yellow{% else %}red{% endif %}">{{ r['similarity'] }}<span style="font-size:10px;color:#9fbed0;font-weight:500"> (θ={{ r['angle'] }}°)</span></span></td>
+                    <td><span class="rec-badge" style="font-size:9px;padding:2px 8px">{{ r['recommendation'] }}</span></td>
+                    <td style="font-size:12px;color:#e2eef4;max-width:140px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis">{{ r['preview'] }}</td>
+                    <td><a href="/resume/{{ r['category'] }}/{{ r['resume'] }}" target="_blank" style="display:inline-flex;align-items:center;gap:4px;background:rgba(0,147,147,0.1);color:#009393;font-size:11px;font-weight:700;padding:4px 10px;border-radius:4px;text-decoration:none;white-space:nowrap;border:1px solid rgba(0,147,147,0.2);transition:all 0.15s" onmouseover="this.style.background='rgba(0,147,147,0.2)'" onmouseout="this.style.background='rgba(0,147,147,0.1)'">&#128196; Open</a></td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+        </div>
+        {% else %}
+        <p class="no-data">No candidates found in the database</p>
+        {% endif %}
+    </div>
+
+    <div class="actions">
+        <a href="/" class="btn-primary">New Search</a>
+        <a href="/" class="btn-green">Back to Home</a>
+    </div>
+</div>
+
+<div class="footer">
+    <p class="footer-desc">AI Resume Screening System — Automated candidate evaluation using keyword matching, semantic similarity, ChromaDB vector search, and cross-encoder re-ranking for intelligent hiring decisions.</p>
+    <p class="brand">Made by <span>Utkarsh Rai</span></p>
+</div>
+<script>
+function filterRankings(){
+    const val = document.getElementById('recFilter').value;
+    document.querySelectorAll('#rankingsTable tbody tr').forEach(tr => {
+        tr.style.display = (val === 'ALL' || tr.dataset.recommendation === val) ? '' : 'none';
+    });
+}
+</script>
+</body>
+</html>

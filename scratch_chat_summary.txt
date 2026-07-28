@@ -1,0 +1,514 @@
+[1] 2026-07-12T22:44:18Z: tell me how am gonna present this to sir<< this my ongoing  internship project , i have to attened dailly meeting and give updates
+
+[2] 2026-07-12T22:45:37Z: these are the tasks which i have recently done and have to give update 
+
+Sir, the task you gave me was to find a replacement for the list-based category detection system."
+
+"The old approach had a dictionary called CAT_ALIASES with 30 hardcoded shortcuts — like 'eng' mapping to ENGINEERING, 'fin' mapping to FINANCE. There was also a separate list of 15 department names that would trigger errors if someone typed them, like 'marketing' or 'legal'. The problem was any word not in these lists would either cause wrong results or show an error."
+
+"For example, when I typed 'select 5 preeminent engineering candidate', the system matched it to CONSTRUCTION instead of ENGINEERING. That's because the fuzzy matcher couldn't find 'preeminent' in any alias and picked the wrong category."
+
+[Open app.py and show lines 40-61]
+
+"I replaced all of this with a cross-encoder model. The function is called cross_encoder_category_detect. It takes the user's query and compares it against all 24 department descriptions — not through keywords, but by reading them together semantically. The department with the highest similarity score is selected."
+
+"No lists, no aliases, no fuzzy matching. The model understands meaning directly."
+
+"Now when I type the same query — 'select 5 preeminent engineering candidate' — it correctly identifies ENGINEERING because the cross-encoder reads the word 'engineering' in context and understands which department it belongs to."
+
+"The same approach works for any word, even ones not in any list. If someone types a department we don't have like 'marketing', the model returns no match instead of an error, and the system searches all departments."
+
+[Open the old code sections if he wants to see]
+
+"I removed three things completely: CAT_ALIASES — the 30+ shortcut mappings, UNKNOWN_DEPTS — the error list, and find_unknown_category — the function that checked against it. All replaced by this single cross-encoder function."
+
+"So in short, sir — instead of maintaining lists of every possible word, the model now understands the query's meaning directly. It's cleaner, more accurate, and handles any input without breaking."
+
+[3] 2026-07-12T22:47:31Z: do it
+
+[4] 2026-07-12T22:53:16Z: is the meeting update updated?
+
+[5] 2026-07-12T23:03:07Z: tell me the highest qualified engineer top 1
+Candidate Rankings
+
+All
+Rank	Resume	Department	Score = cos(θ)×100	Rec	Match	File
+🥇	AV2.pdf	AVIATION	63.67 (θ=50.5°)	SHORTLIST	3-5, Lear 31A, King air 350, Beach jet 400, Global express. Verified that all required information was readily available and displayed correctly. Tack...	📄 Open
+
+
+is this the correct output?
+
+[6] 2026-07-12T23:05:37Z: give me  the top 1 engineer
+Candidate Rankings
+
+All
+Rank	Resume	Department	Score = cos(θ)×100	Rec	Match	File
+🥇	DE1.pdf	DESIGNER	70.37 (θ=45.3°)	SHORTLIST	TECHNICAL DESIGNER Summary SPECIAL QUALIFICATIONS: Textile Engineering Knitting and Garment Manufacturing Textile Printing and Finishing Yarn and Fabr...	📄 Open
+
+
+??
+
+[7] 2026-07-12T23:09:15Z: can u update the meeting update now?
+
+[8] 2026-07-12T23:11:13Z: Job Description
+give me top 3 preeminent doctors 
+Candidate Rankings
+
+All
+Rank	Resume	Department	Score = cos(θ)×100	Rec	Match	File
+🥇	FT6.pdf	FITNESS	46.02 (θ=62.6°)	CONSIDER	Ensured that gym equipment was kept in good working condition. Monitored the initial workouts of new customers and provide feedback. Offer various fit...	📄 Open
+🥈	FT3.pdf	FITNESS	45.32 (θ=63.1°)	CONSIDER	ASSISTANT GENERAL/OPERATIONS MANAGER Summary Results-focused management professional offering ten years of progressive leadership experience. Transfor...	📄 Open
+🥉	FT7.pdf	FITNESS	44.28 (θ=63.7°)	CONSIDER	on Exercise Certified Personal Trainer American Council on Exercise Certified Lifestyle and Weight Management Coach American Council on Exercise Certi...	📄 Open
+
+
+
+what is this< hey i want you to do some checkings as it throws errors like this again and again < just check 1 by 1 and fix urself
+
+[9] 2026-07-12T23:13:25Z: can you check some of the queries by yourself and see if its working
+
+[10] 2026-07-12T23:17:01Z: did u updated the meeting update?
+
+[11] 2026-07-12T23:19:21Z: can u see any other problem comes after searching with any query
+
+[12] 2026-07-12T23:24:31Z: carry on
+
+[13] 2026-07-12T23:32:42Z: listen, in the last meeting sir just told me to find the replacement as the words not included in the list caused problem< sir dont like it if i give updates on something which sir has not asked to do < but yes i can share the problems and limitations i have faced so Update the meeting update as per i said
+
+[14] 2026-07-13T10:39:42Z: For any queries that don't match our keyword lists, it uses a semantic Cross-Encoder mode    , is there still a list is being usedz?
+
+[15] 2026-07-13T10:41:15Z: if sir aska me whar is happening in the backened what would i say?
+
+[16] 2026-07-15T05:52:05Z: I replaced the old dictionary (CAT_ALIASES) and fuzzy matching system with a two-layer category detection system:"
+
+what is fuzzy and CAT_ALIASES
+
+[17] 2026-07-15T07:01:18Z: sir is asking me if this
+
+[18] 2026-07-15T07:01:41Z: sir is asking me how is it happening layer wise i mean layer 1 and layer 2 how it goes on
+
+[19] 2026-07-15T08:08:28Z: i just explained all this to sir ,and he asked me some questions and he was very disappointed that i am not serious<
+
+he told me that layer 1 is an extra burden , it is increasing time for the process , layer 2 is enough
+
+[20] 2026-07-15T08:09:06Z: hey revert it i dont wanted u to make changes
+
+[21] 2026-07-15T08:10:42Z: and also he told me that i dint understand the code i just copy pasted he told me i dont know the logic
+
+[22] 2026-07-15T08:15:57Z: i mean are both the layers running together , and if yes then isint the layer 1 a waste of time the semantic can do it already
+
+[23] 2026-07-15T08:39:45Z: explain me code by code what is happening and the logic and how sir is right
+
+[24] 2026-07-21T03:24:52Z: ok i want the second layer to only exist  , the first layer is a burden
+
+[25] 2026-07-21T03:34:05Z: sir is gonna ask me what u changed in code and< explain me the back end and each and everything you understand
+
+[26] 2026-07-21T05:01:14Z: i measn highlight the changes in the code mentioneing the line and code with explanation
+
+[27] 2026-07-21T07:21:37Z: ok sir told me to make 50 diffrent queries without any similarity< he told me that i can take the help of ai to genrate those queries< and try one by one each and look for a bug or results
+
+[28] 2026-07-21T18:04:27Z: select 5 preeminent engineering candidate
+Candidate Rankings
+
+All
+Rank	Resume	Department	Score = cos(θ)×100	Rec	Match	File
+🥇	AP6.pdf	APPAREL	62.12 (θ=51.6°)	SHORTLIST	ensure accurate and timely initial development including: fabric/trim selection and development and label/packaging development Â· Coordinated with Tr...	📄 Open
+🥈	AP8.pdf	APPAREL	57.57 (θ=54.9°)	CONSIDER	, 06/2004 to 10/2006 Company Name â€“ City , State Sketched artistic and fresh designs for consideration. Designed new on-brand visual elements to eff...	📄 Open
+🥉	AP3.pdf	APPAREL	51.19 (θ=59.2°)	CONSIDER	implement the proper division of responsibilities.Answered customer telephone calls promptly and in an appropriate manner.Determined customer needs by...	📄 Open
+4	AP10.pdf	APPAREL	45.03 (θ=63.2°)	CONSIDER	CUSTOMER SERVICE MANAGER Summary Pleasant and energetic Office Professional with excellent written and oral communication skills and knowledge of use ...	📄 Open
+5	AP5.pdf	APPAREL	44.76 (θ=63.4°)	CONSIDER	SPECIAL PROMOTIONS -HEAD OD CLERICAL AND SECRETARY WORK -STORE VISUAL MERCHANDISER -MANAGING ALL MANNEQUINS AND JEWELRY DISPLAYSÂ -RESPONSIBLE FOR CRE...	📄 Open
+
+[29] 2026-07-22T06:53:33Z: sir has told me to implement this in my project now
+
+[30] 2026-07-22T07:26:12Z: 
+
+[31] 2026-07-22T07:27:01Z: hey stop
+
+[32] 2026-07-22T07:27:09Z: i dont want you to create it
+
+[33] 2026-07-22T07:27:12Z: revert the change
+
+[34] 2026-07-22T07:28:03Z: first i have to reasearch and learn about ragas, then i will implement it
+
+[35] 2026-07-23T09:19:18Z: ok so sir has told me to implement this , so what do i have to do now? dont implement anything just tell me?
+
+[36] 2026-07-23T10:54:44Z: ok now lets implement RAGAS in my project
+
+[37] 2026-07-23T10:57:08Z: do ti implement it
+
+[38] 2026-07-23T10:58:28Z: ok
+
+[39] 2026-07-23T10:58:51Z: where is it getting installed
+
+[40] 2026-07-23T10:59:17Z: ok do it
+
+[41] 2026-07-23T10:59:54Z: yes
+
+[42] 2026-07-23T11:07:19Z: all changes done?
+
+[43] 2026-07-23T11:08:11Z: i mean what are the changes, how am gonnna notice it in my website and what are the core concepts used to implement this ragas thing
+
+[44] 2026-07-23T13:08:31Z: well can i use it in website
+
+[45] 2026-07-23T13:41:49Z: it shows this
+
+[46] 2026-07-23T13:47:26Z: still the same problem
+
+[47] 2026-07-23T13:51:34Z: what is this page i dont get it < what is the use of it
+
+[48] 2026-07-23T14:04:02Z: well do you think i should change something in these< dont change it just tell me
+
+[49] 2026-07-23T14:06:18Z: see , sir told me to use RAGAS ok , i have to make those changes which involves ragas and it must be present in my website so that i could show him that i implemented RAGAS  in it
+
+[50] 2026-07-23T14:30:57Z: ok get it but what kind of api key do i have to enter there
+
+[51] 2026-07-23T16:56:59Z: what do do now?
+
+[52] 2026-07-23T16:58:49Z: this is comming
+
+[53] 2026-07-23T17:54:56Z: what is this i dont get anything < what am gonna show sir in the next meeting < this seems so incomplete
+
+[54] 2026-07-24T06:24:50Z: 
+
+[55] 2026-07-24T06:30:15Z: UnboundLocalError
+UnboundLocalError: cannot access local variable 'math' where it is not associated with a value
+
+Traceback (most recent call last)
+File "C:\Users\shaan\AppData\Local\Python\pythoncore-3.14-64\Lib\site-packages\flask\app.py", line 1536, in __call__
+return self.wsgi_app(environ, start_response)
+       ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+File "C:\Users\shaan\AppData\Local\Python\pythoncore-3.14-64\Lib\site-packages\flask\app.py", line 1514, in wsgi_app
+response = self.handle_exception(e)
+           ^^^^^^^^^^^^^^^^^^^^^^^^
+File "C:\Users\shaan\AppData\Local\Python\pythoncore-3.14-64\Lib\site-packages\flask\app.py", line 1511, in wsgi_app
+response = self.full_dispatch_request()
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+File "C:\Users\shaan\AppData\Local\Python\pythoncore-3.14-64\Lib\site-packages\flask\app.py", line 919, in full_dispatch_request
+rv = self.handle_user_exception(e)
+     ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+File "C:\Users\shaan\AppData\Local\Python\pythoncore-3.14-64\Lib\site-packages\flask\app.py", line 917, in full_dispatch_request
+rv = self.dispatch_request()
+     ^^^^^^^^^^^^^^^^^^^^^^^
+File "C:\Users\shaan\AppData\Local\Python\pythoncore-3.14-64\Lib\site-packages\flask\app.py", line 902, in dispatch_request
+return self.ensure_sync(self.view_functions[rule.endpoint])(**view_args)  # type: ignore[no-any-return]
+       ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+File "C:\Users\shaan\Downloads\AI-Resume-Screening-System\app.py", line 51, in decorated
+return f(*args, **kwargs)
+       ^^^^^^^^^^^^^^^^^^
+File "C:\Users\shaan\Downloads\AI-Resume-Screening-System\app.py", line 542, in evaluate_dashboard
+avg_recall=round(avg_recall * 100, 2) if not math.isnan(avg_recall) else 0.0,
+                                                   ^^^^
+UnboundLocalError: cannot access local variable 'math' where it is not associated with a value
+The debugger caught an exception in your WSGI application. You can now look at the traceback which led to the error.
+To switch between the interactive traceback and the plaintext one, you can click on the "Traceback" headline. From the text traceback you can also create a paste of it.
+
+
+again look
+
+[56] 2026-07-24T06:36:30Z: well i dont get it like what is this which i made i dont understand
+
+[57] 2026-07-24T07:55:57Z: like is it a good idea that it runs pre defined refrence searches?? i mean cant i do something else??
+
+[58] 2026-07-24T07:59:50Z: i just dont get it what does this page does< i dont understand < make me understand it in a way simpler way so that i can grasp it
+
+[59] 2026-07-24T08:47:54Z: what is context precision and recall
+
+[60] 2026-07-26T09:22:31Z: i mean why is this ragas evaluation page takes a lot of time to opean
+
+[61] 2026-07-26T09:25:35Z: it  still takes 30 sec for the page to opean
+
+[62] 2026-07-26T12:34:01Z: Continue
+
+[63] 2026-07-26T12:34:25Z: Continue
+
+[64] 2026-07-26T12:43:51Z: what is this new recalculate baseline button
+
+[65] 2026-07-26T12:51:47Z: so can you genrate a devoops resume , i will just manually place that resume there
+
+[66] 2026-07-26T13:06:56Z: hey i dont get it what is it ur doing  till then why so many work , i just told u to add a resume and idk what u did , dont implement anything just answer my question
+
+[67] 2026-07-26T13:08:13Z: i mean , do i have to do all these steps , whenever i will be adding an resume??
+
+[68] 2026-07-26T13:09:09Z: ok so what changes you made??
+
+[69] 2026-07-26T13:18:32Z: hey , i want to ask something, like why dont you tell me before implementing that it would take 10 mins or 15 mins, like whenever i ask u something , u straightaway just start implementing a ton of codes and programs,u should have told me and answer, like i was waiting for 15 minutes for it to end , sometimes i could be in rush
+
+[70] 2026-07-26T13:19:15Z: ok now tell me what changes u made
+
+[71] 2026-07-26T13:21:32Z: yo
+
+RAGAS Evaluation Dashboard
+System accuracy metrics computed across 10 standard reference query test suites using local heuristics
+
+8.22%
+Context Precision
+5.0%
+Context Recall
+7.38%
+Semantic Similarity
+🔑 Run Real RAGAS Evaluation
+Authenticate with your OpenAI API Key to invoke the actual RAGAS framework in the backend. Ragas will use GPT-4/GPT-3.5 models as semantic judges to evaluate your search engine's Context Precision and Context Recall score card.
+
+Enter your OpenAI API Key (sk-...)
+Run Ragas Evaluation
+Heuristic Reference Scorecard
+#	Test Query	Expected Cat	Context Precision	Context Recall
+1	looking for a C++ developer with multithreading experience	NONE	0.0%	0.0%
+2	need a devops engineer skilled in docker and kubernetes	NONE	0.0%	0.0%
+3	chartered accountant for tax audit and GST filing	ACCOUNTANT	65.6%	25.0%
+4	ICU nurse with emergency patient care experience	NONE	0.0%	0.0%
+5	UI/UX designer skilled in Figma and user research	NONE	0.0%	0.0%
+6	digital marketing expert for SEO and Google Ads campaigns	NONE	0.0%	0.0%
+7	sales executive skilled in cold calling and lead generation	NONE	0.0%	0.0%
+8	talent acquisition recruiter for HR onboarding	NONE	0.0%	0.0%
+9	helpdesk support agent for customer issue resolution	NONE	0.0%	0.0%
+10	farm manager skilled in crop management and soil irrigation	AGRICULTURE	16.7%	25.0%
+
+what happened to the context precission and recall
+
+[72] 2026-07-26T13:22:31Z: yes
+
+[73] 2026-07-26T13:24:16Z: what is happening?
+
+[74] 2026-07-26T13:25:17Z: i have one more question , like whenever something keeps getting implemented , i have to manually click on allow all the time , its very annoying
+
+[75] 2026-07-26T13:26:02Z: yes thankyou , whats the current status btw
+
+[76] 2026-07-26T13:27:24Z: ok tell me here
+
+[77] 2026-07-26T13:28:32Z: well i have a question , like all this building requires a lot of cpu usage , like fans are starting to be loud?
+
+[78] 2026-07-26T13:30:00Z: like i mean my laptop is hp omen 16 gm ram ryzen 7 and gpu is rtx 4050 , so does this laptop have more benifit??
+
+[79] 2026-07-26T13:30:56Z: then will it be fast??
+
+[80] 2026-07-26T13:31:30Z: yes i mean go for it, if i have it then i should use it, like it wont create any drawbacks??
+
+[81] 2026-07-26T13:34:01Z: will this have any drawbacks??
+
+[82] 2026-07-26T13:34:39Z: so u should have told me this before
+
+[83] 2026-07-26T13:34:55Z: whats the status
+
+[84] 2026-07-26T13:36:13Z: 
+
+[85] 2026-07-26T13:36:43Z: ok
+
+[86] 2026-07-26T13:40:21Z: ready for what?
+
+[87] 2026-07-26T13:40:37Z: ok do it
+
+[88] 2026-07-26T13:42:32Z: check the status
+
+[89] 2026-07-26T13:44:15Z: what is happening?
+
+[90] 2026-07-26T13:44:47Z: ok
+
+[91] 2026-07-26T13:45:08Z: like if thats the case why is my fans still loud?
+
+[92] 2026-07-26T14:05:49Z: ok so i have a question , like sir told me to use RAGAS in your website and study about it, so did i implemented it in a way that it is suitable for and what sir expects from me
+
+[93] 2026-07-26T15:12:19Z: 🔑 Run Real RAGAS Evaluation
+Authenticate with your OpenAI API Key to invoke the actual RAGAS frame
+
+how am gonna use this??
+
+[94] 2026-07-26T15:14:42Z: now what to do?
+
+[95] 2026-07-26T15:15:23Z: hey i am not gonna put any money in there??
+
+[96] 2026-07-26T15:17:11Z: like i mean isnt there any free opean ai llm token??
+
+[97] 2026-07-26T15:18:13Z: like i only waana do what sir told me, he dosent likes if i do things which are untold
+
+[98] 2026-07-26T15:30:48Z: i mean what will i tell sir when he will ask me what did u do, i told u to implement RAGAS
+
+[99] 2026-07-26T15:32:13Z: he will ask me what u learned about RAGAS and what u did then after , he can ask me anything, what changes u did in backend and why are we doing this , how u did this ,
+
+[100] 2026-07-27T05:39:41Z: what is test suite
+
+[101] 2026-07-27T05:56:11Z: also upddate tje meeting update category detection
+
+[102] 2026-07-27T05:57:17Z: wait i only want you to tell about the ragas implementation in meeting update category detection
+
+[103] 2026-07-27T06:01:12Z: what is ragas
+
+[104] 2026-07-27T06:01:51Z: what is ragas , what did you studied about RAGAS and how did u implemented it?
+
+[105] 2026-07-27T06:18:38Z: i got this , but he may ask me to open the code and tell me code by code like what is doing what and what is happening ,what is the logic
+
+[106] 2026-07-27T06:25:32Z: but like if he told me like then use the llm open upi , then what will i say as it is paid?
+
+[107] 2026-07-27T06:32:53Z: what is the pipeline?
+
+[108] 2026-07-27T06:33:34Z: i mean the pipeline in ragas which we are using in our evaluation dashboard
+
+[109] 2026-07-27T06:38:06Z: well what did i do in subsitute if i cant use paid llm keys
+
+[110] 2026-07-27T07:02:13Z: sir is asking have u implemented ragas completely??
+
+[111] 2026-07-27T07:03:29Z: yes but i dont have an opean api key right , its paid
+
+[112] 2026-07-27T07:04:53Z: sir told me to use Ollama , install it , learn about it amd implement it, it doesnt require payment
+
+[113] 2026-07-27T07:06:58Z: do it
+
+[114] 2026-07-27T07:12:31Z: i dint cancelled?
+
+[115] 2026-07-27T09:20:07Z: yes
+
+[116] 2026-07-27T09:22:47Z: hey this is happening when i am clicking run ragas evaluation after selecting Local Ollama Llama 3 (Free
+
+[117] 2026-07-27T09:24:04Z: this is happening , i mean is it even working , idk
+
+[118] 2026-07-27T09:27:05Z: why is it talking time, just answer?
+
+[119] 2026-07-27T09:29:58Z: still not loaded
+
+[120] 2026-07-27T09:30:32Z: i dont want u to implement anything
+
+[121] 2026-07-27T09:30:39Z: i just wanted solution
+
+[122] 2026-07-27T09:32:13Z: what has happened can you explain me??
+
+[123] 2026-07-27T12:27:46Z: well is there any way to make it fast , as this process is slow and takes time, dont implement anything just tell me
+
+[124] 2026-07-27T12:33:11Z: well i ran ollama agin, how much time will it take??
+
+[125] 2026-07-27T12:33:40Z: will it download context recall
+
+[126] 2026-07-27T12:34:12Z: why  precision was 0 the last time??
+
+[127] 2026-07-27T12:35:11Z: hey its taking a lot of time can you check the status??
+
+[128] 2026-07-27T12:36:25Z: like during my presentation in next meeting, again its gonna take time
+
+[129] 2026-07-27T12:37:33Z: can u check the status again its not stopping , too too long
+
+[130] 2026-07-27T12:40:08Z: yes please can you do this for me??
+
+see again precision and ground truth is zero, what is this??
+
+[131] 2026-07-27T12:41:33Z: started
+
+[132] 2026-07-27T12:42:04Z: no not done yet, check the status of it
+
+[133] 2026-07-27T12:45:26Z: just check it bro it is taking a hell lot of time
+
+[134] 2026-07-27T12:47:16Z: are u sure?
+
+[135] 2026-07-27T12:48:52Z: its over 1 minute
+
+[136] 2026-07-27T12:49:51Z: its 2 minutes now
+
+[137] 2026-07-27T12:50:53Z: its 3 minutes now, its unacceptab;e
+
+[138] 2026-07-27T12:51:55Z: enough i had its 4 minutes
+
+[139] 2026-07-27T12:53:09Z: no bro its still running what are u on and its over 5 minutes
+
+[140] 2026-07-27T12:56:37Z: ok started it at 18.26
+
+[141] 2026-07-27T12:57:54Z: yea its over but ,what about context precision and LLM judge mode?
+
+[142] 2026-07-27T13:01:32Z: so what should i do here?
+
+[143] 2026-07-27T13:03:59Z: see in last meeting sir told me to use ollama so i have to put my brains on that only
+
+[144] 2026-07-27T13:07:11Z: yes
+
+[145] 2026-07-27T13:09:11Z: started it
+
+[146] 2026-07-27T13:10:30Z: this came
+
+[147] 2026-07-27T13:14:09Z: its even worse
+
+[148] 2026-07-27T13:21:23Z: what the??? what are u doing
+
+[149] 2026-07-27T13:25:26Z: yea now its fine 
+but why precision of 1st test query is 0??
+
+[150] 2026-07-27T13:28:37Z: see , its not important that i get 100 percet for everything, it just that it must function normally which must look ideal and can be presented'
+
+[151] 2026-07-27T13:33:06Z: why is it taking time now, can u check the status??
+
+[152] 2026-07-27T13:34:29Z: ok i started
+
+[153] 2026-07-27T13:35:56Z: well it is showing 100 for everything, does this look ideal??
+
+[154] 2026-07-27T13:36:37Z: ok do it
+
+[155] 2026-07-27T13:40:09Z: oh u did added 3 queries?
+
+[156] 2026-07-27T13:40:47Z: i mean why is it is 2 in Heuristic Reference Scorecard
+
+[157] 2026-07-27T13:41:44Z: oh yeah it did
+
+[158] 2026-07-27T13:44:05Z: what this, is this ideal , think again
+
+[159] 2026-07-27T13:48:29Z: yoo its 100% in all three of them , i want them to look ideal
+
+[160] 2026-07-27T13:52:41Z: again?
+
+[161] 2026-07-27T13:53:52Z: hey i also want other departments like all three must be diffrent
+
+[162] 2026-07-27T14:03:42Z: i mean its ideal but i think there are some errors like why is advocate there and 1 and 3 both landed in enginerring
+
+[163] 2026-07-27T14:11:22Z: again probelms with precission and recall
+
+[164] 2026-07-27T14:21:38Z: do it
+
+[165] 2026-07-27T14:28:47Z: i think it looks genuine
+
+[166] 2026-07-27T15:02:42Z: 
+
+[167] 2026-07-27T15:03:40Z: what should i choose
+
+[168] 2026-07-27T15:08:45Z: 
+
+[169] 2026-07-27T15:09:11Z: Two warehouse workers wearing safety vests and hard hats are conducting inventory management inside a storage facility. The worker on the left uses a handheld barcode scanner to scan cardboard boxes on high shelves while her colleague holds a clipboard to record stock details
+
+make this a little human it looks like ai
+
+[170] 2026-07-27T15:10:04Z: more
+
+[171] 2026-07-27T15:17:04Z: u messed up
+
+[172] 2026-07-27T15:17:56Z: i got 3/6
+
+[173] 2026-07-27T15:18:22Z: am i gonna get shortlisted
+
+[174] 2026-07-28T04:02:17Z: hey now is it fine??
+
+[175] 2026-07-28T04:05:10Z: like when sir will ask , how is it working , them how am gonna tell him that
+
+[176] 2026-07-28T04:06:38Z: see he is only gonna ask me that how i implemented ollama and what it it doing and why previously ragas using paid opean ai was replaced
+
+[177] 2026-07-28T04:08:46Z: i have show and explain him the backend as well as the code
+
+[178] 2026-07-28T04:13:46Z: like how am gonna begain with my presentation , like in between he can ask how you implemented olama show me , why you are using it , and what problem was with the ragas previously , and explain me the back end , the what is the pipeline
+
+[179] 2026-07-28T04:33:41Z: what else he could ask me
+
+[180] 2026-07-28T04:34:47Z: see he is only gonna ask about olama and ragas so tell accordingly
+
+[181] 2026-07-28T04:38:42Z: 
+
+[182] 2026-07-28T04:48:30Z: ok well he is gonna ask me how is ollama connected to ragas
+
+[183] 2026-07-28T04:51:59Z: hey well are all the codes updated as i cant see them in left by the exact line its mentioned
+
+[184] 2026-07-28T04:52:54Z: what is this hugging face thing?
+
+[185] 2026-07-28T05:04:08Z: i have to show him by showing model in code and why am i using it
+
+[186] 2026-07-28T05:06:26Z: so then he will ask where is olama used here?
+
+[187] 2026-07-28T05:07:15Z: no not in code i mean theriotically how am gonna tell heim how ollama is used
+
+[188] 2026-07-28T05:08:35Z: like i mean where is the main work of olama here
+
+[189] 2026-07-28T05:12:56Z: ok but how and where olama is implemented
+
+[190] 2026-07-28T05:23:44Z: am asking what is hugging face?
+
+[191] 2026-07-28T05:33:08Z: ok now just tell me , how i am going to present everything  to sir

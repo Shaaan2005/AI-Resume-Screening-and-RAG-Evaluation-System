@@ -1,0 +1,220 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>RAGAS Evaluation Dashboard</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet">
+<style>
+*{margin:0;padding:0;box-sizing:border-box}
+body{
+    font-family:'Inter',sans-serif;
+    background:#1a2e39;
+    min-height:100vh;
+    color:#f7fafc;
+    -webkit-font-smoothing:antialiased;
+    background-image: radial-gradient(rgba(255,255,255,0.015) 1px,transparent 1px);
+    background-size:24px 24px
+}
+.nav{
+    position:fixed;top:0;left:0;right:0;z-index:100;
+    display:flex;align-items:center;justify-content:space-between;
+    padding:0 32px;height:72px;
+    background:#13232d;
+    border-bottom:1px solid rgba(255,255,255,0.04)
+}
+.nav::after{
+    content:'';position:absolute;bottom:-2px;left:50%;transform:translateX(-50%);
+    width:200px;height:2px;background:linear-gradient(90deg,transparent,#009393,transparent);
+    border-radius:2px
+}
+.nav-left{display:flex;align-items:center}
+.nav-logo{display:flex;align-items:center;gap:10px;text-decoration:none}
+.nav-logo svg{width:36px;height:36px}
+.nav-logo span{font-size:18px;font-weight:700;color:#f7fafc;letter-spacing:-0.2px}
+.nav-right{display:flex;align-items:center;gap:15px}
+.nav-right .btn-back{
+    padding:8px 18px;background:#009393;color:#13232d;
+    border:none;border-radius:6px;
+    font-family:'Inter',sans-serif;font-size:13px;font-weight:700;
+    cursor:pointer;transition:all 0.15s;text-decoration:none
+}
+.nav-right .btn-back:hover{background:#007a7a}
+.content{max-width:1200px;margin:0 auto;padding:110px 32px 60px}
+.hero{text-align:center;margin-bottom:40px}
+.hero h1{font-size:36px;font-weight:800;letter-spacing:-1px;margin-bottom:10px}
+.hero h1 span{color:#009393}
+.hero p{font-size:15px;color:#9fbed0}
+.kpi-row{display:grid;grid-template-columns:repeat(3,1fr);gap:15px;margin-bottom:30px}
+.kpi-card{
+    background:#203743;border-radius:8px;padding:24px;
+    border-left:4px solid #009393;box-shadow:0 4px 15px rgba(0,0,0,0.15);
+    text-align:center;position:relative;overflow:hidden
+}
+.kpi-card::before{
+    content:'';position:absolute;top:0;left:0;right:0;height:2px;
+    background:linear-gradient(90deg,transparent,#009393,transparent);
+}
+.kpi-card .value{font-size:36px;font-weight:800;color:#009393;margin-bottom:5px}
+.kpi-card .label{font-size:12px;font-weight:700;color:#9fbed0;text-transform:uppercase;letter-spacing:1px}
+.scorecard-card{
+    background:#203743;border-radius:8px;padding:24px;
+    box-shadow:0 4px 15px rgba(0,0,0,0.15);margin-bottom:20px
+}
+.scorecard-header{font-size:18px;font-weight:700;color:#f7fafc;margin-bottom:20px;letter-spacing:-0.2px}
+.table-wrap{border-radius:6px;overflow:hidden;border:1px solid rgba(255,255,255,0.06)}
+table{width:100%;border-collapse:collapse}
+th, td{padding:14px 16px;text-align:left;border-bottom:1px solid rgba(255,255,255,0.04)}
+th{background:#13232d;font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:0.8px;color:#9fbed0}
+td{font-size:13px;color:#e2eef4}
+tr:hover td{background:rgba(255,255,255,0.02)}
+.tag{
+    display:inline-block;padding:3px 8px;border-radius:4px;
+    font-size:10px;font-weight:700;text-transform:uppercase;letter-spacing:0.3px
+}
+.tag-dept{background:rgba(0,147,147,0.12);color:#009393}
+.score-badge{font-weight:700;color:#009393}
+@media(max-width:860px){
+    .kpi-row{grid-template-columns:1fr}
+    .content{padding:100px 16px 40px}
+}
+</style>
+</head>
+<body>
+
+<div class="nav">
+    <div class="nav-left">
+        <a href="/" class="nav-logo">
+            <svg viewBox="0 0 36 36" fill="none"><rect width="36" height="36" rx="8" fill="#009393"/><text x="50%" y="55%" dominant-baseline="middle" text-anchor="middle" fill="#13232d" font-size="16" font-weight="800" font-family="Inter">AI</text></svg>
+            <span>AI Resume Screening</span>
+        </a>
+    </div>
+    <div class="nav-right" style="display:flex;gap:10px">
+        <a href="/evaluate?recalculate=true" class="btn-back" style="background:#3178f6;color:#fff" onclick="this.innerHTML='⏳ Recalculating...';this.style.pointerEvents='none';">🔄 Recalculate baseline</a>
+        <a href="/" class="btn-back">← Back to Dashboard</a>
+    </div>
+
+</div>
+
+<div class="content">
+    <div class="hero">
+        <h1>RAGAS <span>Evaluation Dashboard</span></h1>
+        {% if is_real_ragas %}
+        <p style="color: #69f0ae; font-weight: 600;">✨ Real RAGAS evaluation calculated successfully using OpenAI LLM Judge</p>
+        {% else %}
+        <p>System accuracy metrics computed across 10 standard reference query test suites using local heuristics</p>
+        {% endif %}
+    </div>
+
+    <div class="kpi-row">
+        <div class="kpi-card">
+            <div class="value">{{ avg_precision }}%</div>
+            <div class="label">Context Precision</div>
+        </div>
+        <div class="kpi-card" style="border-left-color: #3178f6;">
+            <div class="value" style="color: #3178f6;">{{ avg_recall }}%</div>
+            <div class="label">Context Recall</div>
+        </div>
+        <div class="kpi-card" style="border-left-color: #e2eef4;">
+            <div class="value" style="color: #e2eef4;">
+                {% if is_real_ragas %}
+                <span style="font-size: 24px; color: #69f0ae;">Llama 3</span>
+                {% else %}
+                {{ avg_similarity }}%
+                {% endif %}
+            </div>
+            <div class="label">{% if is_real_ragas %}LLM Judge Mode{% else %}Semantic Similarity{% endif %}</div>
+        </div>
+    </div>
+
+    <!-- OpenAI Ragas Trigger Card -->
+    <div class="scorecard-card" style="margin-bottom: 30px; border-left: 4px solid #3178f6;">
+        <div class="scorecard-header">🔑 Run Real RAGAS Evaluation</div>
+        <p style="font-size: 13px; color: #9fbed0; margin-bottom: 15px; line-height: 1.5;">
+            Authenticate with your OpenAI API Key to invoke the actual <strong>RAGAS</strong> framework in the backend. Ragas will use GPT-4/GPT-3.5 models as semantic judges to evaluate your search engine's Context Precision and Context Recall score card.
+        </p>
+        
+        {% if error_msg %}
+            <div style="background: rgba(255, 107, 107, 0.08); border: 1px solid rgba(255, 107, 107, 0.2); color: #ff6b6b; border-radius: 6px; padding: 12px 16px; margin-bottom: 15px; font-size: 13px; font-weight: 500;">
+                ⚠️ {{ error_msg }}
+            </div>
+        {% endif %}
+        
+        {% if success_msg %}
+            <div style="background: rgba(105, 240, 174, 0.08); border: 1px solid rgba(105, 240, 174, 0.2); color: #69f0ae; border-radius: 6px; padding: 12px 16px; margin-bottom: 15px; font-size: 13px; font-weight: 500;">
+                ✅ {{ success_msg }}
+            </div>
+        {% endif %}
+
+        <form action="/evaluate" method="POST" style="display: flex; gap: 10px; flex-wrap: wrap; align-items: center; width: 100%;">
+            <select name="eval_mode" id="eval_mode" onchange="toggleEvalMode()" style="height: 42px; background: #13232d; border: 1px solid rgba(255,255,255,0.06); border-radius: 6px; padding: 0 14px; color: #fff; outline: none; font-size: 13px; font-family: 'Inter', sans-serif; cursor: pointer; min-width: 200px;">
+                <option value="openai">OpenAI API (Paid)</option>
+                <option value="ollama">Local Ollama Llama 3 (Free)</option>
+            </select>
+            <input type="password" name="openai_key" id="openai_key" placeholder="Enter your OpenAI API Key (sk-...)" required style="flex-grow: 1; min-width: 280px; height: 42px; background: #13232d; border: 1px solid rgba(255,255,255,0.06); border-radius: 6px; padding: 0 14px; color: #fff; outline: none; font-size: 13px; font-family: 'Inter', sans-serif;">
+            <button type="submit" style="padding: 0 24px; height: 42px; background: #3178f6; color: #fff; font-weight: 700; border: none; border-radius: 6px; cursor: pointer; transition: background 0.15s; font-size: 13px; font-family: 'Inter', sans-serif;" onmouseover="this.style.background='#1475e1'" onmouseout="this.style.background='#3178f6'">Run Ragas Evaluation</button>
+        </form>
+
+        <script>
+            function toggleEvalMode() {
+                var select = document.getElementById("eval_mode");
+                var keyInput = document.getElementById("openai_key");
+                if (select.value === "ollama") {
+                    keyInput.style.display = "none";
+                    keyInput.removeAttribute("required");
+                } else {
+                    keyInput.style.display = "block";
+                    keyInput.setAttribute("required", "");
+                }
+            }
+            // Run toggle check immediately to catch page reloads
+            document.addEventListener("DOMContentLoaded", function() {
+                toggleEvalMode();
+            });
+        </script>
+    </div>
+
+    <div class="scorecard-card">
+        <div class="scorecard-header">{% if is_real_ragas %}Real RAGAS Scorecard{% else %}Heuristic Reference Scorecard{% endif %}</div>
+        <div class="table-wrap">
+            <table>
+                <thead>
+                    <tr>
+                        <th style="width: 5%;">#</th>
+                        <th style="width: 50%;">Test Query</th>
+                        <th style="width: 15%;">{% if is_real_ragas %}Ground Truth{% else %}Expected Cat{% endif %}</th>
+                        <th style="width: 15%;">Context Precision</th>
+                        <th style="width: 15%;">Context Recall</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for row in results %}
+                    <tr>
+                        <td>{{ loop.index }}</td>
+                        <td style="font-weight: 500;">{{ row.query or row.question }}</td>
+                        <td><span class="tag tag-dept">{{ row.detected_category or row.ground_truth }}</span></td>
+                        <td class="score-badge">
+                            {% if row.context_precision is not none %}
+                            {{ (row.context_precision * 100) | round(1) }}%
+                            {% else %}
+                            0.0%
+                            {% endif %}
+                        </td>
+                        <td class="score-badge" style="color: #3178f6;">
+                            {% if row.context_recall is not none %}
+                            {{ (row.context_recall * 100) | round(1) }}%
+                            {% else %}
+                            0.0%
+                            {% endif %}
+                        </td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>
+
+</body>
+</html>

@@ -1,0 +1,5 @@
+flask
+pdfplumber
+sentence-transformers
+chromadb
+scikit-learn

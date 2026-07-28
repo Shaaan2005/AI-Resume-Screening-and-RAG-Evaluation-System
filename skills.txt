@@ -1,0 +1,228 @@
+python
+sql
+machine learning
+deep learning
+natural language processing
+nlp
+computer vision
+pytorch
+tensorflow
+scikit-learn
+pandas
+numpy
+flask
+fastapi
+django
+node.js
+react
+typescript
+javascript
+html
+css
+aws
+gcp
+azure
+kubernetes
+docker
+terraform
+jenkins
+github actions
+git
+github
+postgresql
+mongodb
+redis
+elasticsearch
+snowflake
+bigquery
+redshift
+spark
+kafka
+airflow
+hadoop
+flink
+tableau
+power bi
+excel
+looker
+rest api
+graphql
+grpc
+microservices
+ci/cd
+devops
+mlops
+agile
+scrum
+java
+scala
+go
+rust
+c++
+c#
+linux
+bash
+security
+cybersecurity
+penetration testing
+threat modeling
+siem
+soc 2
+iso 27001
+pci dss
+hipaa
+gdpr
+oauth
+zero trust
+firewall
+vpn
+product management
+a/b testing
+analytics
+strategy
+roadmap
+leadership
+mentoring
+etl
+data warehouse
+data pipeline
+llm
+large language model
+rag
+transformer
+cuda
+onnx
+model optimization
+quantization
+distributed systems
+event-driven
+observability
+prometheus
+grafana
+datadog
+spring boot
+express
+problem solving
+communication
+api
+cloud
+data engineering
+data science
+incident response
+container security
+supply chain security
+sbom
+devsecops
+iam
+rbac
+abac
+sso
+saml
+okta
+splunk
+elk
+soar
+forensics
+vulnerability management
+red teaming
+mobile security
+compliance
+fedramp
+nist
+ccpa
+p&l
+go-to-market
+cross-functional
+developer experience
+pricing
+user research
+product strategy
+platform engineering
+site reliability engineering
+chaos engineering
+capacity planning
+service mesh
+istio
+envoy
+helm
+argocd
+serverless
+lambda
+sagemaker
+vertex ai
+mlflow
+kubeflow
+feast
+feature store
+model deployment
+model monitoring
+drift detection
+hyperparameter optimization
+bayesian optimization
+reinforcement learning
+transfer learning
+time series
+anomaly detection
+recommendation systems
+collaborative filtering
+graph neural networks
+generative ai
+diffusion models
+gans
+bert
+gpt
+llama
+mistral
+fine-tuning
+prompt engineering
+vector database
+chromadb
+langchain
+data labeling
+data quality
+data governance
+data lineage
+data catalog
+dbt
+great expectations
+delta lake
+apache iceberg
+apache hudi
+data modeling
+dimensional modeling
+star schema
+oltp
+olap
+cte
+window functions
+query optimization
+indexing
+sharding
+replication
+acid
+cap theorem
+load balancing
+cdn
+dns
+ssl
+tls
+api gateway
+rate limiting
+circuit breaker
+retry pattern
+idempotency
+event sourcing
+cqrs
+saga pattern
+unit testing
+integration testing
+e2e testing
+tdd
+code review
+technical debt
+refactoring
+design patterns
+solid principles
+clean architecture
+hexagonal architecture
+onion architecture
