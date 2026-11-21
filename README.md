@@ -114,6 +114,15 @@ flowchart TD
 
 ---
 
+## 📚 Dataset
+
+The sample resumes in `resumes/` are a subset of the **[Resume Dataset](https://www.kaggle.com/datasets/snehaanbhawal/resume-dataset)** by Snehaan Bhawal on Kaggle (released under **CC0: Public Domain**), originally collected from livecareer.com.
+
+- **Used here:** about 10 resumes from each of the dataset's 24 job categories (242 PDFs in total), renamed by category prefix (e.g. `AC1.pdf` for Accountant).
+- **Full dataset:** about 2,400 resumes in PDF and CSV form.
+
+---
+
 ## 🚀 Quick Start Guide
 
 ### 1. Prerequisites
