@@ -3,29 +3,85 @@
         {
             "query": "Who has experience in software testing and cross platform development?",
             "detected_category": "ENGINEERING",
-            "retrieved_count": 11,
-            "context_precision": 0.7667,
+            "retrieved_count": 14,
+            "context_precision": 0.7436,
             "context_recall": 0.75,
-            "avg_similarity": 0.2859
+            "avg_similarity": 0.2735
         },
         {
-            "query": "Who is a devops engineer skilled in docker and kubernetes?",
-            "detected_category": "ENGINEERING",
-            "retrieved_count": 11,
-            "context_precision": 1.0,
-            "context_recall": 0.75,
-            "avg_similarity": 0.3203
-        },
-        {
-            "query": "Who is skilled in networking and system troubleshooting?",
-            "detected_category": "ENGINEERING",
+            "query": "Who is an IT specialist with system administration and helpdesk experience?",
+            "detected_category": "INFORMATION-TECHNOLOGY",
             "retrieved_count": 10,
-            "context_precision": 0.9167,
+            "context_precision": 0.1111,
+            "context_recall": 0.25,
+            "avg_similarity": 0.5315
+        },
+        {
+            "query": "Who has experience in human resources recruitment and talent acquisition?",
+            "detected_category": "HR",
+            "retrieved_count": 10,
+            "context_precision": 0.0,
+            "context_recall": 0.0,
+            "avg_similarity": 0.4531
+        },
+        {
+            "query": "Who is an accountant skilled in audit, tax compliance, and financial reporting?",
+            "detected_category": "ACCOUNTANT",
+            "retrieved_count": 10,
+            "context_precision": 0.6667,
+            "context_recall": 0.25,
+            "avg_similarity": 0.5881
+        },
+        {
+            "query": "Who has expertise in financial modeling, valuation, and investment analysis?",
+            "detected_category": "FINANCE",
+            "retrieved_count": 10,
+            "context_precision": 0.5,
+            "context_recall": 0.25,
+            "avg_similarity": 0.3679
+        },
+        {
+            "query": "Looking for a chef with culinary experience, menu planning, and food safety.",
+            "detected_category": "CHEF",
+            "retrieved_count": 10,
+            "context_precision": 0.0,
+            "context_recall": 0.0,
+            "avg_similarity": 0.5825
+        },
+        {
+            "query": "Seeking healthcare professional with patient care, clinical diagnosis, and medical records experience.",
+            "detected_category": "HEALTHCARE",
+            "retrieved_count": 10,
+            "context_precision": 0.375,
             "context_recall": 0.5,
-            "avg_similarity": 0.3256
+            "avg_similarity": 0.4268
+        },
+        {
+            "query": "Who is a sales executive skilled in lead generation, cold calling, and negotiation?",
+            "detected_category": "SALES",
+            "retrieved_count": 10,
+            "context_precision": 0.906,
+            "context_recall": 0.25,
+            "avg_similarity": 0.4899
+        },
+        {
+            "query": "Looking for a lawyer with litigation, legal research, and contract drafting experience.",
+            "detected_category": "ADVOCATE",
+            "retrieved_count": 10,
+            "context_precision": 0.0,
+            "context_recall": 0.0,
+            "avg_similarity": 0.3022
+        },
+        {
+            "query": "Who has experience in digital marketing, SEO, social media, and content strategy?",
+            "detected_category": "DIGITAL-MEDIA",
+            "retrieved_count": 10,
+            "context_precision": 0.6429,
+            "context_recall": 0.5,
+            "avg_similarity": 0.4458
         }
     ],
-    "avg_precision": 0.8944666666666667,
-    "avg_recall": 0.6666666666666666,
-    "avg_similarity": 0.3106
+    "avg_precision": 0.39453,
+    "avg_recall": 0.275,
+    "avg_similarity": 0.44613
 }

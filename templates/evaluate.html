@@ -101,9 +101,9 @@ tr:hover td{background:rgba(255,255,255,0.02)}
     <div class="hero">
         <h1>RAGAS <span>Evaluation Dashboard</span></h1>
         {% if is_real_ragas %}
-        <p style="color: #69f0ae; font-weight: 600;">✨ Real RAGAS evaluation calculated successfully using OpenAI LLM Judge</p>
+        <p style="color: #69f0ae; font-weight: 600;">✨ Real RAGAS evaluation calculated successfully</p>
         {% else %}
-        <p>System accuracy metrics computed across 10 standard reference query test suites using local heuristics</p>
+        <p>System accuracy metrics computed across standard reference query test suites using local heuristics</p>
         {% endif %}
     </div>
 
@@ -148,6 +148,7 @@ tr:hover td{background:rgba(255,255,255,0.02)}
         {% endif %}
 
         <form action="/evaluate" method="POST" style="display: flex; gap: 10px; flex-wrap: wrap; align-items: center; width: 100%;">
+            <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
             <select name="eval_mode" id="eval_mode" onchange="toggleEvalMode()" style="height: 42px; background: #13232d; border: 1px solid rgba(255,255,255,0.06); border-radius: 6px; padding: 0 14px; color: #fff; outline: none; font-size: 13px; font-family: 'Inter', sans-serif; cursor: pointer; min-width: 200px;">
                 <option value="openai">OpenAI API (Paid)</option>
                 <option value="ollama">Local Ollama Llama 3 (Free)</option>

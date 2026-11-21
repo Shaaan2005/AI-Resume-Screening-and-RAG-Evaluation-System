@@ -22,7 +22,7 @@ except ImportError as e:
     print(f"Error importing search engine components: {e}")
     sys.exit(1)
 
-# List of 10 test queries across different departments for evaluation
+# List of 10 benchmark test queries across diverse departments for evaluation
 TEST_SUITE = [
     {
         "query": "Who has experience in software testing and cross platform development?",
@@ -38,6 +38,41 @@ TEST_SUITE = [
         "query": "Who has experience in human resources recruitment and talent acquisition?",
         "expected_category": "HR",
         "key_skills": ["human resources", "recruitment", "hiring", "talent acquisition"]
+    },
+    {
+        "query": "Who is an accountant skilled in audit, tax compliance, and financial reporting?",
+        "expected_category": "ACCOUNTANT",
+        "key_skills": ["audit", "tax", "accounting", "financial reporting"]
+    },
+    {
+        "query": "Who has expertise in financial modeling, valuation, and investment analysis?",
+        "expected_category": "FINANCE",
+        "key_skills": ["financial analysis", "financial modeling", "valuation", "investment"]
+    },
+    {
+        "query": "Looking for a chef with culinary experience, menu planning, and food safety.",
+        "expected_category": "CHEF",
+        "key_skills": ["cooking", "culinary", "menu planning", "food safety"]
+    },
+    {
+        "query": "Seeking healthcare professional with patient care, clinical diagnosis, and medical records experience.",
+        "expected_category": "HEALTHCARE",
+        "key_skills": ["patient care", "medical", "clinical", "nursing"]
+    },
+    {
+        "query": "Who is a sales executive skilled in lead generation, cold calling, and negotiation?",
+        "expected_category": "SALES",
+        "key_skills": ["sales", "lead generation", "negotiation", "cold calling"]
+    },
+    {
+        "query": "Looking for a lawyer with litigation, legal research, and contract drafting experience.",
+        "expected_category": "ADVOCATE",
+        "key_skills": ["litigation", "legal research", "contract drafting", "lawyer"]
+    },
+    {
+        "query": "Who has experience in digital marketing, SEO, social media, and content strategy?",
+        "expected_category": "DIGITAL-MEDIA",
+        "key_skills": ["digital marketing", "seo", "social media", "content strategy"]
     }
 ]
 

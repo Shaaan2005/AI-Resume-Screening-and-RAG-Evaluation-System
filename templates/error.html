@@ -1,0 +1,89 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>{{ code }} - {{ title }}</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet">
+<style>
+*{margin:0;padding:0;box-sizing:border-box}
+body{
+    font-family:'Inter',sans-serif;
+    background:#1a2e39;
+    min-height:100vh;
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    color:#f7fafc;
+    background-image:radial-gradient(rgba(255,255,255,0.015) 1px,transparent 1px);
+    background-size:24px 24px
+}
+.error-card{
+    background:#203743;
+    border-radius:12px;
+    padding:40px;
+    width:460px;
+    max-width:90%;
+    position:relative;
+    box-shadow:0 8px 32px rgba(0,0,0,0.25);
+    text-align:center;
+    border-left:4px solid #009393
+}
+.error-card::before{
+    content:'';
+    position:absolute;
+    top:-2px;
+    left:50%;
+    transform:translateX(-50%);
+    width:200px;
+    height:2px;
+    background:linear-gradient(90deg,transparent,#009393,transparent);
+    border-radius:2px
+}
+.error-code{
+    font-size:64px;
+    font-weight:900;
+    color:#009393;
+    line-height:1;
+    margin-bottom:12px;
+    letter-spacing:-1px
+}
+.error-title{
+    font-size:20px;
+    font-weight:700;
+    color:#f7fafc;
+    margin-bottom:10px
+}
+.error-msg{
+    font-size:14px;
+    color:#9fbed0;
+    line-height:1.6;
+    margin-bottom:28px
+}
+.btn-home{
+    display:inline-flex;
+    align-items:center;
+    gap:8px;
+    padding:10px 24px;
+    background:#3178f6;
+    color:#fff;
+    font-family:'Inter',sans-serif;
+    font-size:13px;
+    font-weight:600;
+    border-radius:6px;
+    text-decoration:none;
+    transition:background 0.15s
+}
+.btn-home:hover{background:#1475e1}
+</style>
+</head>
+<body>
+<div class="error-card">
+    <div class="error-code">{{ code }}</div>
+    <div class="error-title">{{ title }}</div>
+    <div class="error-msg">{{ message }}</div>
+    <a href="/" class="btn-home">&larr; Return to Dashboard</a>
+</div>
+</body>
+</html>

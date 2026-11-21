@@ -47,7 +47,7 @@ for i in range(len(results["ids"][0])):
         f"Resume: {results['ids'][0][i]}"
     )
 
-    # Distance may not exist in some configurationspy search_resumes.py
+    # Distance may not exist in some configurations
     if "distances" in results:
         print(
             f"Distance: {results['distances'][0][i]}"

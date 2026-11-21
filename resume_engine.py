@@ -1,62 +1,122 @@
+import os
+import logging
 import pdfplumber
 import docx
 
-with open("skills.txt") as f:
-    skills = [line.strip().lower() for line in f if line.strip()]
+logger = logging.getLogger("ResumeScreening")
+
+# Load skills list safely at module level
+_SKILLS_FILE = os.path.join(os.path.dirname(os.path.abspath(__file__)), "skills.txt")
+
+
+def _load_skills():
+    """Loads standardized skill list from skills.txt."""
+    try:
+        with open(_SKILLS_FILE, encoding="utf-8") as f:
+            return [line.strip().lower() for line in f if line.strip()]
+    except FileNotFoundError:
+        logger.warning(f"skills.txt not found at {_SKILLS_FILE}. Skill matching will be disabled.")
+        return []
+    except Exception as e:
+        logger.warning(f"Could not read skills.txt: {e}")
+        return []
+
+
+skills = _load_skills()
+
+
+def extract_resume_text(path):
+    """Safely extracts text content from PDF or DOCX file.
+    
+    Handles corrupted files, missing files, empty files, and unexpected encodings gracefully.
+    """
+    if not path or not os.path.exists(path):
+        logger.warning(f"Resume file not found: {path}")
+        return ""
+
+    text = ""
+    lower_path = path.lower()
+
+    if lower_path.endswith(".pdf"):
+        try:
+            with pdfplumber.open(path) as pdf:
+                if not pdf.pages:
+                    logger.info(f"PDF {path} has 0 pages.")
+                    return ""
+                for page in pdf.pages:
+                    page_text = page.extract_text()
+                    if page_text:
+                        text += page_text + "\n"
+        except Exception as e:
+            logger.warning(f"Failed to extract PDF text from {path}: {e}")
+            return ""
+
+    elif lower_path.endswith(".docx"):
+        try:
+            doc = docx.Document(path)
+            for para in doc.paragraphs:
+                if para.text:
+                    text += para.text + "\n"
+        except Exception as e:
+            logger.warning(f"Failed to extract DOCX text from {path}: {e}")
+            return ""
+
+    return text.strip()
+
 
 def analyze_resume(path):
-
+    """Analyzes resume text against reference skill dictionary.
+    
+    Returns:
+      {
+         "score": float (0-100),
+         "skills": list[str],
+         "recommendation": "SHORTLIST" | "CONSIDER" | "REJECT"
+      }
+    """
     text = extract_resume_text(path).lower()
+    if not text:
+        return {
+            "score": 0.0,
+            "skills": [],
+            "recommendation": "REJECT"
+        }
 
-    matched_skills = []
+    matched_skills = [s for s in skills if s in text]
 
-    for skill in skills:
+    if skills:
+        score = (len(matched_skills) / len(skills)) * 100
+    else:
+        score = 0.0
 
-        if skill in text:
-            matched_skills.append(skill)
-
-    score = (len(matched_skills) / len(skills)) * 100
+    score = round(max(0.0, min(100.0, score)), 2)
 
     if score >= 70:
         recommendation = "SHORTLIST"
-
     elif score >= 40:
         recommendation = "CONSIDER"
-
     else:
         recommendation = "REJECT"
 
     return {
-        "score": round(score, 2),
+        "score": score,
         "skills": matched_skills,
         "recommendation": recommendation
     }
 
 
-def extract_resume_text(path):
-
-    text = ""
-
-    if path.endswith(".pdf"):
-        with pdfplumber.open(path) as pdf:
-            for page in pdf.pages:
-                page_text = page.extract_text()
-                if page_text:
-                    text += page_text
-
-    elif path.endswith(".docx"):
-        doc = docx.Document(path)
-        for para in doc.paragraphs:
-            text += para.text + "\n"
-            
-    return text
-
-
 def chunk_text(text, chunk_size=200):
+    """Splits document text into overlapping or sequential word chunks."""
+    if not text or not isinstance(text, str):
+        return []
+
     words = text.split()
+    if not words:
+        return []
+
     chunks = []
     for i in range(0, len(words), chunk_size):
-        chunk = " ".join(words[i:i+chunk_size])
-        if chunk.strip():
+        chunk = " ".join(words[i:i + chunk_size]).strip()
+        if chunk:
             chunks.append(chunk)
     return chunks

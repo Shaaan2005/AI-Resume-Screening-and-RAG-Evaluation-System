@@ -43,4 +43,4 @@ for candidate in results:
         f"{rank}. {candidate['resume']} - {candidate['score']}%"
     )
 
-    rank += 1py rank_resumes.py
+    rank += 1
