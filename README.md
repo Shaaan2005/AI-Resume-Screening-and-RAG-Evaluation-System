@@ -20,13 +20,15 @@ Combines dense vector search (`all-mpnet-base-v2`), Cross-Encoder re-ranking (`s
 
 ## 🎬 Demo Walkthrough
 
-<!-- Replace the placeholder below with your 60-90 second GIF or demo video -->
 <div align="center">
-  <img src="https://via.placeholder.com/1000x500.png?text=AI+Resume+Screening+System+Walkthrough+(Upload+Resume+➔+Semantic+Search+➔+RAGAS+Scorecard)" alt="System Demo Preview" width="900" style="border-radius: 8px; box-shadow: 0 4px 20px rgba(0,0,0,0.15);" />
-  <p><em>Demo Preview: Upload Resume ➔ Fast Bi-Encoder Retrieval ➔ Cross-Encoder Re-Ranking ➔ Offline RAGAS Evaluation</em></p>
+  <img src="assets/demo.gif" alt="System Live Walkthrough Demo" width="900" style="border-radius: 8px; box-shadow: 0 4px 20px rgba(0,0,0,0.25);" />
+  <p><em>Live Demo: 1-on-1 Resume & JD Matching ➔ Semantic Smart Search (240+ Resumes) ➔ Offline RAGAS Evaluation</em></p>
 </div>
 
-> **💡 Quick Recording Tip:** You can record a quick 60-second `.gif` using [ScreenToGif](https://www.screentogif.com/) or press `Win + Alt + R` on Windows, drag the `.gif` into any GitHub Issue/Pull Request description, and paste the generated permanent link into the `img src` above!
+> **📁 Video Assets:** Looking for the full uncompressed recording or the 1080p highlight reel?
+> * **[Full 3-Minute Master Video](assets/demo_full.mp4)**
+> * **[45-Second 1080p Highlight Reel](assets/demo_highlight.mp4)**
+
 
 ---
 
