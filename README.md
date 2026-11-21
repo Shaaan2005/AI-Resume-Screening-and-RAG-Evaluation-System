@@ -20,14 +20,18 @@ Combines dense vector search (`all-mpnet-base-v2`), Cross-Encoder re-ranking (`s
 
 ## 🎬 Demo Walkthrough
 
-<div align="center">
-  <img src="assets/demo.gif" alt="System Live Walkthrough Demo" width="900" style="border-radius: 8px; box-shadow: 0 4px 20px rgba(0,0,0,0.25);" />
-  <p><em>Live Demo: 1-on-1 Resume & JD Matching ➔ Semantic Smart Search (240+ Resumes) ➔ Offline RAGAS Evaluation</em></p>
-</div>
+<p align="center">
+  <img src="assets/demo.gif" alt="AI Resume Screening Demo Walkthrough" width="100%" />
+</p>
 
-> **📁 Video Assets:** Looking for the full uncompressed recording or the 1080p highlight reel?
-> * **[Full 3-Minute Master Video](assets/demo_full.mp4)**
-> * **[45-Second 1080p Highlight Reel](assets/demo_highlight.mp4)**
+<p align="center">
+  <em>Live Walkthrough: 1-on-1 Resume & JD Matching ➔ Semantic Smart Search (240+ Resumes) ➔ Offline RAGAS Evaluation</em>
+</p>
+
+> **📥 Downloadable Video Assets:**
+> * 📹 **[Download Full 3-Minute Master Video (MP4)](assets/demo_full.mp4?raw=true)** *(20.8 MB)*
+> * ⚡ **[Download 45-Second 1080p Highlight Reel (MP4)](assets/demo_highlight.mp4?raw=true)** *(5.7 MB)*
+
 
 
 ---
