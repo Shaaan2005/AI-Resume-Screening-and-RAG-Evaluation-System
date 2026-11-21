@@ -5,11 +5,11 @@
 [![Python](https://img.shields.io/badge/Python-3.10%20%7C%203.11%20%7C%203.12%20%7C%203.14-3776AB?style=for-the-badge&logo=python&logoColor=white)](https://python.org)
 [![Flask](https://img.shields.io/badge/Flask-2.0+-000000?style=for-the-badge&logo=flask&logoColor=white)](https://flask.palletsprojects.com/)
 [![ChromaDB](https://img.shields.io/badge/Vector%20Store-ChromaDB-FF6F61?style=for-the-badge&logo=databricks&logoColor=white)](https://www.trychroma.com/)
-[![Tests](https://img.shields.io/badge/Tests-50%20Passed-success?style=for-the-badge&logo=pytest&logoColor=white)](https://pytest.org)
+[![Tests](https://img.shields.io/badge/Tests-52%20Passed-success?style=for-the-badge&logo=pytest&logoColor=white)](https://pytest.org)
 [![RAGAS](https://img.shields.io/badge/Evaluation-RAGAS%20%2B%20Ollama-blueviolet?style=for-the-badge)](https://github.com/explodinggradients/ragas)
 [![Cost](https://img.shields.io/badge/Cloud%20Cost-%240.00%20(100%25%20Offline)-brightgreen?style=for-the-badge)](https://ollama.com)
 
-**An enterprise-grade, privacy-first AI platform for resume screening, semantic candidate ranking, and offline RAG evaluation.**  
+**A privacy-first AI platform for resume screening, semantic candidate ranking, and offline RAG evaluation.**  
 Combines dense vector search (`all-mpnet-base-v2`), Cross-Encoder re-ranking (`stsb-distilroberta-base`), and local LLM evaluation (`Ollama Llama 3`) with zero cloud data leaks.
 
 [Key Features](#-key-features) • [System Architecture](#-system-architecture) • [Demo Walkthrough](#-demo-walkthrough) • [Security](#-security-hardening) • [Quick Start](#-quick-start-guide) • [Tests](#-automated-tests)
@@ -58,7 +58,7 @@ flowchart TD
         G --> H["⚡ Stage 1: Fast Dense Retrieval (Top-K)"]:::stage1
         E -.-> H
         H --> I["🔄 Stage 2: Joint-Attention Re-Ranking (stsb-distilroberta-base)"]:::stage2
-        I --> J["⚖️ Hybrid Scoring: 30% BM25 Keyword + 70% Semantic"]:::stage2
+        I --> J["⚖️ Hybrid Scoring: 30% Keyword + 70% Semantic"]:::stage2
         J --> K["📋 Ranked Candidates Dashboard"]
     end
 
@@ -77,7 +77,7 @@ flowchart TD
 
 | Capability | Traditional ATS | Pure Vector Search | **Our System (Hybrid + Cross-Encoder)** |
 | :--- | :---: | :---: | :---: |
-| **Exact Tech Acronyms (`AWS`, `C++`, `SQL`)** | ✅ Yes | ❌ Often misses exact string matches | ✅ **Yes (30% BM25 Keyword Weight)** |
+| **Exact Tech Acronyms (`AWS`, `C++`, `SQL`)** | ✅ Yes | ❌ Often misses exact string matches | ✅ **Yes (30% Keyword-Match Weight)** |
 | **Domain Synonyms (`K8s` vs `Containerization`)**| ❌ Misses completely | ⚠️ Vague semantic match | ✅ **High Precision (70% Joint-Attention)** |
 | **Candidate Re-ranking Accuracy** | ❌ None | ⚠️ Dual-encoder cosine only | ✅ **Cross-Encoder full token attention** |
 | **Cloud API Charges** | ❌ N/A | ❌ High recurring fees | ✅ **$0.00 (Local Ollama inference)** |
@@ -87,17 +87,17 @@ flowchart TD
 
 ## 🌟 Key Features
 
-* **🧠 Semantic & Keyword Hybrid Search:** Combines BM25-style keyword matching with `SentenceTransformers` (`all-mpnet-base-v2`) dense vector search (`0.30` keyword + `0.70` semantic).
+* **🧠 Semantic & Keyword Hybrid Search:** Combines exact keyword-coverage matching (share of query terms found in the resume) with `SentenceTransformers` (`all-mpnet-base-v2`) dense vector search (`0.30` keyword + `0.70` semantic).
 * **🎯 Cross-Encoder Re-Ranking:** Uses `cross-encoder/stsb-distilroberta-base` to calculate joint cross-attention over candidate texts to eliminate false negatives.
 * **📁 Multi-Department Support:** Supports 24 specialized industry categories (Engineering, IT, HR, Healthcare, Finance, etc.) with automatic department intent detection.
-* **🔒 Enterprise Security Hardening:**
+* **🔒 Security Hardening:**
   * Cryptographic CSRF tokens on all mutating endpoints (`secrets.compare_digest`).
   * Secure HTTP-only cookies (`SameSite=Lax`, 8-hour lifetime, persistent random secret key).
   * Magic-byte file validation (`%PDF-` for PDF, `PK\x03\x04` for DOCX) and 16MB file limits.
   * Whitelisted category verification to prevent directory/path traversal attacks.
   * Parameterized database access preventing SQL injection.
-* **🛡️ Production-Grade Error Handling:** Centralized custom error handlers (`400`, `403`, `404`, `413`, `500`), bounded cosine similarity domains, and graceful fallbacks if vector models disconnect.
-* **🧪 50-Test Automated Pytest Suite:** Complete automated test suite verifying auth flows, file extraction, vector search, security, and route boundaries.
+* **🛡️ Robust Error Handling:** Centralized custom error handlers (`400`, `403`, `404`, `413`, `500`), bounded cosine similarity domains, and graceful fallbacks if vector models disconnect.
+* **🧪 52-Test Automated Pytest Suite:** Complete automated test suite verifying auth flows, file extraction, vector search, security, and route boundaries.
 * **📊 10-Department RAGAS Evaluation Dashboard:** Integrated `/evaluate` page computing **Context Precision** and **Context Recall** across 10 benchmark queries offline.
 
 ---
@@ -110,7 +110,7 @@ flowchart TD
 * **Re-Ranking Model:** `cross-encoder/stsb-distilroberta-base`
 * **Local LLM Judge:** Ollama (`llama3`)
 * **Evaluation Framework:** RAGAS, `langchain-ollama`, `langchain-community`
-* **Testing:** Pytest (50 unit and integration tests)
+* **Testing:** Pytest (52 unit and integration tests)
 
 ---
 
@@ -131,7 +131,6 @@ cd AI-Resume-Screening-and-RAG-Evaluation-System
 
 # Install dependencies
 pip install -r requirements.txt
-pip install pytest
 ```
 
 ### 3. Environment Variables (Optional)
@@ -148,6 +147,9 @@ export OPENAI_API_KEY="sk-..."
 ```bash
 # Start Flask Application
 python app.py
+
+# Optional: enable the Flask debugger (local development only, never on a shared network)
+# FLASK_DEBUG=1 python app.py
 ```
 Open your browser and navigate to:  
 👉 **`http://127.0.0.1:5000/`**
@@ -156,20 +158,20 @@ Open your browser and navigate to:
 
 ## 🧪 Running Automated Tests
 
-Run the full 50-test suite with coverage reports:
+Run the full 52-test suite:
 
 ```bash
-python -m pytest -v tests/
+python -m pytest -v
 ```
 
 ### Test Coverage Highlights:
 - **`tests/test_auth.py` (13 tests):** User registration, RFC email validation, password rules, login sessions, and route protection.
-- **`tests/test_resume_processing.py` (7 tests):** Document extraction, corrupted PDF defense, sliding text chunking, and skill scoring.
-- **`tests/test_ai_pipeline.py` (11 tests):** BM25 keyword matching, technical acronym preservation (`C++`, `Go`), semantic similarity bounds, garbage query suppression, and 0.30/0.70 hybrid weighting.
+- **`tests/test_resume_processing.py` (9 tests):** Document extraction, corrupted PDF defense, sliding text chunking, whole-word skill matching, and role-specific skill scoring.
+- **`tests/test_ai_pipeline.py` (11 tests):** Keyword-coverage matching, technical acronym preservation (`C++`, `Go`), semantic similarity bounds, garbage query suppression, and 0.30/0.70 hybrid weighting.
 - **`tests/test_routes.py` (13 tests):** HTTP route boundaries, file size limits, magic-byte upload validation, and path traversal downloads.
 - **`tests/test_security.py` (6 tests):** CSRF enforcement, password hashing verification, secure cookie headers, and error page sanitization.
 
-**Status:** `50 passed in ~3.3s` ✅
+**Status:** `52 passed in ~8s` ✅
 
 ---
 

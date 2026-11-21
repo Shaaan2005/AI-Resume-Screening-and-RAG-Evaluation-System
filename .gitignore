@@ -30,4 +30,12 @@ scratch_chat_summary.txt
 scratch/
 verify_syntax.py
 recent_analyses.json
+*.pptx
+AI_Resume_Screening_Presentation.pptx
+presentation_preview.html
 
+
+
+# Stale vector store (code uses chromadb_data/) and local AI chat logs
+chroma_db/
+conversations/

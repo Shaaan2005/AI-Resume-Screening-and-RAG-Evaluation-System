@@ -1,7 +1,10 @@
 import os
+import re
 import logging
 import pdfplumber
 import docx
+
+from skills_config import SKILLS_BY_CATEGORY
 
 logger = logging.getLogger("ResumeScreening")
 
@@ -64,9 +67,24 @@ def extract_resume_text(path):
     return text.strip()
 
 
-def analyze_resume(path):
-    """Analyzes resume text against reference skill dictionary.
-    
+def _contains_skill(skill, text):
+    """True if `skill` appears in `text` as a whole term.
+
+    Plain `\\b` word boundaries break on skills like "c++" or "node.js", so we
+    require that the characters around the match are not letters or digits.
+    This stops "go" matching "good" and "java" matching "javascript".
+    """
+    pattern = r"(?<![a-z0-9])" + re.escape(skill) + r"(?![a-z0-9])"
+    return re.search(pattern, text) is not None
+
+
+def analyze_resume(path, category=None):
+    """Analyzes resume text against a reference skill dictionary.
+
+    If `category` matches a key in SKILLS_BY_CATEGORY, the resume is scored
+    against that role's skills only. Otherwise it falls back to the global
+    skills.txt list.
+
     Returns:
       {
          "score": float (0-100),
@@ -82,10 +100,14 @@ def analyze_resume(path):
             "recommendation": "REJECT"
         }
 
-    matched_skills = [s for s in skills if s in text]
+    reference = SKILLS_BY_CATEGORY.get(category) if category else None
+    if not reference:
+        reference = skills
 
-    if skills:
-        score = (len(matched_skills) / len(skills)) * 100
+    matched_skills = [s for s in reference if _contains_skill(s, text)]
+
+    if reference:
+        score = (len(matched_skills) / len(reference)) * 100
     else:
         score = 0.0
 

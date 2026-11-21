@@ -632,7 +632,7 @@ def upload():
 
     try:
         category = detect_category(job_description)
-        result = analyze_resume(file_path)
+        result = analyze_resume(file_path, category=category)
         resume_text = extract_resume_text(file_path)
         semantic_score = get_similarity(job_description, resume_text)
 
@@ -813,4 +813,8 @@ def evaluate_dashboard():
 
 
 if __name__ == "__main__":
-    app.run(debug=True, host="0.0.0.0", port=5000, use_reloader=False)
+    # Never enable the Werkzeug debugger on a network-facing interface: it allows
+    # arbitrary code execution. Opt in locally with FLASK_DEBUG=1.
+    debug = os.environ.get("FLASK_DEBUG", "0") == "1"
+    host = os.environ.get("FLASK_HOST", "127.0.0.1")
+    app.run(debug=debug, host=host, port=5000, use_reloader=False)

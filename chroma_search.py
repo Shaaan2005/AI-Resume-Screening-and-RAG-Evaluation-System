@@ -59,7 +59,7 @@ def get_cross_encoder():
 
 
 def keyword_match_score(query, document):
-    """Computes BM25-style keyword matching score between query and document text."""
+    """Returns the fraction of meaningful query terms that appear in the document (0.0-1.0)."""
     if not query or not document:
         return 0.0
 

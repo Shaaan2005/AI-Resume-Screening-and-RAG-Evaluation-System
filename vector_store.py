@@ -26,7 +26,7 @@ for category in os.listdir("resumes"):
 
         file_path = os.path.join(category_path, filename)
         text = extract_resume_text(file_path)
-        result = analyze_resume(file_path)
+        result = analyze_resume(file_path, category=category)
 
         chunks = chunk_text(text)
         chunk_ids = []

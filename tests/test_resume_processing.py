@@ -93,3 +93,25 @@ def test_analyze_resume_scoring_logic(monkeypatch):
     finally:
         if os.path.exists(temp_path):
             os.remove(temp_path)
+
+
+def test_skill_matching_uses_whole_terms():
+    """Short skills must not match inside longer words; symbol skills still match."""
+    from resume_engine import _contains_skill
+    assert not _contains_skill("go", "good communication at google")
+    assert not _contains_skill("java", "built ui in javascript")
+    assert _contains_skill("go", "backend services in go and rust")
+    assert _contains_skill("c++", "fluent in c++, python")
+    assert _contains_skill("node.js", "apis with node.js.")
+
+
+def test_analyze_resume_scores_against_category_skills(monkeypatch):
+    """With a known category, score is relative to that role's skill list."""
+    import resume_engine
+    monkeypatch.setattr(resume_engine, "SKILLS_BY_CATEGORY", {"TEST": ["audit", "tax", "payroll", "gaap"]})
+    monkeypatch.setattr(resume_engine, "skills", ["python"] * 100)
+    monkeypatch.setattr(resume_engine, "extract_resume_text", lambda path: "audit and tax specialist, gaap")
+    result = analyze_resume("ignored.pdf", category="TEST")
+    assert result["score"] == 75.0
+    assert result["recommendation"] == "SHORTLIST"
+    assert set(result["skills"]) == {"audit", "tax", "gaap"}
