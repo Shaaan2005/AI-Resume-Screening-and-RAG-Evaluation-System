@@ -156,6 +156,28 @@ Open your browser and navigate to:
 
 ---
 
+## 🗂️ Project Layout
+
+```
+app.py              # Entry point: python app.py
+webapp/             # Flask app factory + blueprints
+  __init__.py       #   create_app(): config, security, blueprint registration
+  auth.py           #   /login, /register, /logout
+  search.py         #   /, /search, /resume/<category>/<file>
+  upload.py         #   /upload (validate, score, index a single resume)
+  evaluate.py       #   /evaluate (heuristic + RAGAS dashboard)
+  security.py       #   CSRF, login_required, error pages, secret key
+  db.py, history.py #   SQLite users, recent-analyses history
+query_parsing.py    # Category detection, requested-count parsing, garbage filtering
+chroma_search.py    # Two-stage retrieval: ChromaDB + cross-encoder re-rank + hybrid score
+resume_engine.py    # PDF/DOCX extraction, chunking, role-specific skill scoring
+vector_store.py     # Rebuilds the ChromaDB index from resumes/
+evaluate_ragas.py   # Offline retrieval benchmark
+tests/              # Pytest suite
+```
+
+---
+
 ## 🧪 Running Automated Tests
 
 Run the full 52-test suite:

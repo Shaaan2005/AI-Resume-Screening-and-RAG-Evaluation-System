@@ -3,7 +3,7 @@ import sys
 import os
 sys.path.insert(0, os.path.dirname(__file__))
 
-from app import detect_category, _CAT_DESCRIPTIONS
+from query_parsing import detect_category, _CAT_DESCRIPTIONS
 from chroma_search import get_cross_encoder
 
 # 50 Distinct, Diverse Search Queries across all 24 departments

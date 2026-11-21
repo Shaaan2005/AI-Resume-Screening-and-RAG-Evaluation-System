@@ -2,7 +2,7 @@
 import pytest
 from chroma_search import keyword_match_score, search_candidates, HYBRID_ALPHA
 from semantic_match import get_similarity
-from app import detect_category, is_garbage, extract_search_intent, parse_requested_count
+from query_parsing import detect_category, is_garbage, extract_search_intent, parse_requested_count
 
 
 def test_keyword_match_score():

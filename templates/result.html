@@ -201,10 +201,10 @@ tr:last-child td{border-bottom:1px solid #f0f8ff}
         {% if user %}
         <a href="/evaluate" style="font-size:13px;color:#009393;font-weight:600;text-decoration:none;margin-right:15px;transition:opacity 0.2s" onmouseover="this.style.opacity=0.8" onmouseout="this.style.opacity=1">📊 Evaluation Dashboard</a>
         <span style="font-size:13px;color:#e2eef4;font-weight:500;margin-right:15px">Hi {{ user.username }}</span>
-        <a href="{{ url_for('logout') }}" class="btn-login">Log Out</a>
+        <a href="{{ url_for('auth.logout') }}" class="btn-login">Log Out</a>
         {% else %}
-        <a href="{{ url_for('login') }}" class="btn-login">Log In</a>
-        <a href="{{ url_for('register') }}" class="btn-register">Register</a>
+        <a href="{{ url_for('auth.login') }}" class="btn-login">Log In</a>
+        <a href="{{ url_for('auth.register') }}" class="btn-register">Register</a>
         {% endif %}
     </div>
 

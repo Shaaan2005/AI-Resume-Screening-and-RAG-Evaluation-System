@@ -4,7 +4,7 @@ import os
 sys.path.insert(0, os.path.dirname(__file__))
 
 # Import the single-layer Cross-Encoder detection function
-from app import detect_category
+from query_parsing import detect_category
 
 # --- Test Cases ---
 test_cases = [

@@ -1,6 +1,7 @@
 """Pytest fixtures and configuration for AI Resume Screening test suite."""
 import os
 import io
+import shutil
 import tempfile
 import sqlite3
 import pytest
@@ -9,52 +10,34 @@ from werkzeug.security import generate_password_hash
 # Set testing environment variable
 os.environ["FLASK_SECRET_KEY"] = "test-secret-key-32-bytes-secure-random"
 
-from app import app as flask_app, DB_FILE, UPLOAD_FOLDER
+from webapp import create_app
 
 
 @pytest.fixture(scope="session")
 def test_app():
-    """Configures the Flask app for testing with an isolated temporary database."""
-    # Create a temporary test database
-    db_fd, temp_db_path = tempfile.mkstemp(suffix=".db")
-    os.close(db_fd)
+    """Builds a Flask app whose database, uploads, and history all live in a temp dir."""
+    temp_dir = tempfile.mkdtemp()
+    temp_db_path = os.path.join(temp_dir, "test_users.db")
 
-    temp_upload = tempfile.mkdtemp()
-
-    flask_app.config.update({
+    flask_app = create_app({
         "TESTING": True,
         "WTF_CSRF_ENABLED": False,  # Disabled by default in tests; enabled in security tests
         "DATABASE": temp_db_path,
-        "UPLOAD_FOLDER": temp_upload,
+        "UPLOAD_FOLDER": os.path.join(temp_dir, "uploads"),
+        "HISTORY_FILE": os.path.join(temp_dir, "history.json"),
     })
 
-    # Initialize isolated schema
+    # create_app() builds the schema; seed a pre-existing test user
     with sqlite3.connect(temp_db_path) as conn:
-        conn.execute("CREATE TABLE IF NOT EXISTS users (id INTEGER PRIMARY KEY, username TEXT UNIQUE, email TEXT, password TEXT)")
-        conn.execute("CREATE UNIQUE INDEX IF NOT EXISTS idx_users_email ON users(email)")
-        # Insert a default pre-existing test user
         conn.execute(
             "INSERT INTO users (username, email, password) VALUES (?, ?, ?)",
             ("existinguser", "existing@example.com", generate_password_hash("ValidPass123"))
         )
         conn.commit()
 
-    # Point global DB_FILE in app to temporary DB
-    import app as app_module
-    old_db = app_module.DB_FILE
-    old_upload = app_module.UPLOAD_FOLDER
-    app_module.DB_FILE = temp_db_path
-    app_module.UPLOAD_FOLDER = temp_upload
-
     yield flask_app
 
-    # Cleanup
-    app_module.DB_FILE = old_db
-    app_module.UPLOAD_FOLDER = old_upload
-    try:
-        os.remove(temp_db_path)
-    except OSError:
-        pass
+    shutil.rmtree(temp_dir, ignore_errors=True)
 
 
 @pytest.fixture

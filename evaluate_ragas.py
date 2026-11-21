@@ -215,7 +215,7 @@ def get_heuristic_scorecard():
     """Compiles local heuristic precision, recall, and similarity scores.
     Returns: (results_list, avg_precision, avg_recall, avg_similarity)
     """
-    from app import detect_category
+    from query_parsing import detect_category
     collection = get_collection()
     count = collection.count()
     if count == 0:
@@ -250,7 +250,7 @@ def get_real_ragas_scorecard(openai_key=None, use_ollama=False):
     """Executes evaluation using the real Ragas library (either OpenAI or local Ollama).
     Returns: (results_list, avg_precision, avg_recall)
     """
-    from app import detect_category
+    from query_parsing import detect_category
     if not use_ollama and openai_key:
         os.environ["OPENAI_API_KEY"] = openai_key
     collection = get_collection()
@@ -332,7 +332,7 @@ def main():
     print(f"Average Embed Similarity:  {avg_similarity:.4f}")
 
     # Run real Ragas check
-    from app import detect_category
+    from query_parsing import detect_category
     dataset_records = []
     for item in TEST_SUITE:
         detected = detect_category(item["query"])

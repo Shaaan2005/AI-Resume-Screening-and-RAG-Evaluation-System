@@ -45,7 +45,7 @@ body{font-family:'Inter',sans-serif;background:#1a2e39;min-height:100vh;display:
 <div class="form-group"><label>Password</label><div class="pw-toggle"><input type="password" name="password" id="password" placeholder="Choose a password (min 8 characters, letters & numbers)" required><button type="button" class="eye" onclick="togglePw()">&#128065;</button></div></div>
 <button type="submit" class="btn-submit">Create Account</button>
 </form>
-<div class="auth-footer">Already have an account? <a href="{{ url_for('login') }}">Log In</a></div>
+<div class="auth-footer">Already have an account? <a href="{{ url_for('auth.login') }}">Log In</a></div>
 </div>
 <script>
 function togglePw(){var p=document.getElementById('password');p.type=p.type==='password'?'text':'password'}
