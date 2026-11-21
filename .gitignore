@@ -24,7 +24,6 @@ uploads/*.pdf
 uploads/*.docx
 
 # Cache files
-# evaluation_cache.json is tracked so benchmarks can be viewed without full recomputation
 test_cache.json
 scratch_chat_summary.txt
 scratch/

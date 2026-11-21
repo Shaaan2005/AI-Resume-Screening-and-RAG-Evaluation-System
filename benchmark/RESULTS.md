@@ -13,14 +13,14 @@ A result is **relevant** when its dataset category matches the query's category.
 
 | Configuration | P@5 | P@10 | MRR | nDCG@10 | Latency (ms) |
 | :--- | ---: | ---: | ---: | ---: | ---: |
-| Dense only (no re-ranking) | 0.550 | 0.458 | 0.835 | 0.516 | 34 |
-| STS cross-encoder + 30% overlap [old] | 0.442 | 0.383 | 0.656 | 0.408 | 356 |
-| STS cross-encoder only | 0.329 | 0.275 | 0.586 | 0.301 | 353 |
-| MS MARCO MiniLM only | 0.550 | 0.458 | 0.774 | 0.499 | 153 |
-| MS MARCO MiniLM + 30% overlap | 0.508 | 0.440 | 0.763 | 0.477 | 162 |
-| MS MARCO MiniLM + 30% BM25 | 0.529 | 0.433 | 0.781 | 0.477 | 162 |
-| BGE reranker base only | 0.512 | 0.427 | 0.793 | 0.478 | 641 |
-| BGE reranker base + 30% BM25 | 0.512 | 0.419 | 0.805 | 0.475 | 655 |
+| Dense only (no re-ranking) | 0.550 | 0.458 | 0.835 | 0.516 | 19 |
+| STS cross-encoder + 30% overlap [old] | 0.442 | 0.383 | 0.656 | 0.408 | 337 |
+| STS cross-encoder only | 0.329 | 0.275 | 0.586 | 0.301 | 333 |
+| MS MARCO MiniLM only | 0.550 | 0.458 | 0.774 | 0.499 | 148 |
+| MS MARCO MiniLM + 30% overlap | 0.508 | 0.440 | 0.763 | 0.477 | 159 |
+| MS MARCO MiniLM + 30% BM25 | 0.529 | 0.433 | 0.781 | 0.477 | 159 |
+| BGE reranker base only | 0.512 | 0.427 | 0.793 | 0.478 | 670 |
+| BGE reranker base + 30% BM25 | 0.512 | 0.419 | 0.805 | 0.475 | 646 |
 
 ## Keyword weight with the best re-ranker (dev vs held-out test)
 
@@ -29,10 +29,10 @@ Re-ranker: `BAAI/bge-reranker-base`. Dev = first query per category, test = seco
 | Keyword score | Weight | Dev nDCG@10 | Test nDCG@10 | Test P@5 |
 | :--- | ---: | ---: | ---: | ---: |
 | overlap | 0.0 **(chosen)** | 0.497 | 0.458 | 0.525 |
-| overlap | 0.1 | 0.482 | 0.461 | 0.533 |
+| overlap | 0.1 | 0.483 | 0.461 | 0.533 |
 | overlap | 0.2 | 0.483 | 0.459 | 0.500 |
 | overlap | 0.3 | 0.479 | 0.453 | 0.483 |
-| overlap | 0.5 | 0.465 | 0.453 | 0.467 |
+| overlap | 0.5 | 0.469 | 0.453 | 0.467 |
 | bm25 | 0.1 | 0.480 | 0.483 | 0.533 |
 | bm25 | 0.2 | 0.469 | 0.474 | 0.533 |
 | bm25 | 0.3 | 0.473 | 0.476 | 0.525 |

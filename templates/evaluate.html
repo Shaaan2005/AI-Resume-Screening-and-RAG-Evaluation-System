@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>RAGAS Evaluation Dashboard</title>
+<title>Retrieval Benchmark</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet">
 <style>
@@ -46,7 +46,7 @@ body{
 .hero h1{font-size:36px;font-weight:800;letter-spacing:-1px;margin-bottom:10px}
 .hero h1 span{color:#009393}
 .hero p{font-size:15px;color:#9fbed0}
-.kpi-row{display:grid;grid-template-columns:repeat(3,1fr);gap:15px;margin-bottom:30px}
+.kpi-row{display:grid;grid-template-columns:repeat(4,1fr);gap:15px;margin-bottom:30px}
 .kpi-card{
     background:#203743;border-radius:8px;padding:24px;
     border-left:4px solid #009393;box-shadow:0 4px 15px rgba(0,0,0,0.15);
@@ -58,25 +58,39 @@ body{
 }
 .kpi-card .value{font-size:36px;font-weight:800;color:#009393;margin-bottom:5px}
 .kpi-card .label{font-size:12px;font-weight:700;color:#9fbed0;text-transform:uppercase;letter-spacing:1px}
+.kpi-card .sub{font-size:12px;color:#9fbed0;margin-top:8px}
+.kpi-card .sub .up{color:#69f0ae;font-weight:700}
+.kpi-card .sub .down{color:#ff6b6b;font-weight:700}
 .scorecard-card{
     background:#203743;border-radius:8px;padding:24px;
     box-shadow:0 4px 15px rgba(0,0,0,0.15);margin-bottom:20px
 }
-.scorecard-header{font-size:18px;font-weight:700;color:#f7fafc;margin-bottom:20px;letter-spacing:-0.2px}
+.scorecard-header{font-size:18px;font-weight:700;color:#f7fafc;margin-bottom:16px;letter-spacing:-0.2px}
+.note{font-size:13px;color:#9fbed0;line-height:1.6;margin-bottom:16px}
+.note strong{color:#e2eef4}
+.note code, .empty code{background:#13232d;padding:2px 6px;border-radius:4px;font-size:12px;color:#e2eef4}
 .table-wrap{border-radius:6px;overflow:hidden;border:1px solid rgba(255,255,255,0.06)}
 table{width:100%;border-collapse:collapse}
 th, td{padding:14px 16px;text-align:left;border-bottom:1px solid rgba(255,255,255,0.04)}
 th{background:#13232d;font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:0.8px;color:#9fbed0}
 td{font-size:13px;color:#e2eef4}
 tr:hover td{background:rgba(255,255,255,0.02)}
+tr.current td{background:rgba(0,147,147,0.10)}
+td.num, th.num{text-align:right;font-variant-numeric:tabular-nums}
 .tag{
     display:inline-block;padding:3px 8px;border-radius:4px;
     font-size:10px;font-weight:700;text-transform:uppercase;letter-spacing:0.3px
 }
 .tag-dept{background:rgba(0,147,147,0.12);color:#009393}
+.tag-current{background:#009393;color:#13232d;margin-left:6px}
+.tag-original{background:rgba(255,107,107,0.12);color:#ff6b6b;margin-left:6px}
+.tag-hit{background:rgba(105,240,174,0.12);color:#69f0ae}
+.tag-miss{background:rgba(255,255,255,0.05);color:#9fbed0}
+.cats .tag{margin:2px 3px 2px 0}
 .score-badge{font-weight:700;color:#009393}
+.empty{text-align:center;padding:60px 20px;color:#9fbed0}
 @media(max-width:860px){
-    .kpi-row{grid-template-columns:1fr}
+    .kpi-row{grid-template-columns:1fr 1fr}
     .content{padding:100px 16px 40px}
 }
 </style>
@@ -90,131 +104,144 @@ tr:hover td{background:rgba(255,255,255,0.02)}
             <span>AI Resume Screening</span>
         </a>
     </div>
-    <div class="nav-right" style="display:flex;gap:10px">
-        <a href="/evaluate?recalculate=true" class="btn-back" style="background:#3178f6;color:#fff" onclick="this.innerHTML='⏳ Recalculating...';this.style.pointerEvents='none';">🔄 Recalculate baseline</a>
+    <div class="nav-right">
         <a href="/" class="btn-back">← Back to Dashboard</a>
     </div>
-
 </div>
 
 <div class="content">
     <div class="hero">
-        <h1>RAGAS <span>Evaluation Dashboard</span></h1>
-        {% if is_real_ragas %}
-        <p style="color: #69f0ae; font-weight: 600;">✨ Real RAGAS evaluation calculated successfully</p>
-        {% else %}
-        <p>System accuracy metrics computed across standard reference query test suites using local heuristics</p>
-        {% endif %}
+        <h1>Retrieval <span>Benchmark</span></h1>
+        <p>How well search ranks the right resumes, measured on labeled recruiter queries</p>
     </div>
 
+{% if not results %}
+    <div class="scorecard-card empty">
+        No benchmark results found yet. Run <code>python benchmark/run_benchmark.py</code> to generate them.
+    </div>
+{% else %}
+    {% macro delta(new, old) -%}
+        {%- set d = new - old -%}
+        <span class="{{ 'up' if d >= 0 else 'down' }}">{{ '+' if d > 0 else '' }}{{ '%.3f' % d }}</span>
+    {%- endmacro %}
+
+    {% if current %}
     <div class="kpi-row">
         <div class="kpi-card">
-            <div class="value">{{ avg_precision }}%</div>
-            <div class="label">Context Precision</div>
+            <div class="value">{{ '%.3f' % current.all.ndcg10 }}</div>
+            <div class="label">nDCG@10</div>
+            {% if original %}<div class="sub">{{ delta(current.all.ndcg10, original.all.ndcg10) }} vs original</div>{% endif %}
         </div>
-        <div class="kpi-card" style="border-left-color: #3178f6;">
-            <div class="value" style="color: #3178f6;">{{ avg_recall }}%</div>
-            <div class="label">Context Recall</div>
+        <div class="kpi-card" style="border-left-color:#3178f6">
+            <div class="value" style="color:#3178f6">{{ '%.3f' % current.all.mrr }}</div>
+            <div class="label">MRR</div>
+            {% if original %}<div class="sub">{{ delta(current.all.mrr, original.all.mrr) }} vs original</div>{% endif %}
         </div>
-        <div class="kpi-card" style="border-left-color: #e2eef4;">
-            <div class="value" style="color: #e2eef4;">
-                {% if is_real_ragas %}
-                <span style="font-size: 24px; color: #69f0ae;">Llama 3</span>
-                {% else %}
-                {{ avg_similarity }}%
-                {% endif %}
-            </div>
-            <div class="label">{% if is_real_ragas %}LLM Judge Mode{% else %}Semantic Similarity{% endif %}</div>
+        <div class="kpi-card" style="border-left-color:#e2eef4">
+            <div class="value" style="color:#e2eef4">{{ '%.0f' % (current.all.p5 * 100) }}%</div>
+            <div class="label">Precision @ 5</div>
+            {% if original %}<div class="sub">{{ delta(current.all.p5, original.all.p5) }} vs original</div>{% endif %}
+        </div>
+        <div class="kpi-card" style="border-left-color:#69f0ae">
+            <div class="value" style="color:#69f0ae">{{ '%.0f' % current.latency_ms }} ms</div>
+            <div class="label">Search latency</div>
+            {% if original %}<div class="sub">{{ '%.0f' % (original.latency_ms / current.latency_ms) }}× faster than original</div>{% endif %}
         </div>
     </div>
-
-    <!-- OpenAI Ragas Trigger Card -->
-    <div class="scorecard-card" style="margin-bottom: 30px; border-left: 4px solid #3178f6;">
-        <div class="scorecard-header">🔑 Run Real RAGAS Evaluation</div>
-        <p style="font-size: 13px; color: #9fbed0; margin-bottom: 15px; line-height: 1.5;">
-            Authenticate with your OpenAI API Key to invoke the actual <strong>RAGAS</strong> framework in the backend. Ragas will use GPT-4/GPT-3.5 models as semantic judges to evaluate your search engine's Context Precision and Context Recall score card.
-        </p>
-        
-        {% if error_msg %}
-            <div style="background: rgba(255, 107, 107, 0.08); border: 1px solid rgba(255, 107, 107, 0.2); color: #ff6b6b; border-radius: 6px; padding: 12px 16px; margin-bottom: 15px; font-size: 13px; font-weight: 500;">
-                ⚠️ {{ error_msg }}
-            </div>
-        {% endif %}
-        
-        {% if success_msg %}
-            <div style="background: rgba(105, 240, 174, 0.08); border: 1px solid rgba(105, 240, 174, 0.2); color: #69f0ae; border-radius: 6px; padding: 12px 16px; margin-bottom: 15px; font-size: 13px; font-weight: 500;">
-                ✅ {{ success_msg }}
-            </div>
-        {% endif %}
-
-        <form action="/evaluate" method="POST" style="display: flex; gap: 10px; flex-wrap: wrap; align-items: center; width: 100%;">
-            <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
-            <select name="eval_mode" id="eval_mode" onchange="toggleEvalMode()" style="height: 42px; background: #13232d; border: 1px solid rgba(255,255,255,0.06); border-radius: 6px; padding: 0 14px; color: #fff; outline: none; font-size: 13px; font-family: 'Inter', sans-serif; cursor: pointer; min-width: 200px;">
-                <option value="openai">OpenAI API (Paid)</option>
-                <option value="ollama">Local Ollama Llama 3 (Free)</option>
-            </select>
-            <input type="password" name="openai_key" id="openai_key" placeholder="Enter your OpenAI API Key (sk-...)" required style="flex-grow: 1; min-width: 280px; height: 42px; background: #13232d; border: 1px solid rgba(255,255,255,0.06); border-radius: 6px; padding: 0 14px; color: #fff; outline: none; font-size: 13px; font-family: 'Inter', sans-serif;">
-            <button type="submit" style="padding: 0 24px; height: 42px; background: #3178f6; color: #fff; font-weight: 700; border: none; border-radius: 6px; cursor: pointer; transition: background 0.15s; font-size: 13px; font-family: 'Inter', sans-serif;" onmouseover="this.style.background='#1475e1'" onmouseout="this.style.background='#3178f6'">Run Ragas Evaluation</button>
-        </form>
-
-        <script>
-            function toggleEvalMode() {
-                var select = document.getElementById("eval_mode");
-                var keyInput = document.getElementById("openai_key");
-                if (select.value === "ollama") {
-                    keyInput.style.display = "none";
-                    keyInput.removeAttribute("required");
-                } else {
-                    keyInput.style.display = "block";
-                    keyInput.setAttribute("required", "");
-                }
-            }
-            // Run toggle check immediately to catch page reloads
-            document.addEventListener("DOMContentLoaded", function() {
-                toggleEvalMode();
-            });
-        </script>
-    </div>
+    {% endif %}
 
     <div class="scorecard-card">
-        <div class="scorecard-header">{% if is_real_ragas %}Real RAGAS Scorecard{% else %}Heuristic Reference Scorecard{% endif %}</div>
+        <div class="scorecard-header">Setups compared</div>
+        <p class="note">
+            {{ results.queries }} labeled queries (2 per job category) against {{ results.index.resumes }} resumes.
+            A result counts as <strong>relevant</strong> when it comes from the query's job category.
+            The original design re-ranked results with a sentence-similarity cross-encoder; it scored lower and ran slower,
+            so the app now uses <strong>dense retrieval only</strong>.
+        </p>
         <div class="table-wrap">
             <table>
                 <thead>
                     <tr>
-                        <th style="width: 5%;">#</th>
-                        <th style="width: 50%;">Test Query</th>
-                        <th style="width: 15%;">{% if is_real_ragas %}Ground Truth{% else %}Expected Cat{% endif %}</th>
-                        <th style="width: 15%;">Context Precision</th>
-                        <th style="width: 15%;">Context Recall</th>
+                        <th>Setup</th>
+                        <th class="num">P@5</th>
+                        <th class="num">P@10</th>
+                        <th class="num">MRR</th>
+                        <th class="num">nDCG@10</th>
+                        <th class="num">Latency</th>
                     </tr>
                 </thead>
                 <tbody>
-                    {% for row in results %}
-                    <tr>
-                        <td>{{ loop.index }}</td>
-                        <td style="font-weight: 500;">{{ row.query or row.question }}</td>
-                        <td><span class="tag tag-dept">{{ row.detected_category or row.ground_truth }}</span></td>
-                        <td class="score-badge">
-                            {% if row.context_precision is not none %}
-                            {{ (row.context_precision * 100) | round(1) }}%
-                            {% else %}
-                            0.0%
-                            {% endif %}
+                    {% for c in results.configs %}
+                    <tr class="{{ 'current' if c.is_current else '' }}">
+                        <td style="font-weight:500">{{ c.label }}
+                            {% if c.is_current %}<span class="tag tag-current">In use</span>{% endif %}
+                            {% if c.is_original %}<span class="tag tag-original">Original</span>{% endif %}
                         </td>
-                        <td class="score-badge" style="color: #3178f6;">
-                            {% if row.context_recall is not none %}
-                            {{ (row.context_recall * 100) | round(1) }}%
-                            {% else %}
-                            0.0%
-                            {% endif %}
-                        </td>
+                        <td class="num">{{ '%.3f' % c.all.p5 }}</td>
+                        <td class="num">{{ '%.3f' % c.all.p10 }}</td>
+                        <td class="num">{{ '%.3f' % c.all.mrr }}</td>
+                        <td class="num score-badge">{{ '%.3f' % c.all.ndcg10 }}</td>
+                        <td class="num">{{ '%.0f' % c.latency_ms }} ms</td>
                     </tr>
                     {% endfor %}
                 </tbody>
             </table>
         </div>
     </div>
+
+    {% if current and current.per_query %}
+    <div class="scorecard-card">
+        <div class="scorecard-header">Query by query (current setup)</div>
+        <p class="note">Job categories of the top 5 results for each query. Green means it matches the query's category.</p>
+        <div class="table-wrap">
+            <table>
+                <thead>
+                    <tr>
+                        <th style="width:4%">#</th>
+                        <th style="width:40%">Query</th>
+                        <th style="width:14%">Category</th>
+                        <th class="num" style="width:7%">P@5</th>
+                        <th class="num" style="width:8%">First hit</th>
+                        <th style="width:27%">Top 5 results</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for q in current.per_query %}
+                    <tr>
+                        <td>{{ loop.index }}</td>
+                        <td style="font-weight:500">{{ q.query }}</td>
+                        <td><span class="tag tag-dept">{{ q.category }}</span></td>
+                        <td class="num score-badge">{{ '%.0f' % (q.p5 * 100) }}%</td>
+                        <td class="num">{{ ('#%d' % q.first_relevant_rank) if q.first_relevant_rank else '—' }}</td>
+                        <td class="cats">{% for cat in q.top5 %}<span class="tag {{ 'tag-hit' if cat == q.category else 'tag-miss' }}">{{ cat }}</span>{% endfor %}</td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+    </div>
+    {% endif %}
+
+    <div class="scorecard-card">
+        <div class="scorecard-header">Reading these numbers</div>
+        <p class="note">
+            <strong>P@5</strong>: share of the top 5 results from the right category.
+            <strong>MRR</strong>: how high the first right result appears (1.0 = always first).
+            <strong>nDCG@10</strong>: overall quality of the top-10 ordering (1.0 = perfect).
+        </p>
+        {% if pipeline.new %}
+        <p class="note">
+            In the app, search first detects the department and only searches inside it. Department detection was right for
+            <strong>{{ '%.1f' % (pipeline.new.detect_acc * 100) }}%</strong> of these queries.
+        </p>
+        {% endif %}
+        <p class="note">
+            Limits: 48 queries is a small set, and category labels can't judge ranking <em>within</em> a department
+            (e.g. Python vs Java engineers). Refresh these results with <code>python benchmark/run_benchmark.py</code>;
+            full tables are in <code>benchmark/RESULTS.md</code>.
+        </p>
+    </div>
+{% endif %}
 </div>
 
 </body>

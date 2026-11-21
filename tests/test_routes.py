@@ -104,20 +104,29 @@ def test_resume_download_path_traversal(authenticated_client):
         assert res.status_code == 404
 
 
-def test_evaluate_dashboard_get(authenticated_client):
-    """Verifies the RAGAS evaluation dashboard loads with metrics."""
+def test_evaluate_dashboard_shows_benchmark(authenticated_client):
+    """The evaluation page renders the saved benchmark results (no computation on load)."""
     res = authenticated_client.get("/evaluate")
     assert res.status_code == 200
-    assert b"RAGAS" in res.data
-    assert b"Context Precision" in res.data
-    assert b"Context Recall" in res.data
+    assert b"Retrieval" in res.data and b"Benchmark" in res.data
+    assert b"nDCG@10" in res.data
+    assert b"In use" in res.data          # current default is highlighted
+    assert b"Query by query" in res.data  # per-query table
 
 
-def test_evaluate_dashboard_post_missing_key(authenticated_client):
-    """Verifies requesting OpenAI evaluation without a key triggers validation error."""
-    res = authenticated_client.post("/evaluate", data={
-        "eval_mode": "openai",
-        "openai_key": ""
-    })
+def test_evaluate_dashboard_without_results(test_app, authenticated_client, tmp_path):
+    """If the benchmark hasn't been run, the page explains how to generate results."""
+    original = test_app.config["BENCHMARK_RESULTS"]
+    test_app.config["BENCHMARK_RESULTS"] = str(tmp_path / "missing.json")
+    try:
+        res = authenticated_client.get("/evaluate")
+    finally:
+        test_app.config["BENCHMARK_RESULTS"] = original
     assert res.status_code == 200
-    assert b"Please enter a valid OpenAI API Key" in res.data
+    assert b"No benchmark results found yet" in res.data
+
+
+def test_evaluate_dashboard_no_longer_accepts_posts(authenticated_client):
+    """The old in-browser RAGAS form (which took an API key) is gone."""
+    res = authenticated_client.post("/evaluate", data={"eval_mode": "openai", "openai_key": "sk-test"})
+    assert res.status_code == 405

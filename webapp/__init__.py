@@ -37,7 +37,7 @@ def create_app(config=None):
         DATABASE="users.db",
         UPLOAD_FOLDER="uploads",
         HISTORY_FILE="recent_analyses.json",
-        EVAL_CACHE_FILE="evaluation_cache.json",
+        BENCHMARK_RESULTS=os.path.join(root, "benchmark", "results.json"),
     )
     if config:
         app.config.update(config)

@@ -8,7 +8,7 @@ Pipeline (see search_candidates):
 
 Re-ranking is OFF by default. On benchmark/run_benchmark.py (48 labeled queries),
 dense retrieval alone scored best (nDCG@10 0.516) while the previous STS cross-encoder
-re-ranker lowered it to 0.408 and was ~10x slower; no re-ranker tested clearly beat
+re-ranker lowered it to 0.408 and was 10-20x slower; no re-ranker tested clearly beat
 dense alone. See benchmark/RESULTS.md. Set RESUME_RERANK=1 to turn re-ranking on.
 """
 import os

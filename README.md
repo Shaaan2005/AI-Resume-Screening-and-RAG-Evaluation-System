@@ -10,7 +10,7 @@
 [![Cost](https://img.shields.io/badge/Cloud%20Cost-%240.00%20(100%25%20Offline)-brightgreen?style=for-the-badge)](https://ollama.com)
 
 **A privacy-first AI platform for resume screening, semantic candidate ranking, and offline RAG evaluation.**  
-Combines dense vector search (`all-mpnet-base-v2`), cross-encoder department detection, a reproducible retrieval benchmark, and local LLM evaluation (`Ollama Llama 3`) with zero cloud data leaks.
+Combines dense vector search (`all-mpnet-base-v2`), cross-encoder department detection, a reproducible retrieval benchmark, and optional local LLM evaluation (`Ollama Llama 3`) with zero cloud data leaks.
 
 [Key Features](#-key-features) • [System Architecture](#-system-architecture) • [Benchmark](#-retrieval-benchmark) • [Demo Walkthrough](#-demo-walkthrough) • [Security](#-security-hardening) • [Quick Start](#-quick-start-guide) • [Tests](#-automated-tests)
 
@@ -62,12 +62,11 @@ flowchart TD
         I -.-> K
     end
 
-    subgraph EVALUATION ["3. Privacy-First Offline RAGAS Evaluation"]
-        K --> L["📊 Benchmark Queries (10 Departments)"]
-        L --> M["🦙 Local Ollama (Llama 3 LLM Judge)"]:::eval
-        L --> N["🤗 HuggingFace Embeddings (all-MiniLM-L6-v2)"]:::eval
-        M --> O["📈 Context Precision & Context Recall"]:::eval
-        N --> O
+    subgraph EVALUATION ["3. Evaluation"]
+        K --> L["📊 48 Labeled Benchmark Queries (24 Departments)"]:::eval
+        L --> M["📏 P@5 / MRR / nDCG@10 / Latency"]:::eval
+        M --> O["🖥️ /evaluate Dashboard (loads instantly)"]:::eval
+        L -.-> N["🦙 Optional CLI: RAGAS with local Llama 3 judge"]:::eval
     end
 ```
 
@@ -79,12 +78,12 @@ Every ranking choice in this project is measured with a reproducible benchmark (
 
 | Setup | P@5 | MRR | nDCG@10 | Latency |
 | :--- | ---: | ---: | ---: | ---: |
-| **Dense retrieval only (current default)** | **0.550** | **0.835** | **0.516** | **34 ms** |
-| STS cross-encoder + 30% keywords (original design) | 0.442 | 0.656 | 0.408 | 356 ms |
-| MS MARCO MiniLM re-ranker | 0.550 | 0.774 | 0.499 | 153 ms |
-| BGE reranker base | 0.512 | 0.793 | 0.478 | 641 ms |
+| **Dense retrieval only (current default)** | **0.550** | **0.835** | **0.516** | **19 ms** |
+| STS cross-encoder + 30% keywords (original design) | 0.442 | 0.656 | 0.408 | 337 ms |
+| MS MARCO MiniLM re-ranker | 0.550 | 0.774 | 0.499 | 148 ms |
+| BGE reranker base | 0.512 | 0.793 | 0.478 | 670 ms |
 
-**What it showed:** the original re-ranking stage made results *worse* (nDCG@10 0.516 → 0.408) while making search ~10× slower. The STS model it used was trained for sentence similarity, not search relevance. Search-tuned re-rankers (MS MARCO, BGE), BM25 keyword blending, and blending re-ranker and dense scores all came out within noise of plain dense retrieval. So **re-ranking is now off by default** and available as an option (`RESUME_RERANK=1`, MS MARCO MiniLM).
+**What it showed:** the original re-ranking stage made results *worse* (nDCG@10 0.516 → 0.408) while making search 10–20× slower (timings vary between runs). The STS model it used was trained for sentence similarity, not search relevance. Search-tuned re-rankers (MS MARCO, BGE), BM25 keyword blending, and blending re-ranker and dense scores all came out within noise of plain dense retrieval. So **re-ranking is now off by default** and available as an option (`RESUME_RERANK=1`, MS MARCO MiniLM).
 
 **Limits:** 48 queries is small, and category labels can't measure ranking *within* a department (e.g. Python vs. Java engineers), which is where a re-ranker could still help. Full tables, including the held-out test split and blend weights: [`benchmark/RESULTS.md`](benchmark/RESULTS.md).
 
@@ -106,8 +105,8 @@ python benchmark/run_benchmark.py            # add --rebuild to rebuild its inde
   * Whitelisted category verification to prevent directory/path traversal attacks.
   * Parameterized database access preventing SQL injection.
 * **🛡️ Robust Error Handling:** Centralized custom error handlers (`400`, `403`, `404`, `413`, `500`), bounded cosine similarity domains, and graceful fallbacks if vector models disconnect.
-* **🧪 55-Test Automated Pytest Suite:** Complete automated test suite verifying auth flows, file extraction, vector search, security, and route boundaries.
-* **📊 10-Department RAGAS Evaluation Dashboard:** Integrated `/evaluate` page computing **Context Precision** and **Context Recall** across 10 benchmark queries offline.
+* **🧪 56-Test Automated Pytest Suite:** Complete automated test suite verifying auth flows, file extraction, vector search, security, and route boundaries.
+* **📊 Benchmark Dashboard:** The `/evaluate` page shows the retrieval benchmark instantly: every setup compared, plus query-by-query results. LLM-judged RAGAS scoring is available from the command line.
 
 ---
 
@@ -118,9 +117,9 @@ python benchmark/run_benchmark.py            # add --rebuild to rebuild its inde
 * **Embedding Model:** `sentence-transformers` (`all-mpnet-base-v2`, 768 dimensions)
 * **Department Detection:** `cross-encoder/stsb-distilroberta-base`
 * **Optional Re-Ranker:** `cross-encoder/ms-marco-MiniLM-L-6-v2` (+ `rank_bm25` keyword blend)
-* **Local LLM Judge:** Ollama (`llama3`)
+* **Optional LLM Judge (CLI):** Ollama (`llama3`)
 * **Evaluation Framework:** RAGAS, `langchain-ollama`, `langchain-community`
-* **Testing:** Pytest (55 unit and integration tests)
+* **Testing:** Pytest (56 unit and integration tests)
 
 ---
 
@@ -137,7 +136,7 @@ The sample resumes in `resumes/` are a subset of the **[Resume Dataset](https://
 
 ### 1. Prerequisites
 * Python 3.11 or higher (CI runs on 3.14)
-* [Ollama Installed](https://ollama.com/) (Optional for live LLM judge)
+* [Ollama Installed](https://ollama.com/) (optional, only for `evaluate_ragas.py --judge ollama`)
   ```bash
   ollama pull llama3
   ```
@@ -190,14 +189,14 @@ webapp/             # Flask app factory + blueprints
   auth.py           #   /login, /register, /logout
   search.py         #   /, /search, /resume/<category>/<file>
   upload.py         #   /upload (validate, score, index a single resume)
-  evaluate.py       #   /evaluate (heuristic + RAGAS dashboard)
+  evaluate.py       #   /evaluate (benchmark dashboard)
   security.py       #   CSRF, login_required, error pages, secret key
   db.py, history.py #   SQLite users, recent-analyses history
 query_parsing.py    # Category detection, requested-count parsing, garbage filtering
 chroma_search.py    # Dense retrieval over ChromaDB; optional re-ranking + BM25 blend
 resume_engine.py    # PDF/DOCX extraction, chunking, role-specific skill scoring
 vector_store.py     # Rebuilds the ChromaDB index from resumes/
-evaluate_ragas.py   # RAGAS / heuristic evaluation behind the /evaluate dashboard
+evaluate_ragas.py   # Optional CLI: heuristic + LLM-judged RAGAS evaluation
 benchmark/          # Ranking benchmark: labeled queries, runner, RESULTS.md
 tests/              # Pytest suite (run in CI via .github/workflows/tests.yml)
 scripts/            # Diagnostic scripts (skill scores, category detection checks)
@@ -208,7 +207,7 @@ docs/               # Internship project report and its generator
 
 ## 🧪 Running Automated Tests
 
-Run the full 55-test suite:
+Run the full 56-test suite:
 
 ```bash
 python -m pytest -v
@@ -218,28 +217,24 @@ python -m pytest -v
 - **`tests/test_auth.py` (13 tests):** User registration, RFC email validation, password rules, login sessions, and route protection.
 - **`tests/test_resume_processing.py` (9 tests):** Document extraction, corrupted PDF defense, sliding text chunking, whole-word skill matching, and role-specific skill scoring.
 - **`tests/test_ai_pipeline.py` (14 tests):** Keyword-coverage matching, technical acronym preservation (`C++`, `Go`), semantic similarity bounds, garbage query suppression, dense-only default, re-ranked-first ordering, and BM25 score normalisation.
-- **`tests/test_routes.py` (13 tests):** HTTP route boundaries, file size limits, magic-byte upload validation, and path traversal downloads.
+- **`tests/test_routes.py` (14 tests):** HTTP route boundaries, file size limits, magic-byte upload validation, path traversal downloads, and the benchmark dashboard.
 - **`tests/test_security.py` (6 tests):** CSRF enforcement, password hashing verification, secure cookie headers, and error page sanitization.
 
-**Status:** `55 passed` ✅ (also run on every push by GitHub Actions)
+**Status:** `56 passed` ✅ (also run on every push by GitHub Actions)
 
 ---
 
-## 📊 RAGAS Evaluation Dashboard
+## 📊 Evaluation
 
-Navigate to `http://127.0.0.1:5000/evaluate` to view retrieval benchmark metrics:
+**Dashboard:** open `http://127.0.0.1:5000/evaluate`. It shows the saved [Retrieval Benchmark](#-retrieval-benchmark) results instantly: headline scores for the setup in use, every setup compared, and how each of the 48 queries did. To refresh the numbers, run `python benchmark/run_benchmark.py`.
 
+**Optional LLM-judged RAGAS (command line):** RAGAS asks a language model to grade each retrieved resume, which is slow on local hardware (roughly 10–20 minutes with Llama 3), so it isn't part of the web page.
+
+```bash
+python evaluate_ragas.py                  # fast heuristic check only
+python evaluate_ragas.py --judge ollama   # + RAGAS with local Llama 3 (free; needs `ollama pull llama3`)
+python evaluate_ragas.py --judge openai   # + RAGAS with OpenAI (reads OPENAI_API_KEY)
 ```
-+--------------------------------------------------------------------------+
-| BENCHMARK RESULTS (10 Department Reference Suite)                        |
-| • Context Recall:     93.33% (Near-perfect retrieval of required skills) |
-| • Context Precision:  50.00%                                              |
-| • Cloud API Cost:     $0.00  (100% on-premise execution via Ollama)      |
-| • Execution Time:     ~30s   (Fast local evaluation)                     |
-+--------------------------------------------------------------------------+
-```
-
-These figures were recorded with the original re-ranking setup; the dashboard's **Recalculate** button refreshes them against the current pipeline. They check whether key skills appear in short result previews, so they are a coarse signal. For ranking quality, see the [Retrieval Benchmark](#-retrieval-benchmark).
 
 ---
 

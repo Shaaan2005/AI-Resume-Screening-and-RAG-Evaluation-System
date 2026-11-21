@@ -80,6 +80,22 @@ def ndcg_at(rel, k, n_relevant):
     return dcg / ideal if ideal else 0.0
 
 
+def per_query_rows(queries, rankings_per_query):
+    """Per-query detail for the dashboard: P@5, first relevant rank, top-5 categories."""
+    rows = []
+    for q, ranking in zip(queries, rankings_per_query):
+        rel = [int(r["category"] == q["category"]) for r in ranking]
+        first = next((i for i, r in enumerate(rel, 1) if r), None)
+        rows.append({
+            "query": q["query"],
+            "category": q["category"],
+            "p5": precision_at(rel, 5),
+            "first_relevant_rank": first,
+            "top5": [r["category"] for r in ranking[:5]],
+        })
+    return rows
+
+
 def score_run(queries, rankings_per_query, category_sizes):
     rows = []
     for q, ranking in zip(queries, rankings_per_query):
@@ -169,6 +185,7 @@ def main():
             "test": score_run(test, rankings[1::2], category_sizes),
             "latency_ms": latency,
             "kwargs": kwargs,
+            "per_query": per_query_rows(queries, rankings),
         }
         results["configs"].append(row)
         print(f"{label:42s} P@5 {fmt(row['all']['p5'])}  MRR {fmt(row['all']['mrr'])}  "

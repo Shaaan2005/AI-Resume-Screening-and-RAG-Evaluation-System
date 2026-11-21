@@ -2,8 +2,12 @@
 
 Evaluates Context Precision and Context Recall of the resume screening retriever.
 Supports:
-1. Real Ragas evaluation (requires OpenAI Key or running Ollama).
-2. Local Heuristic evaluation (runs instantly offline without external API keys).
+1. Local heuristic evaluation (fast, offline, no API keys) - the default.
+2. Real RAGAS evaluation with an LLM judge: `--judge ollama` (free, local Llama 3, slow)
+   or `--judge openai` (reads OPENAI_API_KEY).
+
+Usage:  python evaluate_ragas.py [--judge none|ollama|openai]
+For ranking quality, prefer benchmark/run_benchmark.py (shown on the /evaluate page).
 """
 import os
 import sys
@@ -301,6 +305,12 @@ def get_real_ragas_scorecard(openai_key=None, use_ollama=False):
     return results, avg_precision, avg_recall
 
 def main():
+    import argparse
+    parser = argparse.ArgumentParser(description="Heuristic + optional LLM-judged (RAGAS) retrieval evaluation.")
+    parser.add_argument("--judge", choices=["none", "ollama", "openai"], default="none",
+                        help="LLM judge for RAGAS: none (default, fast), ollama (free, local), openai (paid)")
+    args = parser.parse_args()
+
     print("=" * 100)
     print("                      RESUME RETRIEVAL PIPELINE EVALUATION")
     print("=" * 100)
@@ -331,27 +341,29 @@ def main():
     print(f"Average Context Recall:    {avg_recall:.4f}")
     print(f"Average Embed Similarity:  {avg_similarity:.4f}")
 
-    # Run real Ragas check
-    from query_parsing import detect_category
-    dataset_records = []
-    for item in TEST_SUITE:
-        detected = detect_category(item["query"])
-        rankings = search_candidates(item["query"], category=detected)
-        contexts = [r["preview"] for r in rankings]
-        dataset_records.append({
-            "question": item["query"],
-            "contexts": contexts,
-            "ground_truth": item["expected_category"]
-        })
-        
+    if args.judge == "none":
+        print("\nSkipping the LLM-judged RAGAS run. Add --judge ollama (free, local, slow) "
+              "or --judge openai (needs OPENAI_API_KEY) to run it.")
+        return
+
     print("\n" + "=" * 100)
-    print("                                   RAGAS SYSTEM DETECT")
+    print(f"                    RAGAS (LLM judge: {args.judge}) - this can take 10-20 minutes")
     print("=" * 100)
-    ragas_df = run_ragas_evaluation(dataset_records)
-    
-    if ragas_df is not None:
-        print("\n[RAGAS RESULTS]")
-        print(ragas_df.to_string(index=False))
-    
+    if args.judge == "openai":
+        key = os.environ.get("OPENAI_API_KEY")
+        if not key:
+            print("[ERROR] Set the OPENAI_API_KEY environment variable to use --judge openai.")
+            sys.exit(1)
+        r_results, r_precision, r_recall = get_real_ragas_scorecard(openai_key=key)
+    else:
+        r_results, r_precision, r_recall = get_real_ragas_scorecard(use_ollama=True)
+
+    for i, r in enumerate(r_results, 1):
+        print(f"{i:<2} {r.get('question', r.get('query', ''))}")
+        print(f"   Precision: {r.get('context_precision', 0) or 0:.4f}  Recall: {r.get('context_recall', 0) or 0:.4f}")
+    print(f"\nRAGAS Context Precision: {r_precision:.4f}")
+    print(f"RAGAS Context Recall:    {r_recall:.4f}")
+
+
 if __name__ == "__main__":
     main()
