@@ -1,7 +1,10 @@
-"""Test category detection using the Cross-Encoder model from app.py."""
+"""Test category detection using the Cross-Encoder model in query_parsing.py."""
 import sys
 import os
-sys.path.insert(0, os.path.dirname(__file__))
+# Run from anywhere: resolve imports and relative paths against the repo root.
+ROOT = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
+sys.path.insert(0, ROOT)
+os.chdir(ROOT)
 
 # Import the single-layer Cross-Encoder detection function
 from query_parsing import detect_category

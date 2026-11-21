@@ -229,7 +229,8 @@ def create_report_docx():
     add_bullet("Sir Mahendra Kumar Gurve (Project Mentor) for his continuous guidance, constructive feedback during our 12:00 PM daily standups, and mentorship throughout the project.")
     add_bullet("International Institute of Information Technology, Naya Raipur (IIIT-NR) for providing academic support during my 7th semester.")
 
-    output_filename = "Internship_Project_Report_Utkarsh_Rai_Final.docx"
+    output_filename = os.path.join(os.path.dirname(os.path.abspath(__file__)),
+                                   "Internship_Project_Report_Utkarsh_Rai_Final.docx")
     doc.save(output_filename)
     print(f"Successfully generated Word document: {os.path.abspath(output_filename)}")
 

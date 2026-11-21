@@ -1,7 +1,10 @@
 """Run 50 diverse queries through detect_category() to check department detection."""
 import sys
 import os
-sys.path.insert(0, os.path.dirname(__file__))
+# Run from anywhere: resolve imports and relative paths against the repo root.
+ROOT = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
+sys.path.insert(0, ROOT)
+os.chdir(ROOT)
 
 from query_parsing import detect_category, _CAT_DESCRIPTIONS
 from chroma_search import get_cross_encoder

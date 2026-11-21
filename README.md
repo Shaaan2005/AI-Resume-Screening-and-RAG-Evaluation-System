@@ -5,7 +5,7 @@
 [![Python](https://img.shields.io/badge/Python-3.10%20%7C%203.11%20%7C%203.12%20%7C%203.14-3776AB?style=for-the-badge&logo=python&logoColor=white)](https://python.org)
 [![Flask](https://img.shields.io/badge/Flask-2.0+-000000?style=for-the-badge&logo=flask&logoColor=white)](https://flask.palletsprojects.com/)
 [![ChromaDB](https://img.shields.io/badge/Vector%20Store-ChromaDB-FF6F61?style=for-the-badge&logo=databricks&logoColor=white)](https://www.trychroma.com/)
-[![Tests](https://img.shields.io/badge/Tests-52%20Passed-success?style=for-the-badge&logo=pytest&logoColor=white)](https://pytest.org)
+[![Tests](https://img.shields.io/github/actions/workflow/status/Shaaan2005/AI-Resume-Screening-and-RAG-Evaluation-System/tests.yml?branch=main&style=for-the-badge&logo=pytest&logoColor=white&label=Tests)](https://github.com/Shaaan2005/AI-Resume-Screening-and-RAG-Evaluation-System/actions/workflows/tests.yml)
 [![RAGAS](https://img.shields.io/badge/Evaluation-RAGAS%20%2B%20Ollama-blueviolet?style=for-the-badge)](https://github.com/explodinggradients/ragas)
 [![Cost](https://img.shields.io/badge/Cloud%20Cost-%240.00%20(100%25%20Offline)-brightgreen?style=for-the-badge)](https://ollama.com)
 
@@ -117,7 +117,7 @@ flowchart TD
 ## 🚀 Quick Start Guide
 
 ### 1. Prerequisites
-* Python 3.10 or higher
+* Python 3.11 or higher (CI runs on 3.14)
 * [Ollama Installed](https://ollama.com/) (Optional for live LLM judge)
   ```bash
   ollama pull llama3
@@ -143,7 +143,13 @@ export OPENAI_API_KEY="sk-..."
 ```
 *(If `FLASK_SECRET_KEY` is not provided, the application auto-generates a persistent 32-byte cryptographic key in `.secret_key`.)*
 
-### 4. Running the Application
+### 4. Building the Search Index
+The vector index is not committed. Build it once from the sample resumes in `resumes/` (takes a few minutes):
+```bash
+python vector_store.py
+```
+
+### 5. Running the Application
 ```bash
 # Start Flask Application
 python app.py
@@ -173,7 +179,9 @@ chroma_search.py    # Two-stage retrieval: ChromaDB + cross-encoder re-rank + hy
 resume_engine.py    # PDF/DOCX extraction, chunking, role-specific skill scoring
 vector_store.py     # Rebuilds the ChromaDB index from resumes/
 evaluate_ragas.py   # Offline retrieval benchmark
-tests/              # Pytest suite
+tests/              # Pytest suite (run in CI via .github/workflows/tests.yml)
+scripts/            # Diagnostic scripts (skill scores, category detection checks)
+docs/               # Internship project report and its generator
 ```
 
 ---
