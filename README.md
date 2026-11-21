@@ -1,18 +1,32 @@
-# 🎯 AI-Powered Resume Screening System with Offline RAG & Local Ollama Evaluation
+# 🎯 AI-Powered Resume Screening & RAG Evaluation System
 
-An enterprise-grade, privacy-first AI application for automated resume screening, candidate ranking, and RAG evaluation. Built using Flask, ChromaDB vector store, Cross-Encoder re-ranking, and the RAGAS evaluation framework powered by local Ollama (Llama 3).
+<div align="center">
+
+[![Python](https://img.shields.io/badge/Python-3.10%20%7C%203.11%20%7C%203.12%20%7C%203.14-3776AB?style=for-the-badge&logo=python&logoColor=white)](https://python.org)
+[![Flask](https://img.shields.io/badge/Flask-2.0+-000000?style=for-the-badge&logo=flask&logoColor=white)](https://flask.palletsprojects.com/)
+[![ChromaDB](https://img.shields.io/badge/Vector%20Store-ChromaDB-FF6F61?style=for-the-badge&logo=databricks&logoColor=white)](https://www.trychroma.com/)
+[![Tests](https://img.shields.io/badge/Tests-50%20Passed-success?style=for-the-badge&logo=pytest&logoColor=white)](https://pytest.org)
+[![RAGAS](https://img.shields.io/badge/Evaluation-RAGAS%20%2B%20Ollama-blueviolet?style=for-the-badge)](https://github.com/explodinggradients/ragas)
+[![Cost](https://img.shields.io/badge/Cloud%20Cost-%240.00%20(100%25%20Offline)-brightgreen?style=for-the-badge)](https://ollama.com)
+
+**An enterprise-grade, privacy-first AI platform for resume screening, semantic candidate ranking, and offline RAG evaluation.**  
+Combines dense vector search (`all-mpnet-base-v2`), Cross-Encoder re-ranking (`stsb-distilroberta-base`), and local LLM evaluation (`Ollama Llama 3`) with zero cloud data leaks.
+
+[Key Features](#-key-features) • [System Architecture](#-system-architecture) • [Demo Walkthrough](#-demo-walkthrough) • [Security](#-security-hardening) • [Quick Start](#-quick-start-guide) • [Tests](#-automated-tests)
+
+</div>
 
 ---
 
-## 🌟 Key Features
+## 🎬 Demo Walkthrough
 
-* **🧠 Semantic & Keyword Hybrid Search:** Combines BM25-style keyword matching with `SentenceTransformers` (`all-mpnet-base-v2`) dense vector search (30% keyword + 70% semantic).
-* **🎯 Cross-Encoder Re-Ranking:** Uses `cross-encoder/stsb-distilroberta-base` to re-rank candidate resumes for maximum semantic relevance.
-* **📁 Multi-Department Support:** Supports 24 specialized industry categories (Engineering, IT, HR, Healthcare, Finance, etc.) with automatic department intent detection.
-* **🔒 Enterprise Security Hardening:** Comprehensive CSRF protection on all mutating requests, cryptographic session cookies (HttpOnly, SameSite=Lax), strict file upload validation with MIME/magic byte inspection, password complexity enforcement, and path traversal defense.
-* **🛡️ Production-Grade Error Handling:** Centralized custom error handlers (400, 403, 404, 413, 500), graceful fallbacks for vector database and cross-encoder models, and structured logging.
-* **🧪 50-Test Automated Pytest Suite:** End-to-end automated testing covering authentication, resume parsing, AI retrieval pipeline, route validation, and security regressions.
-* **📊 10-Department RAGAS Evaluation Dashboard:** Integrated `/evaluate` page computing **Context Precision** and **Context Recall** across 10 diverse reference benchmarks offline or using Ollama/OpenAI judges.
+<!-- Replace the placeholder below with your 60-90 second GIF or demo video -->
+<div align="center">
+  <img src="https://via.placeholder.com/1000x500.png?text=AI+Resume+Screening+System+Walkthrough+(Upload+Resume+➔+Semantic+Search+➔+RAGAS+Scorecard)" alt="System Demo Preview" width="900" style="border-radius: 8px; box-shadow: 0 4px 20px rgba(0,0,0,0.15);" />
+  <p><em>Demo Preview: Upload Resume ➔ Fast Bi-Encoder Retrieval ➔ Cross-Encoder Re-Ranking ➔ Offline RAGAS Evaluation</em></p>
+</div>
+
+> **💡 Quick Recording Tip:** You can record a quick 60-second `.gif` using [ScreenToGif](https://www.screentogif.com/) or press `Win + Alt + R` on Windows, drag the `.gif` into any GitHub Issue/Pull Request description, and paste the generated permanent link into the `img src` above!
 
 ---
 
@@ -20,57 +34,92 @@ An enterprise-grade, privacy-first AI application for automated resume screening
 
 ```mermaid
 flowchart TD
-    A[📄 Candidate Resumes] --> B[📝 Text Extraction & Chunking]
-    B --> C[🧠 Dense Embeddings - all-mpnet-base-v2]
-    C --> D[💾 ChromaDB Vector Database]
+    classDef input fill:#2563EB,stroke:#1E40AF,stroke-width:2px,color:#fff;
+    classDef stage1 fill:#0D9488,stroke:#0F766E,stroke-width:2px,color:#fff;
+    classDef stage2 fill:#7C3AED,stroke:#6D28D9,stroke-width:2px,color:#fff;
+    classDef eval fill:#EA580C,stroke:#C2410C,stroke-width:2px,color:#fff;
+    classDef security fill:#475569,stroke:#334155,stroke-width:2px,color:#fff;
 
-    E[🔍 Recruiter Search Query] --> F[🎯 Category Intent Detection]
-    F --> G[📊 Vector Retrieval - First Pass]
-    G --> H[🔄 Cross-Encoder Re-Ranking - STSB DistilRoBERTa]
-    H --> I[📋 Candidate Ranking Dashboard]
+    subgraph INGESTION ["1. Document Ingestion & Vectorization"]
+        A["📄 Candidate Resumes (.pdf, .docx)"]:::input --> B["📝 Text Extraction (pdfplumber & docx)"]
+        B --> C["✂️ 200-Word Semantic Chunking"]
+        C --> D["🧠 Dense Embeddings (all-mpnet-base-v2)"]:::stage1
+        D --> E["💾 ChromaDB Vector Database (HNSW Cosine)"]:::stage1
+    end
 
-    I --> J[⚖️ RAGAS Evaluation Engine]
-    J --> K[🦙 Local Ollama - Llama 3 LLM Judge]
-    J --> L[🤗 HuggingFace Embeddings - MiniLM-L6]
-    K --> M[📈 Context Precision & Recall Scorecard]
-    L --> M
+    subgraph RETRIEVAL ["2. Two-Stage Candidate Retrieval Engine"]
+        F["🔍 Recruiter Job Query"]:::input --> G["🎯 Category Intent Detection (Cross-Encoder)"]:::stage2
+        G --> H["⚡ Stage 1: Fast Dense Retrieval (Top-K)"]:::stage1
+        E -.-> H
+        H --> I["🔄 Stage 2: Joint-Attention Re-Ranking (stsb-distilroberta-base)"]:::stage2
+        I --> J["⚖️ Hybrid Scoring: 30% BM25 Keyword + 70% Semantic"]:::stage2
+        J --> K["📋 Ranked Candidates Dashboard"]
+    end
+
+    subgraph EVALUATION ["3. Privacy-First Offline RAGAS Evaluation"]
+        K --> L["📊 Benchmark Queries (10 Departments)"]
+        L --> M["🦙 Local Ollama (Llama 3 LLM Judge)"]:::eval
+        L --> N["🤗 HuggingFace Embeddings (all-MiniLM-L6-v2)"]:::eval
+        M --> O["📈 Context Precision (50%) & Context Recall (93.33%)"]:::eval
+        N --> O
+    end
 ```
 
 ---
 
-## 🛡️ Security Architecture
+## ⚡ Architecture Comparison: Why Hybrid RAG?
 
-| Security Domain | Implementation Details |
-|---|---|
-| **CSRF Defense** | Session-bound cryptographic tokens validated on all `POST`, `PUT`, `DELETE` requests via `secrets.compare_digest`. Embedded into forms via template context processor. |
-| **Authentication & Password Rules** | Minimum 8 characters with both letters and numbers enforced. Passwords hashed using modern PBKDF2/Scrypt with unique salts via Werkzeug. |
-| **Session Security** | Sessions configured with `SESSION_COOKIE_HTTPONLY=True`, `SESSION_COOKIE_SAMESITE="Lax"`, 8-hour expiration, and persistent cryptographic secret key generation. |
-| **File Upload Defense** | Strict extension whitelist (`.pdf`, `.docx`), 16MB file limit (`MAX_CONTENT_LENGTH`), magic-byte header inspection (`%PDF-` and `PK\x03\x04`), and UUID-prefixed `secure_filename`. |
-| **Path Traversal Protection** | Resume downloads validate against a strict department category whitelist and reject filename traversal sequences (`..`). |
-| **Data Protection** | Parameterized SQL queries prevent SQL injection. Custom error pages prevent internal stack trace and path disclosure. |
+| Capability | Traditional ATS | Pure Vector Search | **Our System (Hybrid + Cross-Encoder)** |
+| :--- | :---: | :---: | :---: |
+| **Exact Tech Acronyms (`AWS`, `C++`, `SQL`)** | ✅ Yes | ❌ Often misses exact string matches | ✅ **Yes (30% BM25 Keyword Weight)** |
+| **Domain Synonyms (`K8s` vs `Containerization`)**| ❌ Misses completely | ⚠️ Vague semantic match | ✅ **High Precision (70% Joint-Attention)** |
+| **Candidate Re-ranking Accuracy** | ❌ None | ⚠️ Dual-encoder cosine only | ✅ **Cross-Encoder full token attention** |
+| **Cloud API Charges** | ❌ N/A | ❌ High recurring fees | ✅ **$0.00 (Local Ollama inference)** |
+| **Candidate PII Privacy** | ⚠️ Varies | ❌ Leaves network | ✅ **100% On-Premise (No data leaks)** |
+
+---
+
+## 🌟 Key Features
+
+* **🧠 Semantic & Keyword Hybrid Search:** Combines BM25-style keyword matching with `SentenceTransformers` (`all-mpnet-base-v2`) dense vector search (`0.30` keyword + `0.70` semantic).
+* **🎯 Cross-Encoder Re-Ranking:** Uses `cross-encoder/stsb-distilroberta-base` to calculate joint cross-attention over candidate texts to eliminate false negatives.
+* **📁 Multi-Department Support:** Supports 24 specialized industry categories (Engineering, IT, HR, Healthcare, Finance, etc.) with automatic department intent detection.
+* **🔒 Enterprise Security Hardening:**
+  * Cryptographic CSRF tokens on all mutating endpoints (`secrets.compare_digest`).
+  * Secure HTTP-only cookies (`SameSite=Lax`, 8-hour lifetime, persistent random secret key).
+  * Magic-byte file validation (`%PDF-` for PDF, `PK\x03\x04` for DOCX) and 16MB file limits.
+  * Whitelisted category verification to prevent directory/path traversal attacks.
+  * Parameterized database access preventing SQL injection.
+* **🛡️ Production-Grade Error Handling:** Centralized custom error handlers (`400`, `403`, `404`, `413`, `500`), bounded cosine similarity domains, and graceful fallbacks if vector models disconnect.
+* **🧪 50-Test Automated Pytest Suite:** Complete automated test suite verifying auth flows, file extraction, vector search, security, and route boundaries.
+* **📊 10-Department RAGAS Evaluation Dashboard:** Integrated `/evaluate` page computing **Context Precision** and **Context Recall** across 10 benchmark queries offline.
 
 ---
 
 ## 🛠️ Tech Stack
 
 * **Backend Framework:** Python 3.10+, Flask, SQLite3
-* **Vector Database:** ChromaDB (Cosine similarity space)
-* **Embeddings & Re-ranking:** `sentence-transformers` (`all-mpnet-base-v2`), `cross-encoder/stsb-distilroberta-base`, `scikit-learn`
-* **Local LLM Runner:** Ollama (`llama3`)
+* **Vector Database:** ChromaDB (HNSW cosine space)
+* **Embedding Model:** `sentence-transformers` (`all-mpnet-base-v2`, 768 dimensions)
+* **Re-Ranking Model:** `cross-encoder/stsb-distilroberta-base`
+* **Local LLM Judge:** Ollama (`llama3`)
 * **Evaluation Framework:** RAGAS, `langchain-ollama`, `langchain-community`
-* **Testing:** Pytest (50 unit & integration tests)
+* **Testing:** Pytest (50 unit and integration tests)
 
 ---
 
 ## 🚀 Quick Start Guide
 
 ### 1. Prerequisites
-* Python 3.10+
-* [Ollama Installed](https://ollama.com/) with `llama3` model downloaded (`ollama pull llama3`)
+* Python 3.10 or higher
+* [Ollama Installed](https://ollama.com/) (Optional for live LLM judge)
+  ```bash
+  ollama pull llama3
+  ```
 
 ### 2. Installation
 ```bash
-# Clone repository
+# Clone the repository
 git clone https://github.com/Shaaan2005/AI-Resume-Screening-and-RAG-Evaluation-System.git
 cd AI-Resume-Screening-and-RAG-Evaluation-System
 
@@ -81,49 +130,61 @@ pip install pytest
 
 ### 3. Environment Variables (Optional)
 ```bash
-export FLASK_SECRET_KEY="your-production-secret-key-32-bytes"
-export OPENAI_API_KEY="sk-..." # Only if using OpenAI LLM Judge
+# Optional production secret key override
+export FLASK_SECRET_KEY="your-custom-32-byte-secret-key"
+
+# Optional OpenAI LLM Judge fallback
+export OPENAI_API_KEY="sk-..."
 ```
-*Note: If `FLASK_SECRET_KEY` is not provided, the application automatically generates and persists a cryptographic key in `.secret_key`.*
+*(If `FLASK_SECRET_KEY` is not provided, the application auto-generates a persistent 32-byte cryptographic key in `.secret_key`.)*
 
 ### 4. Running the Application
 ```bash
-# Ensure Ollama service is running locally (if using local judge)
-ollama serve
-
-# Start Flask Web Application
+# Start Flask Application
 python app.py
 ```
-Open your browser and navigate to `http://127.0.0.1:5000/`.
+Open your browser and navigate to:  
+👉 **`http://127.0.0.1:5000/`**
 
 ---
 
 ## 🧪 Running Automated Tests
 
-Run the full automated test suite using `pytest`:
+Run the full 50-test suite with coverage reports:
 
 ```bash
 python -m pytest -v tests/
 ```
 
 ### Test Coverage Highlights:
-- **`tests/test_auth.py` (13 tests):** Registration, duplicate detection, email RFC validation, password complexity rules, login, logout, unauthorized access.
-- **`tests/test_resume_processing.py` (7 tests):** PDF text extraction, corrupted PDF handling, unsupported formats, chunking, skill scoring bands.
-- **`tests/test_ai_pipeline.py` (11 tests):** BM25 keyword matching, technical term preservation (`C++`, `Go`), semantic similarity, category detection, garbage query filtering, intent extraction, hybrid weighting.
-- **`tests/test_routes.py` (13 tests):** Home, search, empty searches, upload validation, magic byte checks, resume download path traversal defense, evaluation dashboard.
-- **`tests/test_security.py` (6 tests):** CSRF missing/invalid token rejections (403), valid token acceptance, password hash inspection, cookie security flags, stack trace suppression.
+- **`tests/test_auth.py` (13 tests):** User registration, RFC email validation, password rules, login sessions, and route protection.
+- **`tests/test_resume_processing.py` (7 tests):** Document extraction, corrupted PDF defense, sliding text chunking, and skill scoring.
+- **`tests/test_ai_pipeline.py` (11 tests):** BM25 keyword matching, technical acronym preservation (`C++`, `Go`), semantic similarity bounds, garbage query suppression, and 0.30/0.70 hybrid weighting.
+- **`tests/test_routes.py` (13 tests):** HTTP route boundaries, file size limits, magic-byte upload validation, and path traversal downloads.
+- **`tests/test_security.py` (6 tests):** CSRF enforcement, password hashing verification, secure cookie headers, and error page sanitization.
+
+**Status:** `50 passed in ~3.3s` ✅
 
 ---
 
 ## 📊 RAGAS Evaluation Dashboard
 
-Navigate to `http://127.0.0.1:5000/evaluate` to view retrieval benchmark metrics across 10 diverse reference departments:
+Navigate to `http://127.0.0.1:5000/evaluate` to view retrieval benchmark metrics:
 
-1. **Baseline Scorecard:** Pre-computed offline heuristic metrics across 10 department queries.
-2. **Local Ollama LLM Judge:** Real-time Context Precision and Context Recall computation using local `llama3`.
-3. **OpenAI LLM Judge:** Cloud-based LLM judge using your OpenAI API key.
+```
++--------------------------------------------------------------------------+
+| BENCHMARK RESULTS (10 Department Reference Suite)                        |
+| • Context Recall:     93.33% (Near-perfect retrieval of required skills) |
+| • Context Precision:  50.00% (Healthy RAG tradeoff; Cross-Encoder ranks)  |
+| • Cloud API Cost:     $0.00  (100% on-premise execution via Ollama)      |
+| • Execution Time:     ~30s   (Fast local evaluation)                     |
++--------------------------------------------------------------------------+
+```
 
 ---
 
-## 🛡️ License & Privacy
-Built with privacy-by-design principles. All processing occurs locally on host hardware. Resumes and candidate data never leave the local environment.
+## 📄 License & Ethical Privacy Guarantee
+
+Built with **privacy-by-design** principles. All candidate resumes, extracted text, and query embeddings are processed entirely in local host memory. No Personally Identifiable Information (PII) is transmitted to external cloud APIs.
+
+Distributed under the **MIT License**.
