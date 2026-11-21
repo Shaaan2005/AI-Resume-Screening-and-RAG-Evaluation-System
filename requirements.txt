@@ -7,6 +7,7 @@ sentence-transformers==5.5.1
 chromadb==1.5.9
 scikit-learn==1.9.0
 numpy==2.4.6
+rank_bm25==0.2.2  # optional BM25 keyword scoring (benchmark / RESUME_RERANK mode)
 # torch is pulled in by sentence-transformers; install the CPU or CUDA build
 # that matches your machine from https://pytorch.org if the default is wrong.
 

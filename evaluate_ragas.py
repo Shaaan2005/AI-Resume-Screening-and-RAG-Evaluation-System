@@ -228,7 +228,7 @@ def get_heuristic_scorecard():
         key_skills = item["key_skills"]
         
         detected = detect_category(query)
-        rankings = search_candidates(query, category=detected, rerank=True)
+        rankings = search_candidates(query, category=detected)
         contexts = [r["preview"] for r in rankings]
         
         dataset_records.append({
@@ -265,7 +265,7 @@ def get_real_ragas_scorecard(openai_key=None, use_ollama=False):
         key_skills = item["key_skills"]
         
         detected = detect_category(query)
-        rankings = search_candidates(query, category=detected, rerank=True)
+        rankings = search_candidates(query, category=detected)
         # Limit to the top 2 retrieved resumes for clean department evaluation
         contexts = [r["preview"] for r in rankings[:2]]
         
@@ -336,7 +336,7 @@ def main():
     dataset_records = []
     for item in TEST_SUITE:
         detected = detect_category(item["query"])
-        rankings = search_candidates(item["query"], category=detected, rerank=True)
+        rankings = search_candidates(item["query"], category=detected)
         contexts = [r["preview"] for r in rankings]
         dataset_records.append({
             "question": item["query"],

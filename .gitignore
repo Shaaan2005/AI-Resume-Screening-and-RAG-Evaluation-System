@@ -39,3 +39,6 @@ presentation_preview.html
 # Stale vector store (code uses chromadb_data/) and local AI chat logs
 chroma_db/
 conversations/
+
+# Benchmark vector index (rebuilt by benchmark/run_benchmark.py)
+benchmark/.index/

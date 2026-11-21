@@ -10,9 +10,9 @@
 [![Cost](https://img.shields.io/badge/Cloud%20Cost-%240.00%20(100%25%20Offline)-brightgreen?style=for-the-badge)](https://ollama.com)
 
 **A privacy-first AI platform for resume screening, semantic candidate ranking, and offline RAG evaluation.**  
-Combines dense vector search (`all-mpnet-base-v2`), Cross-Encoder re-ranking (`stsb-distilroberta-base`), and local LLM evaluation (`Ollama Llama 3`) with zero cloud data leaks.
+Combines dense vector search (`all-mpnet-base-v2`), cross-encoder department detection, a reproducible retrieval benchmark, and local LLM evaluation (`Ollama Llama 3`) with zero cloud data leaks.
 
-[Key Features](#-key-features) • [System Architecture](#-system-architecture) • [Demo Walkthrough](#-demo-walkthrough) • [Security](#-security-hardening) • [Quick Start](#-quick-start-guide) • [Tests](#-automated-tests)
+[Key Features](#-key-features) • [System Architecture](#-system-architecture) • [Benchmark](#-retrieval-benchmark) • [Demo Walkthrough](#-demo-walkthrough) • [Security](#-security-hardening) • [Quick Start](#-quick-start-guide) • [Tests](#-automated-tests)
 
 </div>
 
@@ -53,42 +53,51 @@ flowchart TD
         D --> E["💾 ChromaDB Vector Database (HNSW Cosine)"]:::stage1
     end
 
-    subgraph RETRIEVAL ["2. Two-Stage Candidate Retrieval Engine"]
-        F["🔍 Recruiter Job Query"]:::input --> G["🎯 Category Intent Detection (Cross-Encoder)"]:::stage2
-        G --> H["⚡ Stage 1: Fast Dense Retrieval (Top-K)"]:::stage1
+    subgraph RETRIEVAL ["2. Candidate Retrieval Engine"]
+        F["🔍 Recruiter Job Query"]:::input --> G["🎯 Department Detection (Cross-Encoder)"]:::stage2
+        G --> H["⚡ Dense Retrieval within Department (Top-K)"]:::stage1
         E -.-> H
-        H --> I["🔄 Stage 2: Joint-Attention Re-Ranking (stsb-distilroberta-base)"]:::stage2
-        I --> J["⚖️ Hybrid Scoring: 30% Keyword + 70% Semantic"]:::stage2
-        J --> K["📋 Ranked Candidates Dashboard"]
+        H --> K["📋 Ranked Candidates Dashboard"]
+        H -.-> I["🔄 Optional Re-Ranking: ms-marco-MiniLM (RESUME_RERANK=1)"]:::stage2
+        I -.-> K
     end
 
     subgraph EVALUATION ["3. Privacy-First Offline RAGAS Evaluation"]
         K --> L["📊 Benchmark Queries (10 Departments)"]
         L --> M["🦙 Local Ollama (Llama 3 LLM Judge)"]:::eval
         L --> N["🤗 HuggingFace Embeddings (all-MiniLM-L6-v2)"]:::eval
-        M --> O["📈 Context Precision (50%) & Context Recall (93.33%)"]:::eval
+        M --> O["📈 Context Precision & Context Recall"]:::eval
         N --> O
     end
 ```
 
 ---
 
-## ⚡ Architecture Comparison: Why Hybrid RAG?
+## 📏 Retrieval Benchmark
 
-| Capability | Traditional ATS | Pure Vector Search | **Our System (Hybrid + Cross-Encoder)** |
-| :--- | :---: | :---: | :---: |
-| **Exact Tech Acronyms (`AWS`, `C++`, `SQL`)** | ✅ Yes | ❌ Often misses exact string matches | ✅ **Yes (30% Keyword-Match Weight)** |
-| **Domain Synonyms (`K8s` vs `Containerization`)**| ❌ Misses completely | ⚠️ Vague semantic match | ✅ **High Precision (70% Joint-Attention)** |
-| **Candidate Re-ranking Accuracy** | ❌ None | ⚠️ Dual-encoder cosine only | ✅ **Cross-Encoder full token attention** |
-| **Cloud API Charges** | ❌ N/A | ❌ High recurring fees | ✅ **$0.00 (Local Ollama inference)** |
-| **Candidate PII Privacy** | ⚠️ Varies | ❌ Leaves network | ✅ **100% On-Premise (No data leaks)** |
+Every ranking choice in this project is measured with a reproducible benchmark ([`benchmark/`](benchmark/)): **48 labeled recruiter queries** (2 per job category) run against the 242 sample resumes. A result counts as relevant when it comes from the query's category.
+
+| Setup | P@5 | MRR | nDCG@10 | Latency |
+| :--- | ---: | ---: | ---: | ---: |
+| **Dense retrieval only (current default)** | **0.550** | **0.835** | **0.516** | **34 ms** |
+| STS cross-encoder + 30% keywords (original design) | 0.442 | 0.656 | 0.408 | 356 ms |
+| MS MARCO MiniLM re-ranker | 0.550 | 0.774 | 0.499 | 153 ms |
+| BGE reranker base | 0.512 | 0.793 | 0.478 | 641 ms |
+
+**What it showed:** the original re-ranking stage made results *worse* (nDCG@10 0.516 → 0.408) while making search ~10× slower. The STS model it used was trained for sentence similarity, not search relevance. Search-tuned re-rankers (MS MARCO, BGE), BM25 keyword blending, and blending re-ranker and dense scores all came out within noise of plain dense retrieval. So **re-ranking is now off by default** and available as an option (`RESUME_RERANK=1`, MS MARCO MiniLM).
+
+**Limits:** 48 queries is small, and category labels can't measure ranking *within* a department (e.g. Python vs. Java engineers), which is where a re-ranker could still help. Full tables, including the held-out test split and blend weights: [`benchmark/RESULTS.md`](benchmark/RESULTS.md).
+
+```bash
+python benchmark/run_benchmark.py            # add --rebuild to rebuild its index
+```
 
 ---
 
 ## 🌟 Key Features
 
-* **🧠 Semantic & Keyword Hybrid Search:** Combines exact keyword-coverage matching (share of query terms found in the resume) with `SentenceTransformers` (`all-mpnet-base-v2`) dense vector search (`0.30` keyword + `0.70` semantic).
-* **🎯 Cross-Encoder Re-Ranking:** Uses `cross-encoder/stsb-distilroberta-base` to calculate joint cross-attention over candidate texts to eliminate false negatives.
+* **🧠 Dense Semantic Search:** `all-mpnet-base-v2` embeddings over 200-word resume chunks in ChromaDB; each resume is ranked by its best-matching chunk.
+* **📏 Benchmark-Driven Ranking:** A reproducible 48-query benchmark showed the original cross-encoder re-ranker lowered nDCG@10 from 0.516 to 0.408, so re-ranking is now opt-in (`RESUME_RERANK=1`, `ms-marco-MiniLM-L-6-v2`, optional BM25 keyword blend).
 * **📁 Multi-Department Support:** Supports 24 specialized industry categories (Engineering, IT, HR, Healthcare, Finance, etc.) with automatic department intent detection.
 * **🔒 Security Hardening:**
   * Cryptographic CSRF tokens on all mutating endpoints (`secrets.compare_digest`).
@@ -97,20 +106,21 @@ flowchart TD
   * Whitelisted category verification to prevent directory/path traversal attacks.
   * Parameterized database access preventing SQL injection.
 * **🛡️ Robust Error Handling:** Centralized custom error handlers (`400`, `403`, `404`, `413`, `500`), bounded cosine similarity domains, and graceful fallbacks if vector models disconnect.
-* **🧪 52-Test Automated Pytest Suite:** Complete automated test suite verifying auth flows, file extraction, vector search, security, and route boundaries.
+* **🧪 55-Test Automated Pytest Suite:** Complete automated test suite verifying auth flows, file extraction, vector search, security, and route boundaries.
 * **📊 10-Department RAGAS Evaluation Dashboard:** Integrated `/evaluate` page computing **Context Precision** and **Context Recall** across 10 benchmark queries offline.
 
 ---
 
 ## 🛠️ Tech Stack
 
-* **Backend Framework:** Python 3.10+, Flask, SQLite3
+* **Backend Framework:** Python 3.11+, Flask, SQLite3
 * **Vector Database:** ChromaDB (HNSW cosine space)
 * **Embedding Model:** `sentence-transformers` (`all-mpnet-base-v2`, 768 dimensions)
-* **Re-Ranking Model:** `cross-encoder/stsb-distilroberta-base`
+* **Department Detection:** `cross-encoder/stsb-distilroberta-base`
+* **Optional Re-Ranker:** `cross-encoder/ms-marco-MiniLM-L-6-v2` (+ `rank_bm25` keyword blend)
 * **Local LLM Judge:** Ollama (`llama3`)
 * **Evaluation Framework:** RAGAS, `langchain-ollama`, `langchain-community`
-* **Testing:** Pytest (52 unit and integration tests)
+* **Testing:** Pytest (55 unit and integration tests)
 
 ---
 
@@ -184,10 +194,11 @@ webapp/             # Flask app factory + blueprints
   security.py       #   CSRF, login_required, error pages, secret key
   db.py, history.py #   SQLite users, recent-analyses history
 query_parsing.py    # Category detection, requested-count parsing, garbage filtering
-chroma_search.py    # Two-stage retrieval: ChromaDB + cross-encoder re-rank + hybrid score
+chroma_search.py    # Dense retrieval over ChromaDB; optional re-ranking + BM25 blend
 resume_engine.py    # PDF/DOCX extraction, chunking, role-specific skill scoring
 vector_store.py     # Rebuilds the ChromaDB index from resumes/
-evaluate_ragas.py   # Offline retrieval benchmark
+evaluate_ragas.py   # RAGAS / heuristic evaluation behind the /evaluate dashboard
+benchmark/          # Ranking benchmark: labeled queries, runner, RESULTS.md
 tests/              # Pytest suite (run in CI via .github/workflows/tests.yml)
 scripts/            # Diagnostic scripts (skill scores, category detection checks)
 docs/               # Internship project report and its generator
@@ -197,7 +208,7 @@ docs/               # Internship project report and its generator
 
 ## 🧪 Running Automated Tests
 
-Run the full 52-test suite:
+Run the full 55-test suite:
 
 ```bash
 python -m pytest -v
@@ -206,11 +217,11 @@ python -m pytest -v
 ### Test Coverage Highlights:
 - **`tests/test_auth.py` (13 tests):** User registration, RFC email validation, password rules, login sessions, and route protection.
 - **`tests/test_resume_processing.py` (9 tests):** Document extraction, corrupted PDF defense, sliding text chunking, whole-word skill matching, and role-specific skill scoring.
-- **`tests/test_ai_pipeline.py` (11 tests):** Keyword-coverage matching, technical acronym preservation (`C++`, `Go`), semantic similarity bounds, garbage query suppression, and 0.30/0.70 hybrid weighting.
+- **`tests/test_ai_pipeline.py` (14 tests):** Keyword-coverage matching, technical acronym preservation (`C++`, `Go`), semantic similarity bounds, garbage query suppression, dense-only default, re-ranked-first ordering, and BM25 score normalisation.
 - **`tests/test_routes.py` (13 tests):** HTTP route boundaries, file size limits, magic-byte upload validation, and path traversal downloads.
 - **`tests/test_security.py` (6 tests):** CSRF enforcement, password hashing verification, secure cookie headers, and error page sanitization.
 
-**Status:** `52 passed in ~8s` ✅
+**Status:** `55 passed` ✅ (also run on every push by GitHub Actions)
 
 ---
 
@@ -222,11 +233,13 @@ Navigate to `http://127.0.0.1:5000/evaluate` to view retrieval benchmark metrics
 +--------------------------------------------------------------------------+
 | BENCHMARK RESULTS (10 Department Reference Suite)                        |
 | • Context Recall:     93.33% (Near-perfect retrieval of required skills) |
-| • Context Precision:  50.00% (Healthy RAG tradeoff; Cross-Encoder ranks)  |
+| • Context Precision:  50.00%                                              |
 | • Cloud API Cost:     $0.00  (100% on-premise execution via Ollama)      |
 | • Execution Time:     ~30s   (Fast local evaluation)                     |
 +--------------------------------------------------------------------------+
 ```
+
+These figures were recorded with the original re-ranking setup; the dashboard's **Recalculate** button refreshes them against the current pipeline. They check whether key skills appear in short result previews, so they are a coarse signal. For ranking quality, see the [Retrieval Benchmark](#-retrieval-benchmark).
 
 ---
 
