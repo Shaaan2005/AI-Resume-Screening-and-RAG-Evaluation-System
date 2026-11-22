@@ -89,6 +89,7 @@ def upload():
     os.makedirs(upload_folder, exist_ok=True)
     file_path = os.path.join(upload_folder, unique_filename)
     file.save(file_path)
+    demo_mode = current_app.config.get("DEMO_MODE", False)
 
     try:
         category = detect_category(job_description)
@@ -105,18 +106,20 @@ def upload():
         else:
             combined_rec = "REJECT"
 
-        _index_resume(unique_filename, resume_text, result, category)
+        if not demo_mode:
+            _index_resume(unique_filename, resume_text, result, category)
 
         rankings = search_candidates(job_description, category=category)
         collection = get_collection()
         total_candidates = collection.count() if collection else 0
 
-        save_history({
-            "filename": clean_name,
-            "score": float(semantic_score),
-            "recommendation": result["recommendation"],
-            "timestamp": datetime.now().strftime("%d %b %Y, %I:%M %p")
-        })
+        if not demo_mode:
+            save_history({
+                "filename": clean_name,
+                "score": float(semantic_score),
+                "recommendation": result["recommendation"],
+                "timestamp": datetime.now().strftime("%d %b %Y, %I:%M %p")
+            })
 
         return render_template("result.html",
             filename=clean_name,
@@ -133,3 +136,9 @@ def upload():
     except Exception as e:
         logger.error(f"Error processing resume upload: {e}")
         return _error(f"Error analyzing resume: {str(e)}", clean_name, job_description)
+    finally:
+        if demo_mode:
+            try:
+                os.remove(file_path)  # visitors' resumes never stay on the server
+            except OSError as e:
+                logger.warning(f"Could not delete demo upload {file_path}: {e}")

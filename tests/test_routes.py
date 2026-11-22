@@ -130,3 +130,44 @@ def test_evaluate_dashboard_no_longer_accepts_posts(authenticated_client):
     """The old in-browser RAGAS form (which took an API key) is gone."""
     res = authenticated_client.post("/evaluate", data={"eval_mode": "openai", "openai_key": "sk-test"})
     assert res.status_code == 405
+
+
+def _post_real_resume(client):
+    """Uploads one of the sample resumes against a job description."""
+    with open("resumes/ACCOUNTANT/AC1.pdf", "rb") as f:
+        pdf = f.read()
+    return client.post("/upload", content_type="multipart/form-data", data={
+        "job_description": "Accountant with general ledger, audit and tax experience",
+        "resume": (io.BytesIO(pdf), "candidate.pdf"),
+    })
+
+
+def test_demo_mode_scores_upload_without_keeping_it(test_app, authenticated_client, monkeypatch):
+    """Public demo: the resume is scored, but never indexed, listed in history, or left on disk."""
+    import os
+    from webapp import upload as upload_module
+
+    def must_not_run(*args, **kwargs):
+        raise AssertionError("demo mode must not persist uploads")
+    monkeypatch.setattr(upload_module, "_index_resume", must_not_run)
+    monkeypatch.setattr(upload_module, "save_history", must_not_run)
+    monkeypatch.setitem(test_app.config, "DEMO_MODE", True)
+
+    res = _post_real_resume(authenticated_client)
+    assert res.status_code == 200
+    assert b"Error analyzing resume" not in res.data
+    assert b"candidate.pdf" in res.data  # result page rendered for the upload
+    assert os.listdir(test_app.config["UPLOAD_FOLDER"]) == []
+
+
+def test_normal_mode_still_indexes_uploads(test_app, authenticated_client, monkeypatch):
+    """Outside demo mode, uploads keep their original behaviour (indexed + history)."""
+    from webapp import upload as upload_module
+    calls = []
+    monkeypatch.setattr(upload_module, "_index_resume", lambda *a, **k: calls.append("index"))
+    monkeypatch.setattr(upload_module, "save_history", lambda *a, **k: calls.append("history"))
+    monkeypatch.setitem(test_app.config, "DEMO_MODE", False)
+
+    res = _post_real_resume(authenticated_client)
+    assert res.status_code == 200
+    assert calls == ["index", "history"]

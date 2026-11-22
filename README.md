@@ -105,7 +105,7 @@ python benchmark/run_benchmark.py            # add --rebuild to rebuild its inde
   * Whitelisted category verification to prevent directory/path traversal attacks.
   * Parameterized database access preventing SQL injection.
 * **🛡️ Robust Error Handling:** Centralized custom error handlers (`400`, `403`, `404`, `413`, `500`), bounded cosine similarity domains, and graceful fallbacks if vector models disconnect.
-* **🧪 56-Test Automated Pytest Suite:** Complete automated test suite verifying auth flows, file extraction, vector search, security, and route boundaries.
+* **🧪 58-Test Automated Pytest Suite:** Complete automated test suite verifying auth flows, file extraction, vector search, security, and route boundaries.
 * **📊 Benchmark Dashboard:** The `/evaluate` page shows the retrieval benchmark instantly: every setup compared, plus query-by-query results. LLM-judged RAGAS scoring is available from the command line.
 
 ---
@@ -119,7 +119,7 @@ python benchmark/run_benchmark.py            # add --rebuild to rebuild its inde
 * **Optional Re-Ranker:** `cross-encoder/ms-marco-MiniLM-L-6-v2` (+ `rank_bm25` keyword blend)
 * **Optional LLM Judge (CLI):** Ollama (`llama3`)
 * **Evaluation Framework:** RAGAS, `langchain-ollama`, `langchain-community`
-* **Testing:** Pytest (56 unit and integration tests)
+* **Testing:** Pytest (58 unit and integration tests)
 
 ---
 
@@ -180,6 +180,24 @@ Open your browser and navigate to:
 
 ---
 
+## 🌐 Deploying a Public Demo (Hugging Face Spaces)
+
+The repo ships a `Dockerfile` that runs the app with `gunicorn` on port 7860. Building the image also downloads both models and builds the search index, so the container starts fast. It runs in **demo mode** (`DEMO_MODE=1`): uploaded resumes are scored and then deleted, never added to the shared index.
+
+```bash
+# Try the container locally
+docker build -t resume-screening .
+docker run -p 7860:7860 resume-screening        # -> http://localhost:7860
+
+# Deploy to a free Hugging Face Space (needs a free account + write token)
+hf auth login
+python deploy/deploy_hf_space.py                 # -> https://huggingface.co/spaces/<you>/ai-resume-screening
+```
+
+The deploy script uploads only git-tracked app files (no local database, uploads or secrets), replaces this README with [`deploy/space_README.md`](deploy/space_README.md), and sets a random `FLASK_SECRET_KEY` secret on the first deploy.
+
+---
+
 ## 🗂️ Project Layout
 
 ```
@@ -201,13 +219,15 @@ benchmark/          # Ranking benchmark: labeled queries, runner, RESULTS.md
 tests/              # Pytest suite (run in CI via .github/workflows/tests.yml)
 scripts/            # Diagnostic scripts (skill scores, category detection checks)
 docs/               # Internship project report and its generator
+Dockerfile          # Container for the public demo (gunicorn, port 7860, DEMO_MODE=1)
+deploy/             # Hugging Face Space deploy script + Space README
 ```
 
 ---
 
 ## 🧪 Running Automated Tests
 
-Run the full 56-test suite:
+Run the full 58-test suite:
 
 ```bash
 python -m pytest -v
@@ -217,10 +237,10 @@ python -m pytest -v
 - **`tests/test_auth.py` (13 tests):** User registration, RFC email validation, password rules, login sessions, and route protection.
 - **`tests/test_resume_processing.py` (9 tests):** Document extraction, corrupted PDF defense, sliding text chunking, whole-word skill matching, and role-specific skill scoring.
 - **`tests/test_ai_pipeline.py` (14 tests):** Keyword-coverage matching, technical acronym preservation (`C++`, `Go`), semantic similarity bounds, garbage query suppression, dense-only default, re-ranked-first ordering, and BM25 score normalisation.
-- **`tests/test_routes.py` (14 tests):** HTTP route boundaries, file size limits, magic-byte upload validation, path traversal downloads, and the benchmark dashboard.
+- **`tests/test_routes.py` (16 tests):** HTTP route boundaries, file size limits, magic-byte upload validation, path traversal downloads, the benchmark dashboard, and demo-mode uploads.
 - **`tests/test_security.py` (6 tests):** CSRF enforcement, password hashing verification, secure cookie headers, and error page sanitization.
 
-**Status:** `56 passed` ✅ (also run on every push by GitHub Actions)
+**Status:** `58 passed` ✅ (also run on every push by GitHub Actions)
 
 ---
 

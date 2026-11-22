@@ -38,7 +38,14 @@ def create_app(config=None):
         UPLOAD_FOLDER="uploads",
         HISTORY_FILE="recent_analyses.json",
         BENCHMARK_RESULTS=os.path.join(root, "benchmark", "results.json"),
+        # Public-demo mode (DEMO_MODE=1): uploaded resumes are scored but never
+        # added to the shared search index, the recent-uploads list, or disk.
+        DEMO_MODE=os.environ.get("DEMO_MODE", "0") == "1",
     )
+    if app.config["DEMO_MODE"]:
+        # Hugging Face shows the app inside an iframe on huggingface.co, where
+        # SameSite=Lax cookies are dropped and login would silently fail.
+        app.config.update(SESSION_COOKIE_SAMESITE="None", SESSION_COOKIE_SECURE=True)
     if config:
         app.config.update(config)
 
