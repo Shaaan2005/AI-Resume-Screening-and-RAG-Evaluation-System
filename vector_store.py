@@ -1,6 +1,8 @@
 """Rebuilds the ChromaDB resume index from the resumes/<CATEGORY>/*.pdf folders.
 
-Usage:  python vector_store.py
+Usage:  python vector_store.py                 # rebuild the app's index (chromadb_data/)
+        python vector_store.py chromadb_public # build a separate clean index, e.g. for a
+                                               # public demo started with CHROMA_PATH=chromadb_public
 
 This deletes and recreates the "resumes" collection, so any resumes added
 through the web upload form will need to be uploaded again afterwards.
@@ -65,6 +67,7 @@ def build_index(db_path=DB_PATH, resumes_dir=RESUMES_DIR):
 
 
 if __name__ == "__main__":
-    collection = build_index()
+    import sys
+    collection = build_index(db_path=sys.argv[1] if len(sys.argv) > 1 else DB_PATH)
     print("All resumes chunked and stored in ChromaDB (cosine distance)")
     print("Total chunks:", collection.count())

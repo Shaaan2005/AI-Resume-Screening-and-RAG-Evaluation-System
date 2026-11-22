@@ -43,9 +43,12 @@ def create_app(config=None):
         DEMO_MODE=os.environ.get("DEMO_MODE", "0") == "1",
     )
     if app.config["DEMO_MODE"]:
-        # Hugging Face shows the app inside an iframe on huggingface.co, where
-        # SameSite=Lax cookies are dropped and login would silently fail.
-        app.config.update(SESSION_COOKIE_SAMESITE="None", SESSION_COOKIE_SECURE=True)
+        # Public visitors get their own account database, separate from local users.
+        # Cookies: Hugging Face shows the app inside an iframe, where SameSite=Lax
+        # cookies are dropped and login would silently fail; Secure needs HTTPS,
+        # which every public host and tunnel provides.
+        app.config.update(DATABASE="demo_users.db",
+                          SESSION_COOKIE_SAMESITE="None", SESSION_COOKIE_SECURE=True)
     if config:
         app.config.update(config)
 

@@ -9,6 +9,8 @@ logger = logging.getLogger("ResumeScreening")
 
 
 def load_history():
+    if current_app.config.get("DEMO_MODE"):
+        return []  # public visitors never see anyone's past uploads
     path = current_app.config["HISTORY_FILE"]
     if os.path.exists(path):
         try:

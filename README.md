@@ -174,6 +174,8 @@ python vector_store.py
 powershell -ExecutionPolicy Bypass -File scripts\windows\install_shortcuts.ps1    # add -Remove to undo
 ```
 
+**Share it on a public link (Windows, free, no account):** install Cloudflare's tunnel once with `winget install Cloudflare.cloudflared`, then run `scripts\windows\share_public.ps1` (or the "Share AI Resume Screening" desktop shortcut). It prints a temporary `https://….trycloudflare.com` link that works while your PC is on. While sharing, the app runs in demo mode on a clean index of only the sample resumes, so your own uploads are never visible. Press Ctrl+C to stop.
+
 **Or start it manually:**
 ```bash
 # Start Flask Application

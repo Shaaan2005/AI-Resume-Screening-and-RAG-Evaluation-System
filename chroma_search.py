@@ -63,7 +63,8 @@ def get_collection():
     global _client, _collection
     if _collection is None:
         try:
-            _client = chromadb.PersistentClient(path="chromadb_data")
+            # CHROMA_PATH lets a public demo search its own clean index (see vector_store.py)
+            _client = chromadb.PersistentClient(path=os.environ.get("CHROMA_PATH", "chromadb_data"))
             try:
                 _collection = _client.get_collection(name="resumes")
             except Exception:

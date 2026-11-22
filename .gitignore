@@ -41,3 +41,5 @@ conversations/
 
 # Benchmark vector index (rebuilt by benchmark/run_benchmark.py)
 benchmark/.index/
+demo_users.db
+chromadb_public/
