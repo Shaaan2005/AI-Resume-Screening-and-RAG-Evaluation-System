@@ -15,6 +15,7 @@ import os
 import sys
 import secrets
 import argparse
+import subprocess
 
 from huggingface_hub import HfApi, CommitOperationAdd
 from huggingface_hub.utils import filter_repo_objects
@@ -35,10 +36,16 @@ IGNORE = [
 
 
 def tracked_files():
-    """Files git tracks: never uploads untracked local files by accident."""
-    import subprocess
-    out = subprocess.run(["git", "ls-files"], cwd=ROOT, capture_output=True, text=True, check=True)
-    return [p for p in out.stdout.splitlines() if os.path.isfile(os.path.join(ROOT, p))]
+    """Files in the last commit: never uploads untracked or uncommitted local changes."""
+    out = subprocess.run(["git", "ls-tree", "-r", "--name-only", "HEAD"], cwd=ROOT,
+                         capture_output=True, text=True, check=True)
+    return out.stdout.splitlines()
+
+
+def committed_bytes(path):
+    """File content exactly as committed (keeps Unix line endings on Windows)."""
+    return subprocess.run(["git", "show", f"HEAD:{path}"], cwd=ROOT,
+                          capture_output=True, check=True).stdout
 
 
 def main():
@@ -62,8 +69,11 @@ def main():
         sys.exit("Not logged in to Hugging Face. Run `hf auth login` with a write token first.")
     space_id = args.space or f"{username}/{DEFAULT_SPACE_NAME}"
 
-    operations = [CommitOperationAdd(path_in_repo=p, path_or_fileobj=os.path.join(ROOT, p)) for p in files]
+    operations = [CommitOperationAdd(path_in_repo=p, path_or_fileobj=committed_bytes(p)) for p in files]
     operations.append(CommitOperationAdd(path_in_repo="README.md", path_or_fileobj=SPACE_README))
+    if subprocess.run(["git", "status", "--porcelain", "--untracked-files=no"], cwd=ROOT,
+                      capture_output=True, text=True).stdout.strip():
+        print("Note: you have uncommitted changes; only the last commit is deployed.")
     print(f"Uploading {len(operations)} files to Space {space_id} ...")
 
     created = not api.repo_exists(space_id, repo_type="space")

@@ -1,0 +1,3 @@
+# Docker build files must keep Unix line endings (CRLF breaks RUN line continuations)
+Dockerfile text eol=lf
+.dockerignore text eol=lf
