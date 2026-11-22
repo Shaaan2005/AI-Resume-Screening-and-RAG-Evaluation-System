@@ -168,6 +168,13 @@ python vector_store.py
 ```
 
 ### 5. Running the Application
+
+**Windows, one-time setup (optional):** start the server automatically at login and add desktop shortcuts to open or stop it:
+```powershell
+powershell -ExecutionPolicy Bypass -File scripts\windows\install_shortcuts.ps1    # add -Remove to undo
+```
+
+**Or start it manually:**
 ```bash
 # Start Flask Application
 python app.py
@@ -180,7 +187,7 @@ Open your browser and navigate to:
 
 ---
 
-## 🌐 Deploying a Public Demo (Hugging Face Spaces)
+## 🌐 Running with Docker / Deploying
 
 The repo ships a `Dockerfile` that runs the app with `gunicorn` on port 7860. Building the image also downloads both models and builds the search index, so the container starts fast. It runs in **demo mode** (`DEMO_MODE=1`): uploaded resumes are scored and then deleted, never added to the shared index.
 
@@ -189,12 +196,12 @@ The repo ships a `Dockerfile` that runs the app with `gunicorn` on port 7860. Bu
 docker build -t resume-screening .
 docker run -p 7860:7860 resume-screening        # -> http://localhost:7860
 
-# Deploy to a free Hugging Face Space (needs a free account + write token)
+# Deploy to a Hugging Face Space (Docker Spaces need a Hugging Face PRO subscription)
 hf auth login
 python deploy/deploy_hf_space.py                 # -> https://huggingface.co/spaces/<you>/ai-resume-screening
 ```
 
-The deploy script uploads only git-tracked app files (no local database, uploads or secrets), replaces this README with [`deploy/space_README.md`](deploy/space_README.md), and sets a random `FLASK_SECRET_KEY` secret on the first deploy.
+The image needs about 2 GB of RAM, so it also runs on Google Cloud Run or any Docker host with that much memory (free tiers with 512 MB are too small). The Hugging Face deploy script uploads only git-tracked app files (no local database, uploads or secrets), replaces this README with [`deploy/space_README.md`](deploy/space_README.md), and sets a random `FLASK_SECRET_KEY` secret on the first deploy.
 
 ---
 
