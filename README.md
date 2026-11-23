@@ -25,12 +25,12 @@ Combines dense vector search (`all-mpnet-base-v2`), cross-encoder department det
 </p>
 
 <p align="center">
-  <em>Live Walkthrough: 1-on-1 Resume & JD Matching ➔ Semantic Smart Search (240+ Resumes) ➔ Offline RAGAS Evaluation</em>
+  <em>Live Walkthrough: Semantic Smart Search (242 Resumes) ➔ 1-on-1 Resume & JD Matching ➔ Retrieval Benchmark</em>
 </p>
 
 > **📥 Downloadable Video Assets:**
-> * 📹 **[Download Full 3-Minute Master Video (MP4)](assets/demo_full.mp4?raw=true)** *(20.8 MB)*
-> * ⚡ **[Download 45-Second 1080p Highlight Reel (MP4)](assets/demo_highlight.mp4?raw=true)** *(5.7 MB)*
+> * 📹 **[Download Full Walkthrough (MP4, 42 s)](assets/demo_full.mp4?raw=true)** *(3.7 MB)*
+> * ⚡ **[Download 1080p Highlight Reel (MP4, 2× speed, 21 s)](assets/demo_highlight.mp4?raw=true)** *(3.9 MB)*
 
 
 
