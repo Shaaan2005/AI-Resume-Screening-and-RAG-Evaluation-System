@@ -85,6 +85,10 @@ Every ranking choice in this project is measured with a reproducible benchmark (
 
 **What it showed:** the original re-ranking stage made results *worse* (nDCG@10 0.513 → 0.400) while making search 10–20× slower (timings vary between runs). The STS model it used was trained for sentence similarity, not search relevance. Search-tuned re-rankers (MS MARCO, BGE), BM25 keyword blending, and blending re-ranker and dense scores all came out within noise of plain dense retrieval. So **re-ranking is now off by default** and available as an option (`RESUME_RERANK=1`, MS MARCO MiniLM).
 
+**Department detection** is measured on three query sets: queries that name the department (48/48), realistic queries that don't (48/48), and a held-out set written before tuning and never used for it (23/24, 96%). Before named-department matching, richer department descriptions and fixed alias bugs, the realistic set scored 31/48 (65%).
+
+**Verdicts** compare a resume with how all 242 sample resumes score for the same query (standard deviations above their average): SHORTLIST at 2.5+, CONSIDER at 1.5+. Across 120 labeled queries this keeps the precision of the old fixed cutoffs (60% / 33% from the right department) while separating right from wrong better (AUC 0.865 vs 0.786). Searches with no candidate above REJECT dropped from 34 of 120 to 2. See [`scoring.py`](scoring.py).
+
 **Limits:** 48 queries is small, and category labels can't measure ranking *within* a department (e.g. Python vs. Java engineers), which is where a re-ranker could still help. Full tables, including the held-out test split and blend weights: [`benchmark/RESULTS.md`](benchmark/RESULTS.md).
 
 ```bash
@@ -249,7 +253,7 @@ python -m pytest -v
 - **`tests/test_routes.py` (36 tests):** HTTP route boundaries, file size limits, magic-byte upload validation, path traversal downloads, the benchmark dashboard, demo-mode uploads, private per-user history, duplicate-free re-uploads, owner-only file access, a clear notice when no resume matches well, a clear error for scanned PDFs with no readable text, shareable GET search URLs, multi-department searches, count validation, verdict-free department browsing, security headers, styled error pages, reopening or deleting saved analyses, department/Top-N search controls, a friendly oversized-upload message, and real index status on the home page.
 - **`tests/test_security.py` (6 tests):** CSRF enforcement, password hashing verification, secure cookie headers, and error page sanitization.
 
-**Status:** `106 passed` ✅ (also run on every push by GitHub Actions)
+**Status:** `107 passed` ✅ (also run on every push by GitHub Actions)
 
 ---
 

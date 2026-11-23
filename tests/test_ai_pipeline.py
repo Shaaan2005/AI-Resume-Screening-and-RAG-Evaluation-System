@@ -50,7 +50,7 @@ def test_semantic_similarity_empty_inputs():
 def test_category_detection_core_departments():
     """Verifies that Cross-Encoder detects department intents accurately."""
     cases = [
-        ("Looking for a Python Developer with Docker and Kubernetes", "ENGINEERING"),
+        ("Looking for a Python Developer with Docker and Kubernetes", "INFORMATION-TECHNOLOGY"),
         ("Seeking HR recruiter with talent acquisition experience", "HR"),
         ("Chartered accountant for GST filing and tax audits", "ACCOUNTANT"),
     ]
@@ -235,26 +235,40 @@ def test_no_uploads_without_an_owner():
     assert {r["source"] for r in ranked} == {"dataset"}
 
 
-def test_own_uploads_included_even_when_department_filter_applies():
-    """An upload has no reliable department, so the owner's uploads ignore the filter."""
-    ranked = search_candidates("python", category="ENGINEERING", owner=1,
-                               collection=_FakeCollection(_MIXED_ROWS))
-    assert [r["resume"] for r in ranked] == ["E1.pdf", "mine.pdf"]
+def test_department_search_only_shows_uploads_for_that_department():
+    """An upload carries the department of the job it was analysed for; it no longer
+    appears in every department's results."""
+    rows = _MIXED_ROWS + [("eng_upload.pdf", "ENGINEERING", 0.25, "python engineer",
+                           {"source": "upload", "owner": "1", "file": "1_ccc.pdf"})]
+    eng = search_candidates("python", category="ENGINEERING", owner=1, collection=_FakeCollection(rows))
+    assert [r["resume"] for r in eng] == ["eng_upload.pdf", "E1.pdf"]  # untagged mine.pdf left out
+    chef = search_candidates("python", category="CHEF", owner=1, collection=_FakeCollection(rows))
+    assert [r["resume"] for r in chef] == ["C1.pdf"]
+    everything = search_candidates("python", owner=1, collection=_FakeCollection(rows))
+    assert {"mine.pdf", "eng_upload.pdf"} <= {r["resume"] for r in everything}
 
 
-def test_recommendation_always_matches_the_score_shown():
-    ranked = search_candidates("python", collection=_FakeCollection(_MIXED_ROWS))
-    by_name = {r["resume"]: r for r in ranked}
-    assert by_name["E1.pdf"]["recommendation"] == "SHORTLIST"
-    assert by_name["C1.pdf"]["recommendation"] == "CONSIDER"
-    assert by_name["A1.pdf"]["recommendation"] == "REJECT"
+def test_verdict_compares_with_the_other_sample_resumes():
+    """The verdict depends on how a resume stands out from the sample resumes for the
+    same query, not on a fixed score: a short query that scores everyone low still
+    gets a SHORTLIST for its clear best match."""
+    filler = [(f"F{i}.pdf", "CHEF", 0.70 + i * 0.005, "filler") for i in range(40)]  # 30 down to 10.5
+    rows = [("BEST.pdf", "ENGINEERING", 0.55, "python engineer"),     # 45: far above the rest
+            ("GOOD.pdf", "ENGINEERING", 0.65, "python developer")] + filler  # 35
+    by_name = {r["resume"]: r for r in search_candidates("python", collection=_FakeCollection(rows))}
+    assert by_name["BEST.pdf"]["similarity"] == 45.0 and by_name["BEST.pdf"]["recommendation"] == "SHORTLIST"
+    assert by_name["GOOD.pdf"]["recommendation"] == "CONSIDER"
+    assert by_name["F0.pdf"]["recommendation"] == "REJECT"  # best filler (30) doesn't stand out
+    assert by_name["BEST.pdf"]["percentile"] > 95
 
 
-def test_score_thresholds_and_colours_agree():
-    from scoring import recommend, band
-    assert recommend(60) == "SHORTLIST" and band(60) == "green"
-    assert recommend(55) == "CONSIDER" and band(55) == "yellow"
-    assert recommend(49.9) == "REJECT" and band(49.9) == "red"
+def test_verdict_rule_and_colours():
+    from scoring import Baseline, recommend, band
+    b = Baseline(mean=30.0, std=8.0, count=242)
+    assert b.cutoff(2.5) == 50.0 and b.cutoff(1.5) == 42.0
+    assert recommend(50, b) == "SHORTLIST" and band("SHORTLIST") == "green"
+    assert recommend(43, b) == "CONSIDER" and band("CONSIDER") == "yellow"
+    assert recommend(41, b) == "REJECT" and band("REJECT") == "red"
 
 
 def test_previews_hide_contact_details():
@@ -289,7 +303,7 @@ def test_non_software_developers_are_not_engineering():
     assert detect_category("real estate developer with land acquisition experience") == "CONSTRUCTION"
     assert detect_category("business developer for new partnerships") == "BUSINESS-DEVELOPMENT"
     assert detect_category("martial arts trainer") != "ARTS"
-    assert detect_category("web developer") == "ENGINEERING"
+    assert detect_category("web developer") == "INFORMATION-TECHNOLOGY"
 
 
 def test_search_text_keeps_the_sentence_and_drops_commands():
@@ -420,3 +434,14 @@ def test_missing_skills_are_listed():
     from resume_engine import analyze_resume
     r = analyze_resume("x", category="ENGINEERING", text="python only", job_description="python, docker and kubernetes")
     assert r["skills"] == ["python"] and sorted(r["missing"]) == ["docker", "kubernetes"]
+
+
+
+def test_detection_on_queries_that_dont_name_the_department():
+    """Realistic recruiter queries without department words (the honest benchmark set)."""
+    import json
+    queries = json.load(open("benchmark/queries_unnamed.json"))
+    right = sum(detect_category(q["query"]) == q["category"] for q in queries)
+    assert right / len(queries) >= 0.9
+    assert detect_category("Strategy advisor for process re-engineering at client sites") == "CONSULTANT"
+    assert detect_category("Medical billing coder with ICD-10 knowledge") == "HEALTHCARE"

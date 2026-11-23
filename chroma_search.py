@@ -18,11 +18,12 @@ import logging
 import threading
 
 import chromadb
+import numpy as np
 import torch
 from sentence_transformers import CrossEncoder
 
 from model_loader import model
-from scoring import recommend
+from scoring import Baseline, recommend
 
 logger = logging.getLogger("ResumeScreening")
 
@@ -243,6 +244,79 @@ def _query(collection, embedding, n_results, where):
     return r["ids"][0], r["distances"][0], r["metadatas"][0], r["documents"][0]
 
 
+_BASELINE_CACHE = {}
+_BASELINE_CACHE_SIZE = 128
+_MATRIX_CACHE = {}
+
+
+def _dataset_matrix(collection):
+    """(resume names, unit-length chunk vectors) of the sample resumes, kept in memory.
+
+    Reloaded when the collection's size changes (e.g. after re-indexing). Returns None
+    when the collection can't provide embeddings (e.g. the test stand-in).
+    """
+    try:
+        size = collection.count()
+        key = id(collection)
+        cached = _MATRIX_CACHE.get(key)
+        if cached and cached[0] == size:
+            return cached[1]
+        got = collection.get(where={"source": {"$ne": "upload"}}, include=["embeddings", "metadatas"])
+        vectors = np.asarray(got["embeddings"], dtype=np.float32)
+        if vectors.ndim != 2 or not len(vectors):
+            return None
+        vectors /= np.linalg.norm(vectors, axis=1, keepdims=True).clip(min=1e-12)
+        names = [(m or {}).get("resume") for m in got["metadatas"]]
+        _MATRIX_CACHE[key] = (size, (names, vectors))
+        return names, vectors
+    except Exception:
+        return None
+
+
+def score_baseline(text, collection=None, embedding=None):
+    """How every sample resume scores against `text` (mean, spread, all scores).
+
+    Verdicts compare a resume with this baseline (see scoring.py). Cached per text,
+    so an all-departments search computes it once rather than 24 times.
+    """
+    collection = collection if collection is not None else get_collection()
+    if collection is None:
+        return None
+    key = (id(collection), text)
+    if key in _BASELINE_CACHE:
+        return _BASELINE_CACHE[key]
+    if embedding is None:
+        embedding = model.encode(text).tolist()
+    best = {}
+    matrix = _dataset_matrix(collection)
+    if matrix is not None:
+        # In memory: one matrix product instead of a second full index query (~70 ms)
+        names, vectors = matrix
+        q = np.asarray(embedding, dtype=np.float32)
+        sims = vectors @ (q / (np.linalg.norm(q) or 1.0)) * 100
+        for name, score in zip(names, sims.tolist()):
+            if score > best.get(name, -1e9):
+                best[name] = score
+    else:
+        r = collection.query(query_embeddings=[embedding], n_results=max(1, collection.count()),
+                             where={"source": {"$ne": "upload"}}, include=["metadatas", "distances"])
+        for meta, distance in zip(r["metadatas"][0], r["distances"][0]):
+            name = (meta or {}).get("resume")
+            score = (1.0 - distance) * 100
+            if name and score > best.get(name, -1e9):
+                best[name] = score
+    if not best:
+        return None
+    scores = sorted(best.values())
+    mean = sum(scores) / len(scores)
+    std = (sum((s - mean) ** 2 for s in scores) / len(scores)) ** 0.5
+    baseline = Baseline(round(mean, 4), round(std, 4), len(scores), tuple(round(s, 2) for s in scores))
+    if len(_BASELINE_CACHE) >= _BASELINE_CACHE_SIZE:
+        _BASELINE_CACHE.pop(next(iter(_BASELINE_CACHE)))
+    _BASELINE_CACHE[key] = baseline
+    return baseline
+
+
 def search_candidates(job_description, category=None, rerank=None, *, owner=None, collection=None,
                       reranker=None, alpha=None, keyword_mode=None, rerank_top_n=None):
     """Retrieves and ranks candidate resumes for a job description.
@@ -288,6 +362,12 @@ def search_candidates(job_description, category=None, rerank=None, *, owner=None
         logger.error(f"Failed to generate query embedding: {e}")
         return []
 
+    try:
+        baseline = score_baseline(job_description, collection=collection, embedding=query_embedding)
+    except Exception as e:
+        logger.warning(f"Could not compute the score baseline: {e}")
+        baseline = None
+
     not_upload = {"source": {"$ne": "upload"}}
     shared_filter = {"$and": [{"category": category}, not_upload]} if category else not_upload
     try:
@@ -323,12 +403,13 @@ def search_candidates(job_description, category=None, rerank=None, *, owner=None
                 "preview": _snippet(preview, mid_document=meta.get("chunk", 0) > 0),
                 "preview_full": preview[:600],
                 "full_text": doc,
-                # The recommendation always matches the score shown next to it
-                "recommendation": recommend(similarity),
-                # An upload has no department of its own, except a copy of a sample
-                # resume, which takes the original's ("ENGINEERING/E10.pdf" -> ENGINEERING)
-                "category": (meta.get("duplicate_of", "").partition("/")[0] if is_upload
-                             else meta.get("category", "")),
+                # Verdict: this score compared with every sample resume's score for the same query
+                "recommendation": recommend(similarity, baseline),
+                "percentile": baseline.percentile(similarity) if baseline else None,
+                # An upload's department: the original's if it copies a sample resume,
+                # otherwise the department of the job it was analysed against
+                "category": ((meta.get("duplicate_of", "").partition("/")[0] or meta.get("category", ""))
+                             if is_upload else meta.get("category", "")),
                 "source": "upload" if is_upload else "dataset",
                 "file": meta.get("file", "") if is_upload else "",
                 "duplicate_of": meta.get("duplicate_of", "") if is_upload else "",
@@ -340,8 +421,9 @@ def search_candidates(job_description, category=None, rerank=None, *, owner=None
     # An upload that is a copy of a sample resume replaces it, so it isn't listed twice
     # A copy of a sample resume follows the department filter like the original would
     if category:
+        # A department search only shows uploads tagged with that department
         seen_resumes = {k: r for k, r in seen_resumes.items()
-                        if not (r["source"] == "upload" and r["category"] and r["category"] != category)}
+                        if not (r["source"] == "upload" and r["category"] != category)}
     twins = {r["duplicate_of"] for r in seen_resumes.values() if r["duplicate_of"]}
     if twins:
         seen_resumes = {k: r for k, r in seen_resumes.items()
@@ -401,6 +483,7 @@ def search_candidates(job_description, category=None, rerank=None, *, owner=None
             "source": data["source"],
             "file": data["file"],
             "duplicate_of": data["duplicate_of"],
+            "percentile": data["percentile"],
             "keyword_score": data.get("keyword_score", data["similarity"]),
             "semantic_score": data.get("semantic_score", data["similarity"])
         })

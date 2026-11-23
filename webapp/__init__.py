@@ -15,6 +15,11 @@ from .security import get_or_create_secret_key, register_security
 ROOT = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 
 
+
+def dept_label(category):
+    """Readable department name; short acronyms (HR, BPO) stay upper case."""
+    return " ".join(w if len(w) <= 3 else w.title() for w in category.split("-"))
+
 def _configure_logging():
     logging.basicConfig(
         level=logging.INFO,
@@ -65,7 +70,8 @@ def create_app(config=None):
     init_db(app.config["DATABASE"])
 
     register_security(app)
-    app.jinja_env.globals["score_band"] = band  # score colour, consistent with the recommendation
+    app.jinja_env.globals["verdict_band"] = band  # colour for a SHORTLIST/CONSIDER/REJECT verdict
+    app.jinja_env.filters["dept_label"] = dept_label  # "INFORMATION-TECHNOLOGY" -> "Information Technology", "HR" stays "HR"
 
     from .auth import bp as auth_bp
     from .search import bp as search_bp

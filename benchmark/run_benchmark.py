@@ -33,6 +33,14 @@ from query_parsing import detect_category, search_text  # noqa: E402
 
 INDEX_PATH = os.path.join("benchmark", ".index")
 QUERIES_PATH = os.path.join("benchmark", "queries.json")
+# Department detection is also measured on queries that don't name the department
+# (realistic recruiter wording). queries_fresh.json was written before the detector
+# was tuned on queries_unnamed.json and never used for tuning: it's the held-out check.
+DETECTION_SETS = [
+    ("Name the department (queries.json)", QUERIES_PATH),
+    ("Don't name it (queries_unnamed.json)", os.path.join("benchmark", "queries_unnamed.json")),
+    ("Held out, never tuned on (queries_fresh.json)", os.path.join("benchmark", "queries_fresh.json")),
+]
 RESULTS_MD = os.path.join("benchmark", "RESULTS.md")
 RESULTS_JSON = os.path.join("benchmark", "results.json")
 
@@ -229,6 +237,15 @@ def main():
         pipe[name] = {"detect_acc": detect_acc, "all": score_run(queries, rankings, category_sizes)}
     results["pipeline"] = pipe
 
+    # 5. Department detection on all query sets
+    results["detection"] = []
+    for label, path in DETECTION_SETS:
+        with open(path, encoding="utf-8") as f:
+            qs = json.load(f)
+        right = sum(detect_category(q["query"]) == q["category"] for q in qs)
+        results["detection"].append({"set": label, "queries": len(qs), "accuracy": right / len(qs)})
+        print(f"Detection, {label}: {right}/{len(qs)}")
+
     with open(RESULTS_JSON, "w", encoding="utf-8") as f:
         json.dump(results, f, indent=2)
     write_markdown(results)
@@ -306,6 +323,14 @@ def write_markdown(results):
         f"{fmt(p['old']['all']['mrr'])} | {fmt(p['old']['all']['ndcg10'])} |",
         f"| New (dense only, current default) | {fmt(p['new']['detect_acc'])} | {fmt(p['new']['all']['p5'])} | "
         f"{fmt(p['new']['all']['mrr'])} | {fmt(p['new']['all']['ndcg10'])} |",
+        "",
+        "## Department detection",
+        "",
+        "How often the department the app searches is the query's labelled department.",
+        "",
+        "| Query set | Queries | Accuracy |",
+        "| :--- | ---: | ---: |",
+    ] + [f"| {d['set']} | {d['queries']} | {fmt(d['accuracy'])} |" for d in results.get("detection", [])] + [
         "",
         "## Caveats",
         "",

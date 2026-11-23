@@ -33,12 +33,12 @@ body{
 .nav-logo span{font-size:18px;font-weight:700;color:#f7fafc;letter-spacing:-0.2px}
 .nav-right{display:flex;align-items:center;gap:15px}
 .nav-right .btn-back{
-    padding:8px 18px;background:#009393;color:#13232d;
-    border:none;border-radius:6px;
-    font-family:'Inter',sans-serif;font-size:13px;font-weight:700;
+    padding:7px 16px;background:transparent;color:#d5e4ec;
+    border:1px solid rgba(255,255,255,0.2);border-radius:6px;
+    font-family:'Inter',sans-serif;font-size:13px;font-weight:600;
     cursor:pointer;transition:all 0.15s;text-decoration:none
 }
-.nav-right .btn-back:hover{background:#007a7a}
+.nav-right .btn-back:hover{border-color:#00a3a3;color:#f7fafc}
 .content{max-width:1200px;margin:0 auto;padding:110px 32px 60px}
 .hero{text-align:center;margin-bottom:40px}
 .hero h1{font-size:36px;font-weight:800;letter-spacing:-1px;margin-bottom:10px}
@@ -229,7 +229,15 @@ td.num, th.num{text-align:right;font-variant-numeric:tabular-nums}
             <strong>MRR</strong>: how high the first right result appears (1.0 = always first).
             <strong>nDCG@10</strong>: overall quality of the top-10 ordering (1.0 = perfect).
         </p>
-        {% if pipeline.new %}
+        {% if results.detection %}
+        <p class="note">
+            In the app, search first detects the department and only searches inside it. Detection accuracy depends on
+            how the query is worded:
+            {% for d in results.detection %}<strong>{{ '%.0f' % (d.accuracy * 100) }}%</strong> for {{ d.queries }} queries that
+            {{ {0: 'name the department', 1: "don't name it", 2: "don't name it and were never used for tuning"}[loop.index0] }}{{ ';' if not loop.last else '.' }}
+            {% endfor %}
+        </p>
+        {% elif pipeline.new %}
         <p class="note">
             In the app, search first detects the department and only searches inside it. Department detection was right for
             <strong>{{ '%.1f' % (pipeline.new.detect_acc * 100) }}%</strong> of these queries.

@@ -53,7 +53,10 @@ body{
 .hero h1 span{color:var(--primary)}
 .hero p{font-size:var(--fs-body);color:var(--muted);max-width:480px;margin:0 auto;line-height:1.6}
 
-.content{max-width:1200px;margin:0 auto;padding:0 32px 60px}
+.content{max-width:1200px;margin:0 auto;padding:0 32px 24px}
+.advanced summary{cursor:pointer;font-size:var(--fs-meta);font-weight:600;color:var(--text-2);padding:4px 0 10px}
+.advanced summary:hover{color:var(--text)}
+.advanced[open] summary{margin-bottom:4px}
 .section-title{display:flex;align-items:baseline;justify-content:space-between;gap:12px;margin-bottom:14px}
 .section-title h2{font-size:var(--fs-h2);font-weight:700;letter-spacing:-0.3px}
 .section-title .meta{font-size:var(--fs-meta);color:var(--muted)}
@@ -144,7 +147,7 @@ select{cursor:pointer}
 .btn-delete:hover{background:rgba(255,138,138,0.12)}
 
 /* How it works */
-.how{display:grid;grid-template-columns:repeat(4,1fr);gap:12px;margin-bottom:40px;counter-reset:step}
+.how{display:grid;grid-template-columns:repeat(4,1fr);gap:12px;margin-bottom:16px;counter-reset:step}
 .how .step{background:var(--surface);border-radius:10px;padding:16px;position:relative}
 .how .step::before{counter-increment:step;content:counter(step);position:absolute;top:14px;right:14px;font-size:12px;font-weight:800;color:var(--on-primary);background:var(--primary);width:22px;height:22px;border-radius:50%;display:flex;align-items:center;justify-content:center}
 .how .step .glyph{color:var(--primary);margin-bottom:8px}
@@ -182,6 +185,7 @@ select{cursor:pointer}
     <symbol id="i-bars" viewBox="0 0 24 24"><path d="M4 20V10M10 20V4M16 20v-7M22 20H2"/></symbol>
     <symbol id="i-target" viewBox="0 0 24 24"><circle cx="12" cy="12" r="9"/><circle cx="12" cy="12" r="5"/><circle cx="12" cy="12" r="1"/></symbol>
     <symbol id="i-check" viewBox="0 0 24 24"><path d="M20 6L9 17l-5-5"/></symbol>
+    <symbol id="i-tag" viewBox="0 0 24 24"><path d="M20.6 13.4l-7.2 7.2a2 2 0 0 1-2.8 0L3 13V3h10l7.6 7.6a2 2 0 0 1 0 2.8z"/><circle cx="7.5" cy="7.5" r="1.5"/></symbol>
 </svg>
 
 <div class="nav">
@@ -253,12 +257,14 @@ select{cursor:pointer}
                     <button type="button" class="example" data-q="best 5 sales with cold calling">best 5 sales</button>
                     <button type="button" class="example" data-q="10 mechanical engineer resumes with AutoCAD">10 engineer resumes</button>
                 </div>
-                <div class="search-row form-group">
+                <details class="advanced form-group">
+                <summary>Advanced: department and number of results</summary>
+                <div class="search-row">
                     <div>
                         <label for="searchDept">Department</label>
                         <select id="searchDept" name="department">
                             <option value="">Detect from query</option>
-                            {% for d in stats.department_names %}<option value="{{ d }}">{{ d.replace('-', ' ').title() }}</option>{% endfor %}
+                            {% for d in stats.department_names %}<option value="{{ d }}">{{ d|dept_label }}</option>{% endfor %}
                         </select>
                     </div>
                     <div>
@@ -270,6 +276,7 @@ select{cursor:pointer}
                         </select>
                     </div>
                 </div>
+                </details>
                 <button type="submit" class="btn-submit" id="searchBtn">
                     <span class="spinner" aria-hidden="true"></span><span class="btn-text">Smart Search</span>
                 </button>
@@ -285,7 +292,7 @@ select{cursor:pointer}
         {% set status_cls = 'online' if stats.online else 'offline' %}
         {% set status_txt = 'Online' if stats.online else 'Offline' %}
         <div class="engine-card">
-            <div class="head"><div class="glyph"><svg class="icon" aria-hidden="true"><use href="#i-chart"/></svg></div><span class="status online">Ready</span></div>
+            <div class="head"><div class="glyph"><svg class="icon" aria-hidden="true"><use href="#i-tag"/></svg></div><span class="status online">Ready</span></div>
             <div class="name">Keyword Match</div>
             <div class="provider">{{ stats.skills }} skills database</div>
             <div class="meta"><span>{{ stats.departments }} roles</span><span class="tag">Whole-term matching</span></div>
@@ -312,10 +319,10 @@ select{cursor:pointer}
                 {% for r in recent %}
                 <tr>
                     <td>{% if r['can_open'] %}<a href="{{ url_for('upload.open_analysis', analysis_id=r['id']) }}" title="Reopen this analysis">{{ r['filename'] }}</a>{% else %}{{ r['filename'] }}{% endif %}</td>
-                    <td class="{{ score_band(r['score']) }}">{{ r['score'] }}%</td>
+                    <td class="{{ verdict_band(r['recommendation']) }}">{{ r['score'] }}%</td>
                     <td>{{ r['recommendation'] }}</td>
                     <td style="color:var(--muted);font-size:13px">{{ r['timestamp'] }}</td>
-                    <td style="text-align:right"><form action="{{ url_for('upload.remove_analysis', analysis_id=r['id']) }}" method="POST" style="margin:0"><input type="hidden" name="csrf_token" value="{{ csrf_token() }}"><button type="submit" class="btn-delete" aria-label="Delete {{ r['filename'] }} from history">Delete</button></form></td>
+                    <td style="text-align:right"><form action="{{ url_for('upload.remove_analysis', analysis_id=r['id']) }}" method="POST" style="margin:0" class="confirm-delete" data-name="{{ r['filename'] }}"><input type="hidden" name="csrf_token" value="{{ csrf_token() }}"><button type="submit" class="btn-delete" aria-label="Delete {{ r['filename'] }} from history">Delete</button></form></td>
                 </tr>
                 {% else %}
                 <tr><td colspan="5" style="text-align:center;color:var(--muted)">No analyses yet. Upload a resume above to get started.</td></tr>
@@ -328,7 +335,7 @@ select{cursor:pointer}
     <div class="section-title"><h2>How it works</h2></div>
     <div class="how">
         <div class="step"><div class="glyph"><svg class="icon" aria-hidden="true"><use href="#i-target"/></svg></div><h3>Department detection</h3><p>A cross-encoder reads the job description and picks the department to search.</p></div>
-        <div class="step"><div class="glyph"><svg class="icon" aria-hidden="true"><use href="#i-chart"/></svg></div><h3>Keyword match</h3><p>Checks which skills the job asks for appear in the resume.</p></div>
+        <div class="step"><div class="glyph"><svg class="icon" aria-hidden="true"><use href="#i-tag"/></svg></div><h3>Keyword match</h3><p>Checks which skills the job asks for appear in the resume.</p></div>
         <div class="step"><div class="glyph"><svg class="icon" aria-hidden="true"><use href="#i-brain"/></svg></div><h3>Semantic similarity</h3><p>Scores every section of the resume against the job; the best section decides the verdict.</p></div>
         <div class="step"><div class="glyph"><svg class="icon" aria-hidden="true"><use href="#i-db"/></svg></div><h3>Vector search</h3><p>Ranks the closest resumes in the index by cosine similarity.</p></div>
     </div>
@@ -444,6 +451,8 @@ select{cursor:pointer}
         setFile(input.files[0] || null);
     });
 
+    const adv = document.querySelector('details.advanced');
+    if(adv && (document.getElementById('searchDept').value || document.getElementById('searchTop').value)) adv.open = true;
     // Smart Search: example queries fill the box and run; Enter submits (single-line input)
     const searchForm = document.getElementById('searchForm');
     const query = document.getElementById('searchQuery');
@@ -459,6 +468,9 @@ select{cursor:pointer}
         searchBtn.classList.add('loading');
         searchBtn.querySelector('.btn-text').textContent = 'Searching…';
     });
+    document.querySelectorAll('form.confirm-delete').forEach(f => f.addEventListener('submit', e => {
+        if(!confirm('Delete "' + f.dataset.name + '" from your history? This can\'t be undone.')) e.preventDefault();
+    }));
     refresh();
 })();
 </script>

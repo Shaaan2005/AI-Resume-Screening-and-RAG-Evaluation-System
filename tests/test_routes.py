@@ -202,8 +202,11 @@ def test_upload_saves_matching_score_and_status(test_app, authenticated_client, 
     monkeypatch.setattr(upload_module, "save_history", lambda *a: saved.append(a))
     monkeypatch.setitem(test_app.config, "DEMO_MODE", False)
     _post_real_resume(authenticated_client)
-    (user_id, filename, score, rec, *_), = saved
-    assert rec == recommend(score)
+    (user_id, filename, score, rec, page), = saved
+    assert rec == page["combined_rec"] and score == page["semantic_score"]  # history = what the page shows
+    assert rec in ("SHORTLIST", "CONSIDER", "REJECT")
+    if page["consider_at"] is not None:  # no cutoffs when there's no index to compare with (CI)
+        assert page["consider_at"] < page["shortlist_at"]
 
 
 def test_reuploading_same_file_reuses_one_entry(test_app, authenticated_client, monkeypatch):

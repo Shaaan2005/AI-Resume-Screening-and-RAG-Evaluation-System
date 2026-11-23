@@ -9,9 +9,8 @@ from werkzeug.utils import secure_filename
 
 import resume_engine
 from chroma_search import search_candidates, get_collection, RESUMES_DIR, _dataset_names, _index_path
-from query_parsing import (MAX_REQUESTED, detect_category, extract_search_intent, is_garbage,
+from query_parsing import (MAX_REQUESTED, department_alternatives, detect_category, extract_search_intent, is_garbage,
                            meaningful_terms, named_departments, parse_requested_count, search_text)
-from scoring import CONSIDER_AT
 from skills_config import SKILLS_BY_CATEGORY
 
 from .history import load_history
@@ -38,7 +37,7 @@ def _stats():
     """Live numbers and status for the home page (instead of hard-coded ones)."""
     collection = get_collection()
     try:
-        chunks = collection.count() if collection else 0
+        chunks = len(collection.get(where={"source": {"$ne": "upload"}}, include=[])["ids"]) if collection else 0
     except Exception:
         chunks = 0
     return {
@@ -136,6 +135,7 @@ def search():
     several = not chosen and not all_dept and len(named) > 1 and bool(_JOINED_RE.search(lowered))
     category = None
     multi_msg = None
+    alternatives = []
     per_department = all_dept or several
 
     if all_dept:
@@ -146,6 +146,9 @@ def search():
         rankings = _search_departments(search_intent, named, owner)
     else:
         category = chosen or detect_category(job_description)
+        if category and not chosen and len(named) != 1:
+            # The department was a guess, not named: offer the next likeliest ones
+            alternatives = department_alternatives(job_description, category)
         if category is None:
             multi_msg = ("No department matched this search, so it covers all departments. "
                          "Add one (e.g. \"from finance\") or a job title to narrow it down.")
@@ -191,10 +194,11 @@ def search():
         notes.append("No skills or requirements given, so these are ranked by general fit without "
                      "SHORTLIST/REJECT verdicts. Add requirements (e.g. \"chef with pastry experience\") to get them.")
     else:
-        best = max(r["similarity"] for r in rankings)
-        if best < CONSIDER_AT:
-            notes.append(f"No strong matches: the best resume scores {best:.0f}% (CONSIDER starts at {CONSIDER_AT:.0f}%). "
-                         "These are the closest resumes available, but the collection may have no one for this role.")
+        if not any(r["recommendation"] in ("SHORTLIST", "CONSIDER") for r in rankings):
+            best = max(r["similarity"] for r in rankings)
+            notes.append(f"No strong matches: the best resume scores {best:.0f}%, which doesn't stand out from the "
+                         "other sample resumes for this search. These are the closest available, but the "
+                         "collection may have no one for this role.")
 
     collection = get_collection()
     total_candidates = collection.count() if collection else 0
@@ -205,7 +209,8 @@ def search():
         total_candidates=total_candidates,
         job_description=job_description,
         msg=" ".join(n for n in notes if n) or None,
-        multi_msg=multi_msg)
+        multi_msg=multi_msg,
+        alternatives=alternatives)
 
 
 @bp.route("/resume/<category>/<filename>")

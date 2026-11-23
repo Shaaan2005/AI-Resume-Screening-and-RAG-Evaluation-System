@@ -246,3 +246,42 @@ mechanical design
 product design
 thermodynamics
 hvac
+cold calling
+negotiation
+crm
+salesforce
+lead generation
+account management
+product marketing
+market research
+funnel analysis
+customer journey
+email marketing
+menu planning
+food safety
+food preparation
+inventory management
+customer service
+conflict resolution
+scheduling
+budgeting
+forecasting
+public speaking
+copywriting
+video editing
+premiere pro
+after effects
+photoshop
+illustrator
+figma
+icd-10
+medical billing
+patient care
+lesson planning
+classroom management
+contract drafting
+legal research
+litigation
+quickbooks
+reconciliation
+payroll

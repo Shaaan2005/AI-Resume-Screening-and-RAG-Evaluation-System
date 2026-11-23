@@ -20,7 +20,7 @@
         "mrr": 0.8729166666666667,
         "ndcg10": 0.5054717848783883
       },
-      "latency_ms": 32.432199994218536,
+      "latency_ms": 53.742600000987295,
       "kwargs": {
         "rerank": false
       },
@@ -671,7 +671,7 @@
         "mrr": 0.5472222222222222,
         "ndcg10": 0.378083321268226
       },
-      "latency_ms": 346.6922000006889,
+      "latency_ms": 362.92600000160746,
       "kwargs": {
         "rerank": true,
         "reranker": "cross-encoder/stsb-distilroberta-base",
@@ -1325,7 +1325,7 @@
         "mrr": 0.5529431216931217,
         "ndcg10": 0.2920230893636473
       },
-      "latency_ms": 352.55419999884907,
+      "latency_ms": 363.046549995488,
       "kwargs": {
         "rerank": true,
         "reranker": "cross-encoder/stsb-distilroberta-base",
@@ -1978,7 +1978,7 @@
         "mrr": 0.8045634920634921,
         "ndcg10": 0.5069389454572509
       },
-      "latency_ms": 162.5708499996108,
+      "latency_ms": 180.12479999742936,
       "kwargs": {
         "rerank": true,
         "reranker": "cross-encoder/ms-marco-MiniLM-L-6-v2",
@@ -2631,7 +2631,7 @@
         "mrr": 0.7642045454545454,
         "ndcg10": 0.4590513540751081
       },
-      "latency_ms": 163.80294999544276,
+      "latency_ms": 184.46750000293832,
       "kwargs": {
         "rerank": true,
         "reranker": "cross-encoder/ms-marco-MiniLM-L-6-v2",
@@ -3285,7 +3285,7 @@
         "mrr": 0.7951388888888888,
         "ndcg10": 0.479937404039485
       },
-      "latency_ms": 165.37820000667125,
+      "latency_ms": 185.61429999681422,
       "kwargs": {
         "rerank": true,
         "reranker": "cross-encoder/ms-marco-MiniLM-L-6-v2",
@@ -3939,7 +3939,7 @@
         "mrr": 0.7351190476190477,
         "ndcg10": 0.44756536331959573
       },
-      "latency_ms": 663.3116500015603,
+      "latency_ms": 668.9284500025678,
       "kwargs": {
         "rerank": true,
         "reranker": "BAAI/bge-reranker-base",
@@ -4592,7 +4592,7 @@
         "mrr": 0.7951388888888888,
         "ndcg10": 0.4737743311628792
       },
-      "latency_ms": 674.4079000054626,
+      "latency_ms": 644.9597000028007,
       "kwargs": {
         "rerank": true,
         "reranker": "BAAI/bge-reranker-base",
@@ -5641,21 +5641,21 @@
   ],
   "pipeline": {
     "old": {
-      "detect_acc": 0.9791666666666666,
+      "detect_acc": 1.0,
       "all": {
-        "p5": 0.9791666666666666,
-        "p10": 0.9791666666666666,
-        "mrr": 0.9791666666666666,
-        "ndcg10": 0.9791666666666666
+        "p5": 1.0,
+        "p10": 1.0,
+        "mrr": 1.0,
+        "ndcg10": 1.0
       }
     },
     "new": {
-      "detect_acc": 0.9791666666666666,
+      "detect_acc": 1.0,
       "all": {
-        "p5": 0.9791666666666666,
-        "p10": 0.9791666666666666,
-        "mrr": 0.9791666666666666,
-        "ndcg10": 0.9791666666666666
+        "p5": 1.0,
+        "p10": 1.0,
+        "mrr": 1.0,
+        "ndcg10": 1.0
       }
     }
   },
@@ -5668,5 +5668,22 @@
     "reranker": "cross-encoder/ms-marco-MiniLM-L-6-v2",
     "mode": "overlap",
     "alpha": 0.0
-  }
+  },
+  "detection": [
+    {
+      "set": "Name the department (queries.json)",
+      "queries": 48,
+      "accuracy": 1.0
+    },
+    {
+      "set": "Don't name it (queries_unnamed.json)",
+      "queries": 48,
+      "accuracy": 1.0
+    },
+    {
+      "set": "Held out, never tuned on (queries_fresh.json)",
+      "queries": 24,
+      "accuracy": 0.9583333333333334
+    }
+  ]
 }

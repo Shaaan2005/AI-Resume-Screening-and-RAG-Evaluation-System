@@ -37,30 +37,30 @@ INTENT_NOISE = {"show","list","find","search","need","want","get","give","me",
 # ── Category detection ──────────────────────────────────────────────────────
 
 _CAT_DESCRIPTIONS = {
-    "ACCOUNTANT": "The category for this query is ACCOUNTANT. Includes accounting, bookkeeper, auditor, tax consultant, CA, CPA, bookkeeping, payroll, audit.",
-    "ADVOCATE": "The category for this query is ADVOCATE. Includes lawyer, attorney, legal counsel, solicitor, legal advisor, corporate lawyer, litigation, legal research, contract drafting.",
-    "AGRICULTURE": "The category for this query is AGRICULTURE. Includes farmer, agronomist, agricultural scientist, horticulturist, farm manager, crop management, farming, agronomy.",
-    "APPAREL": "The category for this query is APPAREL. Includes fashion, garment, textile, fashion designer, merchandiser, clothing, apparel designer, fashion design, garment construction.",
-    "ARTS": "The category for this query is ARTS. Includes artist, painter, sculptor, illustrator, creative, fine arts, visual arts, digital art, graphic design, animation.",
-    "AUTOMOBILE": "The category for this query is AUTOMOBILE. Includes automotive, mechanic, auto engineer, vehicle, car, motor, auto mechanics, engine repair, electric vehicles.",
-    "AVIATION": "The category for this query is AVIATION. Includes pilot, flight, airline, aircraft, cabin crew, air traffic controller, flight attendant, aerospace, flight operations.",
-    "BANKING": "The category for this query is BANKING. Includes banker, bank officer, loan officer, credit analyst, financial services, bank, investment banker, credit analysis, risk management.",
-    "BPO": "The category for this query is BPO. Includes business process outsourcing, call center, customer support, customer service representative, telecaller, helpdesk, technical support.",
-    "BUSINESS-DEVELOPMENT": "The category for this query is BUSINESS-DEVELOPMENT. Includes sales development, biz dev, partnerships, growth manager, business strategist, lead generation.",
-    "CHEF": "The category for this query is CHEF. Includes cook, culinary, kitchen, baker, pastry chef, sous chef, head chef, food, culinary arts, cooking, menu planning.",
-    "CONSTRUCTION": "The category for this query is CONSTRUCTION. Includes builder, site engineer, civil contractor, project manager construction, mason, civil engineering, structural engineering, blueprint.",
-    "CONSULTANT": "The category for this query is CONSULTANT. Includes consulting, management consultant, strategy consultant, business analyst, advisor, strategic planning, management consulting.",
-    "DESIGNER": "The category for this query is DESIGNER. Includes ui designer, ux designer, graphic designer, web designer, product designer, visual designer, figma, prototyping, wireframing.",
-    "DIGITAL-MEDIA": "The category for this query is DIGITAL-MEDIA. Includes digital marketing, social media manager, content creator, seo specialist, online marketing, google ads, content strategy, copywriter.",
-    "ENGINEERING": "The category for this query is ENGINEERING. Includes engineer, software engineer, software developer, programmer, coder, developer, devops engineer, data engineer, backend engineer, frontend engineer, full stack developer, software engineering, tech.",
-    "FINANCE": "The category for this query is FINANCE. Includes financial analyst, investment analyst, portfolio manager, treasury, CFO, financial planner, wealth manager, financial modeling, valuation.",
-    "FITNESS": "The category for this query is FITNESS. Includes personal trainer, gym instructor, fitness coach, yoga instructor, sports trainer, wellness coach, personal training, strength training.",
-    "HEALTHCARE": "The category for this query is HEALTHCARE. Includes doctor, nurse, physician, medical, hospital, health, clinical, pharmacist, surgeon, therapist, patient care, nursing, surgery.",
-    "HR": "The category for this query is HR. Includes human resources, recruiter, talent acquisition, hr manager, hr executive, people operations, hiring manager, recruitment, onboarding.",
-    "INFORMATION-TECHNOLOGY": "The category for this query is INFORMATION-TECHNOLOGY. Includes IT support, system administrator, network administrator, sysadmin, cybersecurity, cloud computing, aws, linux, infrastructure.",
-    "PUBLIC-RELATIONS": "The category for this query is PUBLIC-RELATIONS. Includes pr, communications, media relations, press, corporate communications, pr manager, spokesperson, press release.",
-    "SALES": "The category for this query is SALES. Includes salesperson, sales executive, account executive, sales manager, business sales, lead generation, account management, closing.",
-    "TEACHER": "The category for this query is TEACHER. Includes educator, professor, instructor, tutor, lecturer, teaching, academic, faculty, university professor, lecturing, classroom management.",
+    "ACCOUNTANT": "The category for this query is ACCOUNTANT. Roles: accountant, bookkeeper, auditor, accounts payable and receivable clerk, tax preparer, CPA, CA. Ledgers, journal entries, reconciliations, invoices, month-end close, tax returns, payroll, audits.",
+    "ADVOCATE": "The category for this query is ADVOCATE. Roles: lawyer, attorney, advocate, legal counsel, solicitor, litigator, paralegal. Court cases, motions, pleadings, legal research, contracts, NDAs, agreements, compliance, disputes.",
+    "AGRICULTURE": "The category for this query is AGRICULTURE. Roles: farmer, agronomist, crop scientist, farm manager, horticulturist, grower. Crops, soil, irrigation, livestock, dairy, greenhouse, harvest, seeds, pest control, yields.",
+    "APPAREL": "The category for this query is APPAREL. Roles: fashion designer, garment technologist, pattern maker, textile merchandiser, clothing buyer. Garments, fabrics, knitwear, sewing, fit samples, trims, collections, mills.",
+    "ARTS": "The category for this query is ARTS. Roles: artist, painter, illustrator, sculptor, musician, music teacher, art instructor, curator, performer. Painting, drawing, music, recitals, galleries, exhibitions, theatre, fine arts.",
+    "AUTOMOBILE": "The category for this query is AUTOMOBILE. Roles: automotive mechanic, auto technician, body shop painter, collision repair technician, service advisor. Cars, vehicles, engines, brakes, transmissions, suspension, dealerships.",
+    "AVIATION": "The category for this query is AVIATION. Roles: pilot, cabin crew, flight attendant, ramp agent, aircraft maintenance technician, flight dispatcher, air traffic controller. Airlines, aircraft, airports, baggage, flights.",
+    "BANKING": "The category for this query is BANKING. Roles: banker, bank teller, loan officer, relationship manager, credit analyst, branch manager. Bank branches, deposits, accounts, mortgages, loans, credit, retail banking.",
+    "BPO": "The category for this query is BPO. Roles: call center agent, customer support associate, chat support, help desk agent, telecaller, customer service representative. Outsourced support, tickets, SLAs, inbound and outbound calls, shifts.",
+    "BUSINESS-DEVELOPMENT": "The category for this query is BUSINESS-DEVELOPMENT. Roles: business development manager, partnerships lead, growth manager, lead generation specialist. New markets, B2B deals, channel partners, prospecting enterprise accounts, alliances.",
+    "CHEF": "The category for this query is CHEF. Roles: chef, cook, sous chef, pastry chef, baker, kitchen lead, line cook. Kitchens, menus, food preparation, plating, desserts, banquets, restaurants, food safety.",
+    "CONSTRUCTION": "The category for this query is CONSTRUCTION. Roles: construction manager, site supervisor, foreman, civil engineer, quantity surveyor, contractor, builder. Building sites, concrete, framing, subcontractors, safety inspections, cost estimates.",
+    "CONSULTANT": "The category for this query is CONSULTANT. Roles: management consultant, strategy consultant, business analyst, ERP and SAP implementation consultant, advisor. Client engagements, process improvement, workshops, operations, transformation.",
+    "DESIGNER": "The category for this query is DESIGNER. Roles: graphic designer, UI/UX designer, web designer, brand designer, visual designer. Logos, branding, style guides, packaging, layouts, Figma, Illustrator, prototypes, wireframes.",
+    "DIGITAL-MEDIA": "The category for this query is DIGITAL-MEDIA. Roles: digital marketer, social media manager, content creator, video editor, SEO specialist, paid ads specialist, marketing manager. Campaigns, Instagram, YouTube, Google Ads, video production, motion graphics.",
+    "ENGINEERING": "The category for this query is ENGINEERING. Roles: mechanical engineer, electrical engineer, manufacturing engineer, quality engineer, design engineer, engineering technician. CAD, SolidWorks, AutoCAD, PLC, prototypes, failure analysis, manufactured parts.",
+    "FINANCE": "The category for this query is FINANCE. Roles: financial analyst, FP&A analyst, investment analyst, treasury analyst, portfolio manager, CFO. Budgets, forecasting, variance reports, valuation models, equity research, cash flow.",
+    "FITNESS": "The category for this query is FITNESS. Roles: personal trainer, fitness instructor, yoga instructor, pilates instructor, strength coach, gym trainer. Workouts, exercise programs, group classes, HIIT, spin, wellness.",
+    "HEALTHCARE": "The category for this query is HEALTHCARE. Roles: medical staff, nurse, doctor, physician, pharmacist, pharmacy technician, medical coder, medical billing specialist, therapist. Patients, hospitals, clinics, prescriptions, ICD-10, medical records.",
+    "HR": "The category for this query is HR. Roles: human resources generalist, recruiter, talent acquisition partner, HR manager, payroll and benefits administrator, people operations. Hiring, interviews, onboarding, employee relations, policies.",
+    "INFORMATION-TECHNOLOGY": "The category for this query is INFORMATION-TECHNOLOGY. Roles: software developer, programmer, backend developer, Python developer, Java developer, software engineer, systems administrator, network administrator, IT support, help desk technician. Servers, Active Directory, cloud, APIs, databases, cybersecurity.",
+    "PUBLIC-RELATIONS": "The category for this query is PUBLIC-RELATIONS. Roles: public relations specialist, press officer, communications manager, media spokesperson. Press releases, media relations, journalists, reputation, crisis communications, interviews.",
+    "SALES": "The category for this query is SALES. Roles: sales representative, account executive, inside sales rep, field sales, sales manager. Cold calling, quotas, demos, renewals, closing deals, CRM pipelines, retail accounts.",
+    "TEACHER": "The category for this query is TEACHER. Roles: teacher, educator, tutor, lecturer, professor, kindergarten teacher. Schools, classrooms, lesson plans, students, exams, literacy, curriculum.",
 }
 
 
@@ -109,26 +109,32 @@ _DEPARTMENT_ALIASES = {
                      "(?:civil|site|structural) engineers?"],
     "CONSULTANT": ["consultants?", "consulting"],
     "DESIGNER": ["designers?"],
-    "DIGITAL-MEDIA": ["digital[ -]media"],
-    # "developer" alone means software, but not in "business / real estate / property developer"
-    "ENGINEERING": ["engineering", _NOT_NON_SOFTWARE + "developers?", "programmers?", "coders?",
-                    # engineering disciplines (the model alone sent "Mechanical Engineer" to AUTOMOBILE)
-                    "(?:mechanical|electrical|electronics?|chemical|thermal|industrial|manufacturing|"
-                    "software|hardware|test|qa|design|product) engineers?"],
+    # No Marketing department in the data: marketing roles are closest to DIGITAL-MEDIA
+    "DIGITAL-MEDIA": ["digital[ -]media", "(?:digital |online |content |performance |product )?marketing",
+                      "marketers?", "social media"],
+    # engineering disciplines (the model alone sent "Mechanical Engineer" to AUTOMOBILE)
+    "ENGINEERING": ["engineering", "(?:mechanical|electrical|electronics?|chemical|thermal|industrial|"
+                    "manufacturing|hardware|quality|design|product) engineers?"],
     "FINANCE": ["finance"],
     "FITNESS": ["fitness"],
     "HEALTHCARE": ["health ?care", "doctors?", "nurses?", "physicians?"],
     "HR": ["hr", "human resources?", "recruiters?"],
+    # Software roles belong here: the dataset's ENGINEERING resumes are mechanical/electrical.
+    # "developer" alone means software, but not in "business / real estate / property developer".
     "INFORMATION-TECHNOLOGY": ["information[ -]technology",
-                               "it (?:support|help ?desk|administrators?|infrastructure)"],
+                               "it (?:support|help ?desk|administrators?|infrastructure)",
+                               _NOT_NON_SOFTWARE + "developers?", "programmers?",
+                               "(?<!billing )(?<!medical )coders?",
+                               "(?:software|qa|test|devops|backend|frontend|full[ -]stack) engineers?",
+                               "(?:system|network|database)s? administrators?", "sysadmins?"],
     "PUBLIC-RELATIONS": ["public[ -]relations"],
     "SALES": ["sales", "salespe(?:rson|ople)"],
-    "TEACHER": ["teachers?", "teaching", "professors?", "tutors?", "lecturers?"],
+    "TEACHER": ["teachers?", "professors?", "tutors?", "lecturers?"],
 }
 # Abbreviations that are also everyday words, so they only count in capitals.
 _DEPARTMENT_ACRONYMS = {"IT": "INFORMATION-TECHNOLOGY", "BD": "BUSINESS-DEVELOPMENT",
                         "PR": "PUBLIC-RELATIONS"}
-_ALIAS_PATTERNS = {cat: re.compile(r"\b(?:" + "|".join(words) + r")\b", re.I)
+_ALIAS_PATTERNS = {cat: re.compile(r"(?<![\w-])(?:" + "|".join(words) + r")(?![\w-])", re.I)
                    for cat, words in _DEPARTMENT_ALIASES.items()}
 
 
@@ -138,6 +144,21 @@ def named_departments(query):
     found += [cat for word, cat in _DEPARTMENT_ACRONYMS.items()
               if re.search(rf"\b{word}\b", query) and cat not in found]
     return found
+
+
+def department_alternatives(query, chosen, n=2):
+    """The next most likely departments after `chosen`, for "Not right? Try ..." links."""
+    ce = get_cross_encoder()
+    if ce is None or not query:
+        return []
+    cats = list(_CAT_DESCRIPTIONS)
+    try:
+        scores = ce.predict([(query, _CAT_DESCRIPTIONS[c]) for c in cats])
+    except Exception as e:
+        logger.warning(f"Could not rank alternative departments: {e}")
+        return []
+    ranked = [cats[i] for i in sorted(range(len(cats)), key=lambda i: -scores[i])]
+    return [c for c in ranked if c != chosen][:n]
 
 
 def detect_category(job_description):
@@ -184,7 +205,7 @@ def _stem(word):
 def _build_job_vocabulary():
     vocab = set()
     for description in _CAT_DESCRIPTIONS.values():
-        vocab |= {_stem(w) for w in re.findall(r"[a-z+#]+", description.lower().split("includes", 1)[1])
+        vocab |= {_stem(w) for w in re.findall(r"[a-z+#]+", description.lower().split("roles:", 1)[1])
                   if len(w) >= 3}
     for skills in SKILLS_BY_CATEGORY.values():
         for skill in skills:
@@ -263,6 +284,7 @@ def search_text(query):
     """
     t = _RESULT_NOUNS.sub(" ", _COMMAND.sub(" ", query))
     t = re.sub(r"\s+", " ", t).strip(" ,.;:")
+    t = re.sub(r"^(?:from|in|of|for|among)\s+", "", t, flags=re.I)  # "from chef" -> "chef"
     return t if meaningful_terms(t) else query
 
 

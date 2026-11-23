@@ -25,18 +25,30 @@ def load_history(user_id, limit=10):
 
 
 def save_history(user_id, filename, score, recommendation, details=None):
-    """Records one analysis. `score` and `recommendation` must be the pair shown to the user;
-    `details` is the result page's data, kept so the analysis can be reopened."""
+    """Records one analysis and returns its id (None if it couldn't be saved).
+
+    `score` and `recommendation` must be the pair shown to the user; `details` is the
+    result page's data, kept so the analysis can be reopened. Analysing the same file
+    against the same job description again replaces the earlier row.
+    """
     try:
         with connect() as conn:
-            conn.execute(
+            if details:
+                for row_id, old in conn.execute(
+                        "SELECT id, details FROM analyses WHERE user_id = ? AND filename = ? AND details IS NOT NULL",
+                        (user_id, filename)).fetchall():
+                    if json.loads(old).get("job_description") == details.get("job_description"):
+                        conn.execute("DELETE FROM analyses WHERE id = ?", (row_id,))
+            cur = conn.execute(
                 "INSERT INTO analyses (user_id, filename, score, recommendation, created_at, details) "
                 "VALUES (?, ?, ?, ?, ?, ?)",
                 (user_id, filename, round(float(score), 2), recommendation,
                  datetime.now().strftime("%d %b %Y, %I:%M %p"), json.dumps(details) if details else None))
             conn.commit()
+            return cur.lastrowid
     except Exception as e:
         logger.warning(f"Could not save history: {e}")
+        return None
 
 
 def load_analysis(user_id, analysis_id):

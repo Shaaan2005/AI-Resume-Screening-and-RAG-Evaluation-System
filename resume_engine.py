@@ -88,15 +88,32 @@ def extract_resume_text(path):
     return clean_text(text).strip()
 
 
-def _contains_skill(skill, text):
-    """True if `skill` appears in `text` as a whole term.
+def _skill_pattern(skill):
+    # Plain \\b word boundaries break on skills like "c++" or "node.js", so the
+    # characters around a match must not be letters, digits or hyphens. This stops
+    # "go" matching "good" or "go-to-market", and "java" matching "javascript".
+    return re.compile(r"(?<![a-z0-9-])" + re.escape(skill) + r"(?![a-z0-9-])")
 
-    Plain `\\b` word boundaries break on skills like "c++" or "node.js", so we
-    require that the characters around the match are not letters or digits.
-    This stops "go" matching "good" and "java" matching "javascript".
+
+def _contains_skill(skill, text):
+    """True if `skill` appears in `text` as a whole term."""
+    return _skill_pattern(skill).search(text) is not None
+
+
+def find_skills(candidates, text):
+    """The candidate skills found in `text` (in reading order), each span used once.
+
+    Longer skills are matched first and their text blanked out, so "machine
+    learning" isn't also counted as "learning", and "go-to-market" never as "go".
     """
-    pattern = r"(?<![a-z0-9])" + re.escape(skill) + r"(?![a-z0-9])"
-    return re.search(pattern, text) is not None
+    found = {}
+    for skill in sorted(dict.fromkeys(candidates), key=len, reverse=True):
+        pattern = _skill_pattern(skill)
+        match = pattern.search(text)
+        if match:
+            found[skill] = match.start()
+            text = pattern.sub(lambda m: " " * len(m.group()), text)  # same length: positions stay valid
+    return sorted(found, key=found.get)  # in the order they appear in the text
 
 
 def analyze_resume(path, category=None, text=None, job_description=None):
@@ -134,7 +151,7 @@ def analyze_resume(path, category=None, text=None, job_description=None):
     basis = "role" if role_skills else "all"
     if job_description:
         jd = job_description.lower()
-        wanted = list(dict.fromkeys(s for s in list(role_skills or []) + list(skills) if _contains_skill(s, jd)))
+        wanted = find_skills(list(role_skills or []) + list(skills), jd)
         if wanted:
             # Measured against what the job asks for, not a role template the job may not need
             reference, basis = wanted, "job"

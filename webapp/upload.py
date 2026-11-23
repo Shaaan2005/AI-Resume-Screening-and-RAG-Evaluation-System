@@ -6,11 +6,11 @@ import logging
 from flask import Blueprint, request, render_template, current_app, session, abort, redirect, url_for
 from werkzeug.utils import secure_filename
 
-from chroma_search import search_candidates, get_collection
+from chroma_search import search_candidates, get_collection, score_baseline
 from model_loader import model
 from query_parsing import detect_category
 from resume_engine import analyze_resume, extract_resume_text, chunk_text
-from scoring import recommend
+from scoring import recommend, CONSIDER_Z, SHORTLIST_Z
 from semantic_match import best_chunk_similarity
 
 from .history import save_history, load_analysis, delete_analysis
@@ -59,13 +59,14 @@ def _dataset_twin(collection, embeddings):
     return ""
 
 
-def _index_resume(owner, stored, display_name, chunks, embeddings, keyword_result):
+def _index_resume(owner, stored, display_name, chunks, embeddings, keyword_result, category=None):
     """Adds the uploaded resume to the search index, visible only to its owner.
 
     Chunk ids derive from the stored name, so uploading the same file again
-    replaces its entries instead of adding duplicates. No department is stored:
-    guessing one from a resume was right <50% of the time on the benchmark, so
-    the owner's uploads are searched across all departments instead.
+    replaces its entries instead of adding duplicates. Its department is the one
+    of the job it was analysed against (`category`), not a guess from the resume
+    itself (that was right <50% of the time). Department searches only show
+    uploads with that department; all-department searches show every upload.
     """
     collection = get_collection()
     if not collection or not chunks:
@@ -83,7 +84,7 @@ def _index_resume(owner, stored, display_name, chunks, embeddings, keyword_resul
             "chunk": idx,
             "total_chunks": len(chunks),
             "skill_score": keyword_result["score"],
-            "category": "",
+            "category": category or "",  # the department of the job it was analysed for
             "duplicate_of": twin,
         } for idx in range(len(chunks))]
     )
@@ -144,10 +145,12 @@ def upload():
         chunks = chunk_text(resume_text)
         embeddings = model.encode(chunks) if chunks else []
         match_score = best_chunk_similarity(model.encode(job_description), embeddings)
-        match_rec = recommend(match_score)
+        # Verdict: this resume compared with how the sample resumes score for the same job
+        baseline = score_baseline(job_description)
+        match_rec = recommend(match_score, baseline)
 
         if not demo_mode:
-            _index_resume(owner, stored, clean_name, chunks, embeddings, keyword_result)
+            _index_resume(owner, stored, clean_name, chunks, embeddings, keyword_result, category)
 
         rankings = search_candidates(job_description, category=category, owner=owner)
         collection = get_collection()
@@ -163,9 +166,16 @@ def upload():
             # full_text is the whole resume: not needed to redraw the page, so not stored
             rankings=[{k: v for k, v in r.items() if k != "full_text"} for r in rankings],
             job_description=job_description,
-            category=category)
+            category=category,
+            percentile=baseline.percentile(match_score) if baseline else None,
+            sample_count=baseline.count if baseline else 0,
+            consider_at=baseline.cutoff(CONSIDER_Z) if baseline else None,
+            shortlist_at=baseline.cutoff(SHORTLIST_Z) if baseline else None)
         if not demo_mode:
-            save_history(owner, clean_name, match_score, match_rec, page)
+            analysis_id = save_history(owner, clean_name, match_score, match_rec, page)
+            if analysis_id:
+                # Post/Redirect/Get: refreshing the result page reloads it instead of re-posting (405)
+                return redirect(url_for("upload.open_analysis", analysis_id=analysis_id))
 
         return render_template("result.html", error=None, total_candidates=total_candidates, **page)
     except Exception:

@@ -10,6 +10,8 @@ os.chdir(ROOT)
 from query_parsing import detect_category
 
 # --- Test Cases ---
+# Software roles map to INFORMATION-TECHNOLOGY: the dataset's ENGINEERING resumes are
+# mechanical/electrical, and a standard job taxonomy files developers under IT.
 test_cases = [
     # (query, expected_category)
     # Singular role names
@@ -26,11 +28,11 @@ test_cases = [
     ("give me top 3 preeminent doctors", "HEALTHCARE"),
     ("top 5 engineers", "ENGINEERING"),
     ("best nurses", "HEALTHCARE"),
-    ("show me developers", "ENGINEERING"),
+    ("show me developers", "INFORMATION-TECHNOLOGY"),
     ("find lawyers", "ADVOCATE"),
     ("list all teachers", "TEACHER"),
     ("select 3 designers", "DESIGNER"),
-    ("top 10 programmers", "ENGINEERING"),
+    ("top 10 programmers", "INFORMATION-TECHNOLOGY"),
 
     # Category names (direct)
     ("top 5 from engineering", "ENGINEERING"),
@@ -47,14 +49,14 @@ test_cases = [
     ("PR candidates", "PUBLIC-RELATIONS"),
 
     # Synonyms
-    ("find a coder", "ENGINEERING"),
+    ("find a coder", "INFORMATION-TECHNOLOGY"),
     ("need a mechanic", "AUTOMOBILE"),
     ("best farmer", "AGRICULTURE"),
     ("show me artists", "ARTS"),
     ("gym trainers", "FITNESS"),
     ("find an attorney", "ADVOCATE"),
     ("medical staff", "HEALTHCARE"),
-    ("software developers", "ENGINEERING"),
+    ("software developers", "INFORMATION-TECHNOLOGY"),
 
     # Multi-word categories
     ("digital media candidates", "DIGITAL-MEDIA"),
@@ -70,9 +72,9 @@ test_cases = [
     ("show me highly skilled consultants", "CONSULTANT"),
 
     # Queries with tech terms
-    ("c++ developer", "ENGINEERING"),
-    ("go developer", "ENGINEERING"),
-    ("python programmer", "ENGINEERING"),
+    ("c++ developer", "INFORMATION-TECHNOLOGY"),
+    ("go developer", "INFORMATION-TECHNOLOGY"),
+    ("python programmer", "INFORMATION-TECHNOLOGY"),
 
     # Queries with clear domain keywords
     ("find someone good with cooking and baking", "CHEF"),

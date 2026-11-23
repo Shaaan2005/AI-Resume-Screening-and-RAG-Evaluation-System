@@ -13,14 +13,14 @@ A result is **relevant** when its dataset category matches the query's category.
 
 | Configuration | P@5 | P@10 | MRR | nDCG@10 | Latency (ms) |
 | :--- | ---: | ---: | ---: | ---: | ---: |
-| Dense only (no re-ranking) | 0.567 | 0.452 | 0.843 | 0.513 | 32 |
-| STS cross-encoder + 30% overlap [old] | 0.413 | 0.381 | 0.627 | 0.400 | 347 |
-| STS cross-encoder only | 0.312 | 0.273 | 0.571 | 0.294 | 353 |
-| MS MARCO MiniLM only | 0.554 | 0.450 | 0.805 | 0.502 | 163 |
-| MS MARCO MiniLM + 30% overlap | 0.508 | 0.425 | 0.801 | 0.473 | 164 |
-| MS MARCO MiniLM + 30% BM25 | 0.529 | 0.429 | 0.799 | 0.477 | 165 |
-| BGE reranker base only | 0.508 | 0.423 | 0.760 | 0.469 | 663 |
-| BGE reranker base + 30% BM25 | 0.512 | 0.427 | 0.784 | 0.473 | 674 |
+| Dense only (no re-ranking) | 0.567 | 0.452 | 0.843 | 0.513 | 54 |
+| STS cross-encoder + 30% overlap [old] | 0.413 | 0.381 | 0.627 | 0.400 | 363 |
+| STS cross-encoder only | 0.312 | 0.273 | 0.571 | 0.294 | 363 |
+| MS MARCO MiniLM only | 0.554 | 0.450 | 0.805 | 0.502 | 180 |
+| MS MARCO MiniLM + 30% overlap | 0.508 | 0.425 | 0.801 | 0.473 | 184 |
+| MS MARCO MiniLM + 30% BM25 | 0.529 | 0.429 | 0.799 | 0.477 | 186 |
+| BGE reranker base only | 0.508 | 0.423 | 0.760 | 0.469 | 669 |
+| BGE reranker base + 30% BM25 | 0.512 | 0.427 | 0.784 | 0.473 | 645 |
 
 ## Keyword weight with the best re-ranker (dev vs held-out test)
 
@@ -63,8 +63,18 @@ What the web app's search does: detect the department, search only inside it. Wi
 
 | Search settings | Category detection accuracy | P@5 | MRR | nDCG@10 |
 | :--- | ---: | ---: | ---: | ---: |
-| Old (STS + 30% overlap) | 0.979 | 0.979 | 0.979 | 0.979 |
-| New (dense only, current default) | 0.979 | 0.979 | 0.979 | 0.979 |
+| Old (STS + 30% overlap) | 1.000 | 1.000 | 1.000 | 1.000 |
+| New (dense only, current default) | 1.000 | 1.000 | 1.000 | 1.000 |
+
+## Department detection
+
+How often the department the app searches is the query's labelled department.
+
+| Query set | Queries | Accuracy |
+| :--- | ---: | ---: |
+| Name the department (queries.json) | 48 | 1.000 |
+| Don't name it (queries_unnamed.json) | 48 | 1.000 |
+| Held out, never tuned on (queries_fresh.json) | 24 | 0.958 |
 
 ## Caveats
 
