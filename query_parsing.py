@@ -89,8 +89,68 @@ def cross_encoder_category_detect(query, threshold=0.3):
         return None
 
 
+# Words that name a department outright. When a query uses one, the recruiter has
+# told us the department, so we trust it instead of the cross-encoder's guess
+# (which, e.g., sent "top 5 from engineering" to CONSTRUCTION).
+_DEPARTMENT_ALIASES = {
+    "ACCOUNTANT": ["accountants?", "accounting"],
+    "ADVOCATE": ["advocates?", "lawyers?", "attorneys?"],
+    "AGRICULTURE": ["agriculture", "agricultural", "farmers?"],
+    "APPAREL": ["apparel", "fashion", "garments?", "textiles?"],
+    "ARTS": ["arts", "artists?"],
+    "AUTOMOBILE": ["automobiles?", "automotive"],
+    "AVIATION": ["aviation", "pilots?"],
+    "BANKING": ["banking", "bankers?"],
+    "BPO": ["bpo", "call cent(?:er|re)s?"],
+    "BUSINESS-DEVELOPMENT": ["business[ -]development"],
+    "CHEF": ["chefs?", "cooks?", "culinary"],
+    "CONSTRUCTION": ["construction"],
+    "CONSULTANT": ["consultants?", "consulting"],
+    "DESIGNER": ["designers?"],
+    "DIGITAL-MEDIA": ["digital[ -]media"],
+    "ENGINEERING": ["engineering", "developers?", "programmers?", "coders?"],
+    "FINANCE": ["finance"],
+    "FITNESS": ["fitness"],
+    "HEALTHCARE": ["health ?care", "doctors?", "nurses?", "physicians?"],
+    "HR": ["hr", "human resources?", "recruiters?"],
+    "INFORMATION-TECHNOLOGY": ["information[ -]technology",
+                               "it (?:support|help ?desk|administrators?|infrastructure)"],
+    "PUBLIC-RELATIONS": ["public[ -]relations"],
+    "SALES": ["sales", "salespe(?:rson|ople)"],
+    "TEACHER": ["teachers?", "teaching", "professors?", "tutors?", "lecturers?"],
+}
+# Abbreviations that are also everyday words, so they only count in capitals.
+_DEPARTMENT_ACRONYMS = {"IT": "INFORMATION-TECHNOLOGY", "BD": "BUSINESS-DEVELOPMENT",
+                        "PR": "PUBLIC-RELATIONS"}
+_ALIAS_PATTERNS = {cat: re.compile(r"\b(?:" + "|".join(words) + r")\b", re.I)
+                   for cat, words in _DEPARTMENT_ALIASES.items()}
+
+
+def named_departments(query):
+    """Departments the query names directly ("from engineering", "best 3 sales", "IT")."""
+    found = [cat for cat, pattern in _ALIAS_PATTERNS.items() if pattern.search(query)]
+    found += [cat for word, cat in _DEPARTMENT_ACRONYMS.items()
+              if re.search(rf"\b{word}\b", query) and cat not in found]
+    return found
+
+
 def detect_category(job_description):
-    """Semantic category detection using Cross-Encoder model."""
+    """The department a query is about.
+
+    A department named in the query wins. If it names several ("fashion
+    designer"), the cross-encoder picks between just those; if it names none,
+    the cross-encoder picks from all departments.
+    """
+    if not job_description:
+        return None
+    named = named_departments(job_description)
+    if len(named) == 1:
+        return named[0]
+    if named:
+        ce = get_cross_encoder()
+        if ce is not None:
+            scores = ce.predict([(job_description, _CAT_DESCRIPTIONS[c]) for c in named])
+            return named[int(scores.argmax())]
     return cross_encoder_category_detect(job_description)
 
 

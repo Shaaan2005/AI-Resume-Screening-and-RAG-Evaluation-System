@@ -274,6 +274,21 @@ def test_requested_count_ignores_experience_durations():
     assert parse_requested_count("need 3 java developers") == 3
 
 
+def test_named_department_beats_the_models_guess():
+    """A department the recruiter names is used as-is (the model alone sent
+    "top 5 from engineering" to CONSTRUCTION and "best 3 sales" to APPAREL)."""
+    assert detect_category("top 5 from engineering") == "ENGINEERING"
+    assert detect_category("best 3 sales with cold calling") == "SALES"
+    assert detect_category("list all teachers") == "TEACHER"
+    assert detect_category("IT candidates") == "INFORMATION-TECHNOLOGY"
+    assert detect_category("it support") == "INFORMATION-TECHNOLOGY"
+    assert detect_category("finance team") == "FINANCE"
+
+
+def test_several_named_departments_are_settled_by_the_model():
+    assert detect_category("fashion designer") in {"APPAREL", "DESIGNER"}
+
+
 def test_ambiguous_short_words_need_capitals():
     assert is_garbage("asdfgh it") is True
     assert is_garbage("qwrtzx r") is True
