@@ -4,6 +4,7 @@ import logging
 from datetime import timedelta
 
 from flask import Flask
+from werkzeug.middleware.proxy_fix import ProxyFix
 
 from scoring import band
 from .db import init_db
@@ -52,6 +53,11 @@ def create_app(config=None):
         # which every public host and tunnel provides.
         app.config.update(DATABASE=os.path.join(root, "demo_users.db"),
                           SESSION_COOKIE_SAMESITE="None", SESSION_COOKIE_SECURE=True)
+        # Demo mode always runs behind one proxy (Cloudflare tunnel or Hugging Face),
+        # so every request arrives from 127.0.0.1. Read the visitor's real IP from the
+        # proxy's X-Forwarded-For; otherwise the login lockout is shared by all
+        # visitors, and anyone could lock any account by failing its password 5 times.
+        app.wsgi_app = ProxyFix(app.wsgi_app, x_for=1, x_proto=1)
     if config:
         app.config.update(config)
 

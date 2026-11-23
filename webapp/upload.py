@@ -122,12 +122,20 @@ def upload():
     upload_folder = current_app.config["UPLOAD_FOLDER"]
     os.makedirs(upload_folder, exist_ok=True)
     file_path = os.path.join(upload_folder, stored)
+    already_stored = os.path.exists(file_path)  # same file uploaded before by this user
     with open(file_path, "wb") as f:
         f.write(content)
 
     try:
         category = detect_category(job_description)  # the role being hired for
         resume_text = extract_resume_text(file_path)
+        if not resume_text:
+            # Scanned or image-only PDFs have no text layer: without this check they got
+            # a 0% score and REJECT, which looks like a bad candidate rather than a bad file.
+            if not demo_mode and not already_stored:  # demo uploads are removed in `finally`
+                os.remove(file_path)
+            return _error("No text could be read from this file. It may be a scanned image; "
+                          "please upload a PDF or DOCX with selectable text.", clean_name, job_description)
         keyword_result = analyze_resume(file_path, category=category, text=resume_text)
 
         # One score drives everything shown: best-chunk similarity, same scale as search

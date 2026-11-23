@@ -125,6 +125,7 @@ def register():
                             )
                             conn.commit()
                             cur = conn.execute("SELECT id FROM users WHERE username = ?", (username,))
+                            session.clear()  # fresh session on sign-up, as on login
                             session["user_id"] = cur.fetchone()[0]
                             session["username"] = username
                             session.permanent = True

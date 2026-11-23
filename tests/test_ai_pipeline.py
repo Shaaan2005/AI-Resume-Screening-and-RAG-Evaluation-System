@@ -302,13 +302,31 @@ def test_search_text_keeps_the_sentence_and_drops_commands():
     assert search_text("top 5") == "top 5"  # nothing left: fall back to the original
 
 
-def test_full_sentence_scores_higher_than_stripped_keywords():
+@pytest.fixture(scope="module")
+def hr_collection(tmp_path_factory):
+    """A real ChromaDB index of the sample HR resumes, built in a temp dir.
+
+    The app's index (chromadb_data/) is gitignored and not built in CI, so tests
+    must not depend on it: searching it there returns no results.
+    """
+    import os
+    import shutil
+    from vector_store import build_index
+
+    resumes_dir = tmp_path_factory.mktemp("resumes")
+    repo_root = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
+    shutil.copytree(os.path.join(repo_root, "resumes", "HR"), resumes_dir / "HR")
+    return build_index(db_path=str(tmp_path_factory.mktemp("chroma")), resumes_dir=str(resumes_dir))
+
+
+def test_full_sentence_scores_higher_than_stripped_keywords(hr_collection):
     """The reason for search_text: keyword-only text scored ~12 points lower on the benchmark."""
     from query_parsing import search_text
     q = "Experienced HR recruiter for talent acquisition and onboarding"
-    full = search_candidates(search_text(q), category="HR")[0]["similarity"]
-    stripped = search_candidates(extract_search_intent(q), category="HR")[0]["similarity"]
-    assert full > stripped
+    full = search_candidates(search_text(q), category="HR", collection=hr_collection)
+    stripped = search_candidates(extract_search_intent(q), category="HR", collection=hr_collection)
+    assert full and stripped, "HR test index returned no results"
+    assert full[0]["similarity"] > stripped[0]["similarity"]
 
 
 def test_upload_that_copies_a_sample_resume_replaces_it():

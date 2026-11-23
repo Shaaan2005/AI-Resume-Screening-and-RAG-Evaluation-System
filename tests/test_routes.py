@@ -276,3 +276,19 @@ def test_home_page_shows_live_numbers(authenticated_client):
     page = authenticated_client.get("/").data
     assert b"248 active" not in page and b"24 chunks" not in page
     assert b"Search 242 indexed resumes" in page
+
+
+def test_upload_without_readable_text_says_so(test_app, authenticated_client, monkeypatch):
+    """A scanned/image-only resume gets a clear message, not a silent 0% REJECT."""
+    import os
+    from webapp import upload as upload_module
+    monkeypatch.setattr(upload_module, "extract_resume_text", lambda path: "")
+    monkeypatch.setitem(test_app.config, "DEMO_MODE", False)
+    with open("resumes/HR/HR1.pdf", "rb") as f:
+        pdf = f.read()
+    stored = upload_module.stored_name(1, pdf, ".pdf")
+    res = authenticated_client.post("/upload", content_type="multipart/form-data", data={
+        "job_description": "HR recruiter", "resume": (io.BytesIO(pdf), "scan.pdf")})
+    assert res.status_code == 200
+    assert b"No text could be read from this file" in res.data
+    assert stored not in os.listdir(test_app.config["UPLOAD_FOLDER"])  # nothing left behind

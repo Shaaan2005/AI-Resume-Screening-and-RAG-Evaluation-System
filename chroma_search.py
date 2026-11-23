@@ -15,6 +15,7 @@ import os
 import math
 import re
 import logging
+import threading
 
 import chromadb
 import torch
@@ -26,6 +27,7 @@ from scoring import recommend
 logger = logging.getLogger("ResumeScreening")
 
 _client = None
+_collection_lock = threading.Lock()
 _collection = None
 _cross_encoders = {}
 _bm25_cache = {}
@@ -99,21 +101,23 @@ def tag_untagged_uploads(collection):
 def get_collection():
     """Returns the app's ChromaDB collection (created if missing)."""
     global _client, _collection
-    if _collection is None:
-        try:
-            # CHROMA_PATH lets a public demo search its own clean index (see vector_store.py)
-            _client = chromadb.PersistentClient(path=_index_path())
+    if _collection is not None:
+        return _collection
+    # The server handles requests on several threads. Without the lock, two requests
+    # on a fresh server could both try to create the collection; the second one failed
+    # with "already exists" and its search silently returned no results.
+    with _collection_lock:
+        if _collection is None:
             try:
-                _collection = _client.get_collection(name="resumes")
-            except Exception:
-                _collection = _client.create_collection(
-                    name="resumes",
-                    metadata={"hnsw:space": "cosine"}
-                )
-            tag_untagged_uploads(_collection)
-        except Exception as e:
-            logger.error(f"Failed to initialize ChromaDB collection: {e}")
-            return None
+                # CHROMA_PATH lets a public demo search its own clean index (see vector_store.py)
+                _client = chromadb.PersistentClient(path=_index_path())
+                collection = _client.get_or_create_collection(
+                    name="resumes", metadata={"hnsw:space": "cosine"})
+                tag_untagged_uploads(collection)
+                _collection = collection
+            except Exception as e:
+                logger.error(f"Failed to initialize ChromaDB collection: {e}")
+                return None
     return _collection
 
 
