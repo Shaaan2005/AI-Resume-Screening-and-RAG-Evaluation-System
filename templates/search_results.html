@@ -28,23 +28,18 @@ body{
     background:#13232d;
     border-bottom:1px solid rgba(255,255,255,0.04)
 }
-.nav::after{
-    content:'';position:absolute;bottom:-2px;left:50%;transform:translateX(-50%);
-    width:200px;height:2px;background:linear-gradient(90deg,transparent,#009393,transparent);
-    border-radius:2px
-}
 .nav-left{display:flex;align-items:center}
 .nav-logo{display:flex;align-items:center;gap:10px;text-decoration:none}
 .nav-logo svg{width:36px;height:36px}
 .nav-logo span{font-size:18px;font-weight:700;color:#f7fafc;letter-spacing:-0.2px}
 .nav-right{display:flex;align-items:center;gap:10px}
 .nav-right .btn-login{
-    padding:8px 18px;background:#3178f6;color:#fff;
+    padding:8px 18px;background:#00a3a3;color:#0d1b22;
     border:none;border-radius:6px;
     font-family:'Inter',sans-serif;font-size:13px;font-weight:600;
     cursor:pointer;transition:all 0.15s;text-decoration:none
 }
-.nav-right .btn-login:hover{background:#1475e1}
+.nav-right .btn-login:hover{background:#00b8b8}
 .nav-right .btn-register{
     padding:8px 18px;background:#009393;color:#13232d;
     border:none;border-radius:6px;
@@ -58,11 +53,11 @@ body{
 .breadcrumb a:hover{color:#009393}
 .breadcrumb span{color:rgba(255,255,255,0.08)}
 .breadcrumb .current{color:#e2eef4}
-.breadcrumb .back-btn{display:inline-flex;align-items:center;gap:4px;color:#3178f6;font-weight:600}
-.breadcrumb .back-btn:hover{color:#1475e1}
+.breadcrumb .back-btn{display:inline-flex;align-items:center;gap:4px;color:#00a3a3;font-weight:600}
+.breadcrumb .back-btn:hover{color:#00b8b8}
 .breadcrumb::before{
     content:'';display:inline-block;width:3px;height:14px;
-    background:#3178f6;border-radius:2px;margin-right:4px
+    background:#00a3a3;border-radius:2px;margin-right:4px
 }
 .search-badge{
     display:flex;align-items:center;gap:10px;
@@ -97,17 +92,17 @@ body{
 .jd-toggle:hover{color:#009393}
 .table-wrap{border-radius:6px;overflow:hidden}
 table{width:100%;border-collapse:collapse}
-th, td{border:1px solid #f0f8ff}
+th, td{border:1px solid rgba(255,255,255,0.1)}
 th{
     text-align:left;padding:10px 14px;
     font-size:11px;font-weight:600;text-transform:uppercase;
     letter-spacing:0.4px;color:#e2eef4;
     background:rgba(0,0,0,0.1);
-    border-bottom:1px solid #f0f8ff
+    border-bottom:1px solid rgba(255,255,255,0.1)
 }
-td{padding:10px 14px;font-size:13px;color:#e2eef4;border-bottom:1px solid #f0f8ff}
+td{padding:10px 14px;font-size:13px;color:#e2eef4;border-bottom:1px solid rgba(255,255,255,0.1)}
 tr:nth-child(even) td{background:rgba(255,255,255,0.02)}
-tr:last-child td{border-bottom:1px solid #f0f8ff}
+tr:last-child td{border-bottom:1px solid rgba(255,255,255,0.1)}
 .rank-num{
     display:inline-flex;align-items:center;justify-content:center;
     width:22px;height:22px;border-radius:4px;
@@ -126,22 +121,22 @@ tr:last-child td{border-bottom:1px solid #f0f8ff}
 .actions{display:flex;gap:10px;margin-top:18px;padding-top:16px;border-top:1px solid rgba(255,255,255,0.04)}
 .btn-primary{
     display:inline-flex;align-items:center;justify-content:center;gap:6px;
-    padding:12px 26px;background:#3178f6;color:#fff;
+    padding:12px 26px;background:#00a3a3;color:#0d1b22;
     font-family:'Inter',sans-serif;font-size:14px;font-weight:600;
     border:none;border-radius:6px;cursor:pointer;transition:all 0.15s;
     text-decoration:none
 }
-.btn-primary:hover{background:#1475e1}
+.btn-primary:hover{background:#00b8b8}
 .btn-secondary{
     display:inline-flex;align-items:center;justify-content:center;gap:6px;
-    padding:12px 26px;background:transparent;color:#3178f6;
+    padding:12px 26px;background:transparent;color:#00a3a3;
     font-family:'Inter',sans-serif;font-size:14px;font-weight:600;
-    border:1px solid rgba(49,120,246,0.15);border-radius:6px;
+    border:1px solid rgba(0,163,163,0.15);border-radius:6px;
     cursor:pointer;transition:all 0.15s;text-decoration:none
 }
-.btn-secondary:hover{background:rgba(49,120,246,0.04);border-color:rgba(49,120,246,0.2)}
-.btn-green{display:inline-flex;align-items:center;justify-content:center;gap:6px;padding:12px 26px;background:#009393;color:#fff;font-family:'Inter',sans-serif;font-size:14px;font-weight:600;border:none;border-radius:6px;cursor:pointer;transition:all 0.15s;text-decoration:none}
-.btn-green:hover{background:#007a7a}
+.btn-secondary:hover{background:rgba(0,163,163,0.04);border-color:rgba(0,163,163,0.2)}
+.btn-green{display:inline-flex;align-items:center;justify-content:center;gap:6px;padding:12px 26px;background:#00a3a3;color:#0d1b22;font-family:'Inter',sans-serif;font-size:14px;font-weight:600;border:none;border-radius:6px;cursor:pointer;transition:all 0.15s;text-decoration:none}
+.btn-green:hover{background:#00b8b8}
 .footer{
     background:#13232d;
     border-top:1px solid rgba(255,255,255,0.04);
@@ -158,6 +153,21 @@ tr:last-child td{border-bottom:1px solid #f0f8ff}
     .actions{flex-direction:column}
     .content{padding:90px 16px 40px}
 }
+.nav{border-bottom:1px solid rgba(0,163,163,0.25) !important}
+.nav-link{display:inline-flex;align-items:center;gap:6px;font-size:13px;font-weight:600;color:#d5e4ec;text-decoration:none;padding:6px 2px;border-bottom:2px solid transparent}
+.nav-link:hover{color:#f7fafc;border-bottom-color:#00a3a3}
+.nav-user{font-size:13px;color:#a9c4d3;font-weight:500}
+.btn-outline{padding:7px 16px;background:transparent;color:#d5e4ec;border:1px solid rgba(255,255,255,0.2);border-radius:6px;font-family:inherit;font-size:13px;font-weight:600;cursor:pointer;text-decoration:none}
+.btn-outline:hover{border-color:#00a3a3;color:#f7fafc}
+.footer-inner{max-width:720px;margin:0 auto;text-align:center}
+.footer .footer-desc{font-size:15px;color:#d5e4ec;line-height:1.6;margin-bottom:10px}
+.footer .footer-meta{font-size:13px;color:#a9c4d3}
+.footer .footer-meta a{color:#3fd0d0;text-decoration:none}
+.btn-export{background:transparent;color:#d5e4ec;border:1px solid rgba(255,255,255,0.2);border-radius:4px;padding:4px 10px;font-family:inherit;font-size:12px;font-weight:600;cursor:pointer}
+.btn-export:hover{border-color:#00a3a3;color:#f7fafc}
+.table-wrap{overflow-x:auto !important}
+.table-wrap table{min-width:640px}
+@media(max-width:767px){.nav{padding:0 16px !important}.nav-logo span,.nav-user{display:none}}
 </style>
 </head>
 <body>
@@ -171,9 +181,9 @@ tr:last-child td{border-bottom:1px solid #f0f8ff}
     </div>
     <div class="nav-right">
         {% if user %}
-        <a href="/evaluate" style="font-size:13px;color:#009393;font-weight:600;text-decoration:none;margin-right:15px;transition:opacity 0.2s" onmouseover="this.style.opacity=0.8" onmouseout="this.style.opacity=1">📊 Benchmark</a>
-        <span style="font-size:13px;color:#e2eef4;font-weight:500;margin-right:15px">Hi {{ user.username }}</span>
-        <form action="{{ url_for('auth.logout') }}" method="POST" style="display:inline;margin:0"><input type="hidden" name="csrf_token" value="{{ csrf_token() }}"><button type="submit" class="btn-login">Log Out</button></form>
+        <a href="/evaluate" class="nav-link"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" aria-hidden="true"><path d="M4 20V10M10 20V4M16 20v-7M22 20H2"/></svg>Benchmark</a>
+        <span class="nav-user">Hi {{ user.display_name or user.username }}</span>
+        <form action="{{ url_for('auth.logout') }}" method="POST" style="margin:0"><input type="hidden" name="csrf_token" value="{{ csrf_token() }}"><button type="submit" class="btn-outline">Log Out</button></form>
         {% else %}
         <a href="{{ url_for('auth.login') }}" class="btn-login">Log In</a>
         <a href="{{ url_for('auth.register') }}" class="btn-register">Register</a>
@@ -223,6 +233,7 @@ tr:last-child td{border-bottom:1px solid #f0f8ff}
                     <option value="CONSIDER">CONSIDER</option>
                     <option value="REJECT">REJECT</option>
                 </select>
+                <button type="button" class="btn-export" onclick="exportCsv('rankingsTable', 'search-results.csv')">Export CSV</button>
             </div>
         </div>
         {% if rankings %}
@@ -240,7 +251,7 @@ tr:last-child td{border-bottom:1px solid #f0f8ff}
                     <td><span class="dist {{ score_band(r['similarity']) if r['recommendation'] else '' }}">{{ r['similarity'] }}<span style="font-size:10px;color:#9fbed0;font-weight:500"> (θ={{ r['angle'] }}°)</span></span></td>
                     <td><span class="rec-badge" style="font-size:9px;padding:2px 8px">{{ r['recommendation'] or '—' }}</span></td>
                     <td style="font-size:12px;color:#e2eef4;max-width:140px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis"><span title="{{ r['preview_full'] }}">{{ r['preview'] }}</span></td>
-                    <td><a href="{{ ('/my-uploads/' ~ r['file']) if r['source'] == 'upload' else ('/resume/' ~ r['category'] ~ '/' ~ r['resume']) }}" target="_blank" style="display:inline-flex;align-items:center;gap:4px;background:rgba(0,147,147,0.1);color:#009393;font-size:11px;font-weight:700;padding:4px 10px;border-radius:4px;text-decoration:none;white-space:nowrap;border:1px solid rgba(0,147,147,0.2);transition:all 0.15s" onmouseover="this.style.background='rgba(0,147,147,0.2)'" onmouseout="this.style.background='rgba(0,147,147,0.1)'">&#128196; Open</a></td>
+                    <td><a href="{{ ('/my-uploads/' ~ r['file']) if r['source'] == 'upload' else ('/resume/' ~ r['category'] ~ '/' ~ r['resume']) }}" target="_blank" style="display:inline-flex;align-items:center;gap:4px;background:rgba(0,147,147,0.1);color:#009393;font-size:11px;font-weight:700;padding:4px 10px;border-radius:4px;text-decoration:none;white-space:nowrap;border:1px solid rgba(0,147,147,0.2);transition:all 0.15s" onmouseover="this.style.background='rgba(0,147,147,0.2)'" onmouseout="this.style.background='rgba(0,147,147,0.1)'">Open</a></td>
                 </tr>
                 {% endfor %}
             </tbody>
@@ -257,11 +268,23 @@ tr:last-child td{border-bottom:1px solid #f0f8ff}
     </div>
 </div>
 
-<div class="footer">
-    <p class="footer-desc">AI Resume Screening System — Automated candidate evaluation using keyword matching, semantic similarity, ChromaDB vector search, and cross-encoder department detection for intelligent hiring decisions.</p>
-    <p class="brand">Made by <span>Utkarsh Rai</span></p>
-</div>
+<footer class="footer">
+    <div class="footer-inner">
+        <p class="footer-desc">Automated candidate screening: keyword matching, semantic similarity and vector search, with department detection by a cross-encoder.</p>
+        <p class="footer-meta">Flask · Sentence-Transformers · ChromaDB · Made by Utkarsh Rai · <a href="https://github.com/Shaaan2005/AI-Resume-Screening-and-RAG-Evaluation-System" target="_blank" rel="noopener">GitHub</a></p>
+    </div>
+</footer>
 <script>
+function exportCsv(tableId, filename){
+    const rows = [...document.querySelectorAll('#' + tableId + ' tr')].filter(tr => tr.style.display !== 'none');
+    const csv = rows.map(tr => [...tr.querySelectorAll('th,td')].slice(0, -1)
+        .map(c => '"' + (c.querySelector('[title]')?.title || c.innerText).replace(/\s+/g, ' ').trim().replace(/"/g, '""') + '"').join(',')).join('\n');
+    const a = document.createElement('a');
+    a.href = URL.createObjectURL(new Blob([csv], {type: 'text/csv'}));
+    a.download = filename;
+    a.click();
+    URL.revokeObjectURL(a.href);
+}
 function filterRankings(){
     const val = document.getElementById('recFilter').value;
     document.querySelectorAll('#rankingsTable tbody tr').forEach(tr => {

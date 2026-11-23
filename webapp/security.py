@@ -140,8 +140,13 @@ def register_security(app):
 
     @app.errorhandler(413)
     def request_entity_too_large(e):
-        return _error_page(413, "File Too Large",
-                           "The uploaded file exceeds the 16MB limit. Please upload a smaller resume.")
+        message = "This file is larger than the 16 MB limit. Please upload a smaller PDF or DOCX."
+        if request.path == "/upload":
+            # Stay on the upload flow with a plain message instead of an error page
+            return render_template("result.html", error=message, filename="",
+                                   result={"score": 0, "skills": []}, rankings=[], total_candidates=0,
+                                   job_description="", category=None), 413
+        return _error_page(413, "File Too Large", message)
 
     @app.errorhandler(500)
     def internal_server_error(e):

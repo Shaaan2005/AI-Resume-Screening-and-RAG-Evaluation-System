@@ -413,3 +413,10 @@ def test_engineering_tools_count_as_job_skills():
     r = analyze_resume("x", category="ENGINEERING", text="autocad and solidworks drawings",
                        job_description="Mechanical Engineer with AutoCAD, SolidWorks")
     assert r["basis"] == "job" and r["skills"] == ["autocad", "solidworks"]
+
+
+
+def test_missing_skills_are_listed():
+    from resume_engine import analyze_resume
+    r = analyze_resume("x", category="ENGINEERING", text="python only", job_description="python, docker and kubernetes")
+    assert r["skills"] == ["python"] and sorted(r["missing"]) == ["docker", "kubernetes"]

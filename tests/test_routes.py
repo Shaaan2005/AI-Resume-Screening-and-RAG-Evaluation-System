@@ -371,3 +371,23 @@ def test_saved_analysis_can_be_reopened_and_deleted(test_app, authenticated_clie
 def test_empty_search_shows_one_message(authenticated_client):
     page = authenticated_client.post("/search", data={"job_description": "  "}).data
     assert b"Please enter a search query" in page and b"No candidates found" not in page
+
+
+
+def test_department_and_top_n_controls(authenticated_client, fake_search):
+    page = authenticated_client.get("/search", query_string={
+        "job_description": "pastry and menu planning", "department": "CHEF", "top": "3"}).data
+    assert page.count(b'data-recommendation=') == 3
+
+
+def test_oversized_upload_gets_a_friendly_message(test_app, authenticated_client, monkeypatch):
+    monkeypatch.setitem(test_app.config, "MAX_CONTENT_LENGTH", 1024)
+    res = authenticated_client.post("/upload", content_type="multipart/form-data", data={
+        "job_description": "x", "resume": (io.BytesIO(b"%PDF-" + b"0" * 4096), "big.pdf")})
+    assert res.status_code == 413 and b"16 MB limit" in res.data and b"Upload Error" in res.data
+
+
+def test_home_page_shows_real_index_status(authenticated_client):
+    page = authenticated_client.get("/").data
+    assert b"status online" in page or b"status offline" in page
+    assert b"Analyze Resume" in page and b'id="searchDept"' in page

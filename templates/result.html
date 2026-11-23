@@ -28,23 +28,18 @@ body{
     background:#13232d;
     border-bottom:1px solid rgba(255,255,255,0.04)
 }
-.nav::after{
-    content:'';position:absolute;bottom:-2px;left:50%;transform:translateX(-50%);
-    width:200px;height:2px;background:linear-gradient(90deg,transparent,#009393,transparent);
-    border-radius:2px
-}
 .nav-left{display:flex;align-items:center}
 .nav-logo{display:flex;align-items:center;gap:10px;text-decoration:none}
 .nav-logo svg{width:36px;height:36px}
 .nav-logo span{font-size:18px;font-weight:700;color:#f7fafc;letter-spacing:-0.2px}
 .nav-right{display:flex;align-items:center;gap:10px}
 .nav-right .btn-login{
-    padding:8px 18px;background:#3178f6;color:#fff;
+    padding:8px 18px;background:#00a3a3;color:#0d1b22;
     border:none;border-radius:6px;
     font-family:'Inter',sans-serif;font-size:13px;font-weight:600;
     cursor:pointer;transition:all 0.15s;text-decoration:none
 }
-.nav-right .btn-login:hover{background:#1475e1}
+.nav-right .btn-login:hover{background:#00b8b8}
 .nav-right .btn-register{
     padding:8px 18px;background:#009393;color:#13232d;
     border:none;border-radius:6px;
@@ -58,17 +53,17 @@ body{
 .breadcrumb a:hover{color:#009393}
 .breadcrumb span{color:rgba(255,255,255,0.08)}
 .breadcrumb .current{color:#e2eef4}
-.breadcrumb .back-btn{display:inline-flex;align-items:center;gap:4px;color:#3178f6;font-weight:600}
-.breadcrumb .back-btn:hover{color:#1475e1}
+.breadcrumb .back-btn{display:inline-flex;align-items:center;gap:4px;color:#00a3a3;font-weight:600}
+.breadcrumb .back-btn:hover{color:#00b8b8}
 .breadcrumb::before{
     content:'';display:inline-block;width:3px;height:14px;
-    background:#3178f6;border-radius:2px;margin-right:4px
+    background:#00a3a3;border-radius:2px;margin-right:4px
 }
 .file-badge{
     display:flex;align-items:center;gap:8px;
     background:#203743;border-radius:6px;padding:10px 16px;margin-bottom:20px;
     font-size:14px;color:#e2eef4;font-weight:500;
-    border-left:3px solid #3178f6;box-shadow:0 1px 3px rgba(0,0,0,0.12)
+    border-left:3px solid #00a3a3;box-shadow:0 1px 3px rgba(0,0,0,0.12)
 }
 .file-badge .dot{width:6px;height:6px;background:#009393;border-radius:50%}
 .scores-grid{display:grid;grid-template-columns:1fr 1fr 1fr;gap:10px;margin-bottom:20px}
@@ -78,23 +73,23 @@ body{
 }
 .score-card::before{
     content:'';position:absolute;top:0;left:0;right:0;height:2px;
-    background:linear-gradient(90deg,transparent,#3178f6,#009393,transparent)
+    background:linear-gradient(90deg,transparent,#00a3a3,#009393,transparent)
 }
 .score-card .label{
     font-size:11px;font-weight:600;text-transform:uppercase;
     letter-spacing:0.4px;color:#e2eef4;margin-bottom:6px
 }
 .score-card .value{font-size:32px;font-weight:700;color:#f7fafc;line-height:1}
-.score-card .sub{font-size:12px;color:#e2eef4;margin-top:5px}
+.score-card .sub{font-size:13px;color:#a9c4d3;margin-top:8px;line-height:1.45}
 .progress-wrap{margin-top:6px;background:#0d1b22;border-radius:100px;height:9px;overflow:hidden}
-.progress-fill{height:100%;border-radius:100px;transition:width 0.6s ease;background:#3178f6}
+.progress-fill{height:100%;border-radius:100px;transition:width 0.6s ease;background:#00a3a3}
 .rec-badge{
     display:inline-block;padding:6px 18px;border-radius:4px;
     font-size:13px;font-weight:700;letter-spacing:0.4px;margin-top:2px
 }
-.rec-badge.shortlist{background:rgba(255,183,0,0.12);color:#ffd54f;border:1px solid rgba(255,183,0,0.3)}
-.rec-badge.consider{background:rgba(255,183,0,0.06);color:#ffb700;border:1px solid rgba(255,183,0,0.1)}
-.rec-badge.reject{background:rgba(255,60,60,0.06);color:#ff3c3c;border:1px solid rgba(255,60,60,0.1)}
+.rec-badge.shortlist{background:rgba(105,240,174,0.12);color:#69f0ae;border:1px solid rgba(105,240,174,0.4)}
+.rec-badge.consider{background:rgba(255,213,79,0.12);color:#ffd54f;border:1px solid rgba(255,213,79,0.4)}
+.rec-badge.reject{background:rgba(255,138,138,0.12);color:#ff8a8a;border:1px solid rgba(255,138,138,0.4)}
 .card{
     background:#203743;border-radius:6px;padding:16px 16px 16px 20px;margin-bottom:10px;
     position:relative;border-left:3px solid rgba(0,147,147,0.2);
@@ -118,17 +113,17 @@ body{
 .jd-toggle:hover{color:#009393}
 .table-wrap{border-radius:6px;overflow:hidden}
 table{width:100%;border-collapse:collapse}
-th, td{border:1px solid #f0f8ff}
+th, td{border:1px solid rgba(255,255,255,0.1)}
 th{
     text-align:left;padding:10px 14px;
     font-size:11px;font-weight:600;text-transform:uppercase;
     letter-spacing:0.4px;color:#e2eef4;
     background:rgba(0,0,0,0.1);
-    border-bottom:1px solid #f0f8ff
+    border-bottom:1px solid rgba(255,255,255,0.1)
 }
-td{padding:10px 14px;font-size:13px;color:#e2eef4;border-bottom:1px solid #f0f8ff}
+td{padding:10px 14px;font-size:13px;color:#e2eef4;border-bottom:1px solid rgba(255,255,255,0.1)}
 tr:nth-child(even) td{background:rgba(255,255,255,0.02)}
-tr:last-child td{border-bottom:1px solid #f0f8ff}
+tr:last-child td{border-bottom:1px solid rgba(255,255,255,0.1)}
 .rank-num{
     display:inline-flex;align-items:center;justify-content:center;
     width:22px;height:22px;border-radius:4px;
@@ -151,27 +146,34 @@ tr:last-child td{border-bottom:1px solid #f0f8ff}
 .pipeline-card .title{font-size:11px;font-weight:600;text-transform:uppercase;letter-spacing:0.4px;color:#e2eef4;margin-bottom:10px}
 .pipeline-flow{display:flex;align-items:center;gap:0;overflow-x:auto;padding-bottom:4px;flex-wrap:wrap}
 .pipeline-step{display:flex;align-items:center;gap:6px;flex-shrink:0;font-size:12px;font-weight:500;color:#f7fafc;padding:5px 12px;background:rgba(0,147,147,0.08);border-radius:4px;border:1px solid rgba(0,147,147,0.3)}
-.pipeline-step .icon{color:#009393;font-size:12px}
+.pipeline-step .icon{display:none}
+.meter{position:relative;height:8px;background:#0d1b22;border-radius:99px;margin:12px 0 4px;overflow:visible}
+.meter-fill{height:100%;border-radius:99px;background:#ff8a8a}
+.meter-fill.green{background:#69f0ae}.meter-fill.yellow{background:#ffd54f}
+.meter .tick{position:absolute;top:-3px;width:2px;height:14px;background:#d5e4ec;opacity:0.7}
+.meter-legend{display:flex;justify-content:space-between;font-size:12px;color:#a9c4d3;margin-top:4px}
+.value.green{color:#69f0ae}.value.yellow{color:#ffd54f}.value.red{color:#ff8a8a}
+.skills-wrap.missing li{background:rgba(255,138,138,0.08);border-color:rgba(255,138,138,0.4);color:#ffd0d0}
 .pipeline-arrow{flex-shrink:0;color:rgba(255,255,255,0.15);font-size:11px;padding:0 6px}
 .actions{display:flex;gap:10px;margin-top:18px;padding-top:16px;border-top:1px solid rgba(255,255,255,0.04)}
 .btn-primary{
     display:inline-flex;align-items:center;justify-content:center;gap:6px;
-    padding:12px 26px;background:#3178f6;color:#fff;
+    padding:12px 26px;background:#00a3a3;color:#0d1b22;
     font-family:'Inter',sans-serif;font-size:14px;font-weight:600;
     border:none;border-radius:6px;cursor:pointer;transition:all 0.15s;
     text-decoration:none
 }
-.btn-primary:hover{background:#1475e1}
+.btn-primary:hover{background:#00b8b8}
 .btn-secondary{
     display:inline-flex;align-items:center;justify-content:center;gap:6px;
-    padding:12px 26px;background:transparent;color:#3178f6;
+    padding:12px 26px;background:transparent;color:#00a3a3;
     font-family:'Inter',sans-serif;font-size:14px;font-weight:600;
-    border:1px solid rgba(49,120,246,0.15);border-radius:6px;
+    border:1px solid rgba(0,163,163,0.15);border-radius:6px;
     cursor:pointer;transition:all 0.15s;text-decoration:none
 }
-.btn-secondary:hover{background:rgba(49,120,246,0.04);border-color:rgba(49,120,246,0.2)}
-.btn-green{display:inline-flex;align-items:center;justify-content:center;gap:6px;padding:12px 26px;background:#009393;color:#fff;font-family:'Inter',sans-serif;font-size:14px;font-weight:600;border:none;border-radius:6px;cursor:pointer;transition:all 0.15s;text-decoration:none}
-.btn-green:hover{background:#007a7a}
+.btn-secondary:hover{background:rgba(0,163,163,0.04);border-color:rgba(0,163,163,0.2)}
+.btn-green{display:inline-flex;align-items:center;justify-content:center;gap:6px;padding:12px 26px;background:#00a3a3;color:#0d1b22;font-family:'Inter',sans-serif;font-size:14px;font-weight:600;border:none;border-radius:6px;cursor:pointer;transition:all 0.15s;text-decoration:none}
+.btn-green:hover{background:#00b8b8}
 .footer{
     background:#13232d;
     border-top:1px solid rgba(255,255,255,0.04);
@@ -189,6 +191,21 @@ tr:last-child td{border-bottom:1px solid #f0f8ff}
     .actions{flex-direction:column}
     .content{padding:90px 16px 40px}
 }
+.nav{border-bottom:1px solid rgba(0,163,163,0.25) !important}
+.nav-link{display:inline-flex;align-items:center;gap:6px;font-size:13px;font-weight:600;color:#d5e4ec;text-decoration:none;padding:6px 2px;border-bottom:2px solid transparent}
+.nav-link:hover{color:#f7fafc;border-bottom-color:#00a3a3}
+.nav-user{font-size:13px;color:#a9c4d3;font-weight:500}
+.btn-outline{padding:7px 16px;background:transparent;color:#d5e4ec;border:1px solid rgba(255,255,255,0.2);border-radius:6px;font-family:inherit;font-size:13px;font-weight:600;cursor:pointer;text-decoration:none}
+.btn-outline:hover{border-color:#00a3a3;color:#f7fafc}
+.footer-inner{max-width:720px;margin:0 auto;text-align:center}
+.footer .footer-desc{font-size:15px;color:#d5e4ec;line-height:1.6;margin-bottom:10px}
+.footer .footer-meta{font-size:13px;color:#a9c4d3}
+.footer .footer-meta a{color:#3fd0d0;text-decoration:none}
+.btn-export{background:transparent;color:#d5e4ec;border:1px solid rgba(255,255,255,0.2);border-radius:4px;padding:4px 10px;font-family:inherit;font-size:12px;font-weight:600;cursor:pointer}
+.btn-export:hover{border-color:#00a3a3;color:#f7fafc}
+.table-wrap{overflow-x:auto !important}
+.table-wrap table{min-width:640px}
+@media(max-width:767px){.nav{padding:0 16px !important}.nav-logo span,.nav-user{display:none}}
 </style>
 </head>
 <body>
@@ -202,9 +219,9 @@ tr:last-child td{border-bottom:1px solid #f0f8ff}
     </div>
     <div class="nav-right">
         {% if user %}
-        <a href="/evaluate" style="font-size:13px;color:#009393;font-weight:600;text-decoration:none;margin-right:15px;transition:opacity 0.2s" onmouseover="this.style.opacity=0.8" onmouseout="this.style.opacity=1">📊 Benchmark</a>
-        <span style="font-size:13px;color:#e2eef4;font-weight:500;margin-right:15px">Hi {{ user.username }}</span>
-        <form action="{{ url_for('auth.logout') }}" method="POST" style="display:inline;margin:0"><input type="hidden" name="csrf_token" value="{{ csrf_token() }}"><button type="submit" class="btn-login">Log Out</button></form>
+        <a href="/evaluate" class="nav-link"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" aria-hidden="true"><path d="M4 20V10M10 20V4M16 20v-7M22 20H2"/></svg>Benchmark</a>
+        <span class="nav-user">Hi {{ user.display_name or user.username }}</span>
+        <form action="{{ url_for('auth.logout') }}" method="POST" style="margin:0"><input type="hidden" name="csrf_token" value="{{ csrf_token() }}"><button type="submit" class="btn-outline">Log Out</button></form>
         {% else %}
         <a href="{{ url_for('auth.login') }}" class="btn-login">Log In</a>
         <a href="{{ url_for('auth.register') }}" class="btn-register">Register</a>
@@ -221,7 +238,7 @@ tr:last-child td{border-bottom:1px solid #f0f8ff}
     </div>
 
     {% if error %}
-    <div style="background:rgba(255,60,60,0.08);border:1px solid rgba(255,60,60,0.15);color:#ff6b6b;border-radius:6px;padding:12px 16px;margin-bottom:16px;font-size:13px;font-weight:500">⚠️ {{ error }}</div>
+    <div role="alert" style="display:flex;gap:10px;align-items:flex-start;background:rgba(255,138,138,0.1);border:1px solid rgba(255,138,138,0.4);color:#ffb3b3;border-radius:6px;padding:12px 16px;margin-bottom:16px;font-size:14px;font-weight:500"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true" style="flex-shrink:0;margin-top:1px"><circle cx="12" cy="12" r="9"/><path d="M12 7v6M12 16.5v.5"/></svg><span>{{ error }}</span></div>
     {% endif %}
     <div class="file-badge">
         <span class="dot"></span>
@@ -235,38 +252,57 @@ tr:last-child td{border-bottom:1px solid #f0f8ff}
     {% if error %}
     <a href="/" class="btn-submit" style="display:inline-block;text-decoration:none;padding:10px 18px;margin-bottom:20px">&#8592; Fix and try again</a>
     {% else %}
+    {% set band_cls = score_band(semantic_score) %}
     <div class="scores-grid">
-        <div class="score-card">
-            <div class="label">Keyword Match</div>
-            <div class="value">{{ result['skills']|length }}<span style="font-size:14px;font-weight:400;color:#e2eef4"> {{ 'skill' if result['skills']|length == 1 else 'skills' }}</span></div>
-            <div class="progress-wrap"><div class="progress-fill" style="width:{{ result['score'] }}%"></div></div>
-            <div class="sub">{% if result['basis'] == 'job' %}{{ result['skills']|length }} of the {{ result['wanted'] }} skills the job description asks for{% else %}{{ result['score'] }}% of the role's skills found (the job description names none){% endif %}</div>
+        <div class="score-card overall">
+            <div class="label">Overall match</div>
+            <div class="value {{ band_cls }}">{{ semantic_score }}<span style="font-size:14px;font-weight:400;color:#d5e4ec">%</span></div>
+            <div class="rec-badge {% if combined_rec == 'SHORTLIST' %}shortlist{% elif combined_rec == 'CONSIDER' %}consider{% else %}reject{% endif %}" style="margin-top:8px">{{ combined_rec }}</div>
+            <div class="meter" role="img" aria-label="{{ semantic_score }}%: REJECT below 50, CONSIDER 50 to 60, SHORTLIST 60 and above">
+                <div class="meter-fill {{ band_cls }}" style="width:{{ [semantic_score, 100]|min }}%"></div>
+                <span class="tick" style="left:50%"></span><span class="tick" style="left:60%"></span>
+            </div>
+            <div class="meter-legend"><span>Reject &lt; 50</span><span>Consider 50–60</span><span>Shortlist ≥ 60</span></div>
+            <div class="sub">The overall score is the semantic score below; it alone decides the verdict.</div>
         </div>
         <div class="score-card">
-            <div class="label">Match Score</div>
-            <div class="value">{{ semantic_score }}<span style="font-size:14px;font-weight:400;color:#e2eef4">%</span></div>
+            <div class="label">Semantic similarity</div>
+            <div class="value">{{ semantic_score }}<span style="font-size:14px;font-weight:400;color:#d5e4ec">%</span></div>
             <div class="progress-wrap"><div class="progress-fill" style="width:{{ semantic_score }}%"></div></div>
-            <div class="sub">best-matching section of the resume (decides the recommendation)</div>
+            <div class="sub">How closely the best-matching section of the resume reads like the job description</div>
         </div>
         <div class="score-card">
-            <div class="label">Recommendation</div>
-            <div class="rec-badge {% if combined_rec == 'SHORTLIST' %}shortlist{% elif combined_rec == 'CONSIDER' %}consider{% else %}reject{% endif %}">{{ combined_rec }}</div>
+            <div class="label">Keyword coverage</div>
+            <div class="value">{{ result['score'] }}<span style="font-size:14px;font-weight:400;color:#d5e4ec">%</span></div>
+            <div class="progress-wrap"><div class="progress-fill" style="width:{{ result['score'] }}%"></div></div>
+            <div class="sub">{% if result['basis'] == 'job' %}{{ result['skills']|length }} of the {{ result['wanted'] }} {{ 'skill' if result['wanted'] == 1 else 'skills' }} the job description asks for{% else %}{{ result['skills']|length }} of the role's {{ result['wanted'] }} skills (the job description names none){% endif %} · supporting detail</div>
         </div>
     </div>
 
     <div class="card">
         <div class="card-header">
-            <h3>Matched Skills</h3>
+            <h3>Matched skills</h3>
             <span class="count">{{ result['skills']|length }}</span>
         </div>
         {% if result['skills'] %}
-        <ul class="skills-wrap">
-            {% for skill in result['skills'] %}
-            <li>{{ skill }}</li>
-            {% endfor %}
+        <ul class="skills-wrap" aria-label="Matched skills">
+            {% for skill in result['skills'] %}<li>{{ skill }}</li>{% endfor %}
         </ul>
         {% else %}
-        <p class="no-data">No skills matched</p>
+        <p class="no-data">None of the wanted skills were found</p>
+        {% endif %}
+        {% if result['basis'] == 'job' %}
+        <div class="card-header" style="margin-top:14px">
+            <h3>Missing skills</h3>
+            <span class="count">{{ (result['missing'] or [])|length }}</span>
+        </div>
+        {% if result['missing'] %}
+        <ul class="skills-wrap missing" aria-label="Missing skills">
+            {% for skill in result['missing'] %}<li>{{ skill }}</li>{% endfor %}
+        </ul>
+        {% else %}
+        <p class="no-data">Every skill the job description names was found</p>
+        {% endif %}
         {% endif %}
     </div>
 
@@ -289,6 +325,7 @@ tr:last-child td{border-bottom:1px solid #f0f8ff}
                     <option value="REJECT">REJECT</option>
                 </select>
                 <span class="count">{{ total_candidates }} chunks</span>
+                <button type="button" class="btn-export" onclick="exportCsv('rankingsTable', 'candidate-rankings.csv')">Export CSV</button>
             </div>
         </div>
         {% if rankings %}
@@ -300,13 +337,13 @@ tr:last-child td{border-bottom:1px solid #f0f8ff}
             <tbody>
                 {% for r in rankings %}
                 <tr data-recommendation="{{ r['recommendation'] }}">
-                    <td><span class="rank-num {% if r['rank'] == 1 %}rank-1{% elif r['rank'] == 2 %}rank-2{% elif r['rank'] == 3 %}rank-3{% endif %}">{% if r['rank'] == 1 %}&#129351;{% elif r['rank'] == 2 %}&#129352;{% elif r['rank'] == 3 %}&#129353;{% else %}{{ r['rank'] }}{% endif %}</span></td>
+                    <td><span class="rank-num {% if r['rank'] == 1 %}rank-1{% elif r['rank'] == 2 %}rank-2{% elif r['rank'] == 3 %}rank-3{% endif %}">{{ r['rank'] }}</span></td>
                     <td><span class="rname">{{ r['resume'] }}</span></td>
                     <td><span style="font-size:11px;color:#9fbed0;font-weight:500">{% if r['source'] == 'upload' %}Your upload{% if r['duplicate_of'] %} (copy of {{ r['duplicate_of'].partition('/')[2] }}, {{ r['category'] }}){% endif %}{% else %}{{ r['category'] }}{% endif %}</span></td>
                     <td><span class="dist {{ score_band(r['similarity']) }}">{{ r['similarity'] }}<span style="font-size:10px;color:#9fbed0;font-weight:500"> (θ={{ r['angle'] }}°)</span></span></td>
                     <td><span class="rec-badge" style="font-size:9px;padding:2px 8px">{{ r['recommendation'] }}</span></td>
                     <td style="font-size:12px;color:#e2eef4;max-width:140px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis"><span title="{{ r['preview_full'] }}">{{ r['preview'] }}</span></td>
-                    <td><a href="{{ ('/my-uploads/' ~ r['file']) if r['source'] == 'upload' else ('/resume/' ~ r['category'] ~ '/' ~ r['resume']) }}" target="_blank" style="display:inline-flex;align-items:center;gap:4px;background:rgba(0,147,147,0.1);color:#009393;font-size:11px;font-weight:700;padding:4px 10px;border-radius:4px;text-decoration:none;white-space:nowrap;border:1px solid rgba(0,147,147,0.2);transition:all 0.15s" onmouseover="this.style.background='rgba(0,147,147,0.2)'" onmouseout="this.style.background='rgba(0,147,147,0.1)'">&#128196; Open</a></td>
+                    <td><a href="{{ ('/my-uploads/' ~ r['file']) if r['source'] == 'upload' else ('/resume/' ~ r['category'] ~ '/' ~ r['resume']) }}" target="_blank" style="display:inline-flex;align-items:center;gap:4px;background:rgba(0,147,147,0.1);color:#009393;font-size:11px;font-weight:700;padding:4px 10px;border-radius:4px;text-decoration:none;white-space:nowrap;border:1px solid rgba(0,147,147,0.2);transition:all 0.15s" onmouseover="this.style.background='rgba(0,147,147,0.2)'" onmouseout="this.style.background='rgba(0,147,147,0.1)'">Open</a></td>
                 </tr>
                 {% endfor %}
             </tbody>
@@ -321,21 +358,21 @@ tr:last-child td{border-bottom:1px solid #f0f8ff}
     <div class="pipeline-card">
         <div class="title">Pipeline</div>
         <div class="pipeline-flow">
-            <div class="pipeline-step"><span class="icon">&#128196;</span> Resume</div>
+            <div class="pipeline-step">Resume</div>
             <span class="pipeline-arrow">&#8594;</span>
-            <div class="pipeline-step"><span class="icon">&#128209;</span> Chunking</div>
+            <div class="pipeline-step">Chunking</div>
             <span class="pipeline-arrow">&#8594;</span>
-            <div class="pipeline-step"><span class="icon">&#10003;</span> Keyword Match</div>
+            <div class="pipeline-step">Keyword Match</div>
             <span class="pipeline-arrow">&#8594;</span>
-            <div class="pipeline-step"><span class="icon">&#129302;</span> Transformer</div>
+            <div class="pipeline-step">Transformer</div>
             <span class="pipeline-arrow">&#8594;</span>
-            <div class="pipeline-step"><span class="icon">&#127922;</span> Embeddings</div>
+            <div class="pipeline-step">Embeddings</div>
             <span class="pipeline-arrow">&#8594;</span>
-            <div class="pipeline-step"><span class="icon">&#128200;</span> Cosine</div>
+            <div class="pipeline-step">Cosine</div>
             <span class="pipeline-arrow">&#8594;</span>
-            <div class="pipeline-step"><span class="icon">&#128451;</span> ChromaDB</div>
+            <div class="pipeline-step">ChromaDB</div>
             <span class="pipeline-arrow">&#8594;</span>
-            <div class="pipeline-step"><span class="icon">&#127942;</span> Ranking</div>
+            <div class="pipeline-step">Ranking</div>
         </div>
     </div>
 
@@ -345,11 +382,23 @@ tr:last-child td{border-bottom:1px solid #f0f8ff}
     </div>
 </div>
 
-<div class="footer">
-    <p class="footer-desc">AI Resume Screening System — Automated candidate evaluation using keyword matching, semantic similarity, ChromaDB vector search, and cross-encoder department detection for intelligent hiring decisions.</p>
-    <p class="brand">Made by <span>Utkarsh Rai</span></p>
-</div>
+<footer class="footer">
+    <div class="footer-inner">
+        <p class="footer-desc">Automated candidate screening: keyword matching, semantic similarity and vector search, with department detection by a cross-encoder.</p>
+        <p class="footer-meta">Flask · Sentence-Transformers · ChromaDB · Made by Utkarsh Rai · <a href="https://github.com/Shaaan2005/AI-Resume-Screening-and-RAG-Evaluation-System" target="_blank" rel="noopener">GitHub</a></p>
+    </div>
+</footer>
 <script>
+function exportCsv(tableId, filename){
+    const rows = [...document.querySelectorAll('#' + tableId + ' tr')].filter(tr => tr.style.display !== 'none');
+    const csv = rows.map(tr => [...tr.querySelectorAll('th,td')].slice(0, -1)
+        .map(c => '"' + (c.querySelector('[title]')?.title || c.innerText).replace(/\s+/g, ' ').trim().replace(/"/g, '""') + '"').join(',')).join('\n');
+    const a = document.createElement('a');
+    a.href = URL.createObjectURL(new Blob([csv], {type: 'text/csv'}));
+    a.download = filename;
+    a.click();
+    URL.revokeObjectURL(a.href);
+}
 {% if not saved_at %}document.getElementById('timestamp').textContent = new Date().toLocaleString('en-IN', {day:'2-digit',month:'short',year:'numeric',hour:'2-digit',minute:'2-digit'});{% endif %}
 function filterRankings(){
     const val = document.getElementById('recFilter').value;

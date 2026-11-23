@@ -2,12 +2,13 @@
 import os
 import re
 import logging
+from datetime import datetime
 
 from flask import Blueprint, request, render_template, send_from_directory, abort, current_app, session
 from werkzeug.utils import secure_filename
 
 import resume_engine
-from chroma_search import search_candidates, get_collection, RESUMES_DIR, _dataset_names
+from chroma_search import search_candidates, get_collection, RESUMES_DIR, _dataset_names, _index_path
 from query_parsing import (MAX_REQUESTED, detect_category, extract_search_intent, is_garbage,
                            meaningful_terms, named_departments, parse_requested_count, search_text)
 from scoring import CONSIDER_AT
@@ -24,14 +25,31 @@ bp = Blueprint("search", __name__)
 DEFAULT_TOP_N = 5
 
 
+def _index_updated():
+    """When the search index was last written, e.g. "23 Nov 2026", or None."""
+    path = os.path.join(_index_path(), "chroma.sqlite3")
+    try:
+        return datetime.fromtimestamp(os.path.getmtime(path)).strftime("%d %b %Y")
+    except OSError:
+        return None
+
+
 def _stats():
-    """Live numbers for the home page (instead of hard-coded ones)."""
+    """Live numbers and status for the home page (instead of hard-coded ones)."""
     collection = get_collection()
+    try:
+        chunks = collection.count() if collection else 0
+    except Exception:
+        chunks = 0
     return {
         "resumes": len(_dataset_names()),
         "departments": len(SKILLS_BY_CATEGORY),
         "skills": len(resume_engine.skills),
-        "chunks": collection.count() if collection else 0,
+        "chunks": chunks,
+        # "online" only when the index can actually be queried, not a decorative badge
+        "online": chunks > 0,
+        "index_updated": _index_updated(),
+        "department_names": sorted(SKILLS_BY_CATEGORY),
     }
 
 
@@ -109,11 +127,13 @@ def search():
     owner = session.get("user_id")
     lowered = job_description.lower()
 
-    all_dept = bool(re.search(r'\b(all|every)\s+departments?\b', lowered))
+    chosen = request.values.get("department", "").strip().upper()
+    chosen = chosen if chosen in SKILLS_BY_CATEGORY else None
+    all_dept = not chosen and bool(re.search(r'\b(all|every)\s+departments?\b', lowered))
     named = named_departments(job_description)
     # "top 3 from chef and sales": several departments joined by and/or/commas are all searched.
     # ("fashion designer" names two departments without a joining word, so it stays one search.)
-    several = not all_dept and len(named) > 1 and bool(_JOINED_RE.search(lowered))
+    several = not chosen and not all_dept and len(named) > 1 and bool(_JOINED_RE.search(lowered))
     category = None
     multi_msg = None
     per_department = all_dept or several
@@ -125,7 +145,7 @@ def search():
         multi_msg = "Showing results from " + " and ".join(named)
         rankings = _search_departments(search_intent, named, owner)
     else:
-        category = detect_category(job_description)
+        category = chosen or detect_category(job_description)
         if category is None:
             multi_msg = ("No department matched this search, so it covers all departments. "
                          "Add one (e.g. \"from finance\") or a job title to narrow it down.")
@@ -134,7 +154,9 @@ def search():
     if not rankings:
         return _results(job_description, f"No candidates found in {category or 'any department'}", category)
 
-    requested = parse_requested_count(job_description)
+    top = request.values.get("top", "")
+    requested = (min(int(top), MAX_REQUESTED) if top.isdigit() and int(top) > 0
+                 else parse_requested_count(job_description))
     notes = [_count_note(job_description)]
     if requested is None and all_dept and "each" in lowered:
         requested = 1

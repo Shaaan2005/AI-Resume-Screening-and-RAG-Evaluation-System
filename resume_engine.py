@@ -161,6 +161,8 @@ def analyze_resume(path, category=None, text=None, job_description=None):
         "recommendation": recommendation,
         "wanted": len(reference),
         "basis": basis,
+        # Wanted skills the resume doesn't mention (shown as "missing" chips)
+        "missing": [s for s in reference if s not in matched_skills],
     }
 
 
