@@ -207,13 +207,18 @@ def mask_contacts(text):
                          else m.group(), text)
 
 
-def _snippet(text, limit=150):
-    """Shortens `text` at a word boundary ("Culinary…", never "Culin…")."""
+def _snippet(text, limit=150, mid_document=False):
+    """Shortens `text` at a word boundary ("Culinary…", never "Culin…").
+
+    `mid_document`: the text is a later chunk of the resume, so it starts
+    mid-sentence; a leading "…" says so.
+    """
     text = " ".join(text.split())
+    lead = "…" if mid_document and text[:1].islower() else ""
     if len(text) <= limit:
-        return text
+        return lead + text
     cut = text[:limit].rsplit(" ", 1)[0]
-    return cut.rstrip(",;:-–") + "…"
+    return lead + cut.rstrip(",;:-–") + "…"
 
 
 def _angle(similarity_pct):
@@ -315,12 +320,15 @@ def search_candidates(job_description, category=None, rerank=None, *, owner=None
                 "distance": round(distance, 4),
                 "similarity": similarity,
                 "angle": _angle(similarity),
-                "preview": _snippet(preview),
+                "preview": _snippet(preview, mid_document=meta.get("chunk", 0) > 0),
                 "preview_full": preview[:600],
                 "full_text": doc,
                 # The recommendation always matches the score shown next to it
                 "recommendation": recommend(similarity),
-                "category": "" if is_upload else meta.get("category", ""),
+                # An upload has no department of its own, except a copy of a sample
+                # resume, which takes the original's ("ENGINEERING/E10.pdf" -> ENGINEERING)
+                "category": (meta.get("duplicate_of", "").partition("/")[0] if is_upload
+                             else meta.get("category", "")),
                 "source": "upload" if is_upload else "dataset",
                 "file": meta.get("file", "") if is_upload else "",
                 "duplicate_of": meta.get("duplicate_of", "") if is_upload else "",
@@ -330,6 +338,10 @@ def search_candidates(job_description, category=None, rerank=None, *, owner=None
             seen_resumes[key]["full_text"] += " " + doc
 
     # An upload that is a copy of a sample resume replaces it, so it isn't listed twice
+    # A copy of a sample resume follows the department filter like the original would
+    if category:
+        seen_resumes = {k: r for k, r in seen_resumes.items()
+                        if not (r["source"] == "upload" and r["category"] and r["category"] != category)}
     twins = {r["duplicate_of"] for r in seen_resumes.values() if r["duplicate_of"]}
     if twins:
         seen_resumes = {k: r for k, r in seen_resumes.items()
@@ -383,10 +395,12 @@ def search_candidates(job_description, category=None, rerank=None, *, owner=None
             "similarity": data["similarity"],
             "angle": data["angle"],
             "preview": data["preview"],
+            "preview_full": data["preview_full"],
             "recommendation": data["recommendation"],
             "category": data["category"],
             "source": data["source"],
             "file": data["file"],
+            "duplicate_of": data["duplicate_of"],
             "keyword_score": data.get("keyword_score", data["similarity"]),
             "semantic_score": data.get("semantic_score", data["similarity"])
         })

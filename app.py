@@ -29,4 +29,14 @@ if __name__ == "__main__":
     # arbitrary code execution. Opt in locally with FLASK_DEBUG=1.
     debug = os.environ.get("FLASK_DEBUG", "0") == "1"
     host = os.environ.get("FLASK_HOST", "127.0.0.1")
-    app.run(debug=debug, host=host, port=5000, use_reloader=False)
+    from werkzeug.serving import WSGIRequestHandler
+
+    class QuietHandler(WSGIRequestHandler):
+        """Doesn't advertise the Werkzeug/Python versions in the Server header."""
+        server_version = "ResumeScreening"
+        sys_version = ""
+
+        def version_string(self):
+            return self.server_version
+
+    app.run(debug=debug, host=host, port=5000, use_reloader=False, request_handler=QuietHandler)

@@ -393,3 +393,23 @@ def test_keyword_match_uses_the_job_descriptions_skills(tmp_path):
                        job_description="Need python and docker")
     assert r["basis"] == "job" and r["wanted"] == 2 and r["score"] == 100.0
     assert "microservices" not in r["skills"]  # not asked for by the job
+
+
+
+def test_copied_upload_takes_the_originals_department():
+    rows = [("E1.pdf", "ENGINEERING", 0.30, "devops"),
+            ("devops.pdf", "", 0.30, "devops", {"source": "upload", "owner": "1", "file": "1_d.pdf",
+                                                "duplicate_of": "ENGINEERING/E1.pdf"})]
+    eng = search_candidates("devops", category="ENGINEERING", owner=1, collection=_FakeCollection(rows))
+    assert [(r["resume"], r["category"], r["duplicate_of"]) for r in eng] == \
+        [("devops.pdf", "ENGINEERING", "ENGINEERING/E1.pdf")]  # the page labels it "copy of E1.pdf"
+    assert eng[0]["preview_full"]  # hover text for the shortened snippet
+    auto = search_candidates("devops", category="AUTOMOBILE", owner=1, collection=_FakeCollection(rows))
+    assert auto == []  # not listed under a department the original isn't in
+
+
+def test_engineering_tools_count_as_job_skills():
+    from resume_engine import analyze_resume
+    r = analyze_resume("x", category="ENGINEERING", text="autocad and solidworks drawings",
+                       job_description="Mechanical Engineer with AutoCAD, SolidWorks")
+    assert r["basis"] == "job" and r["skills"] == ["autocad", "solidworks"]

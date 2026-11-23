@@ -72,46 +72,35 @@ body{
 .section-title h2{font-size:18px;font-weight:700;color:#f7fafc;letter-spacing:-0.2px}
 .section-title a{font-size:13px;color:#3178f6;text-decoration:none;font-weight:600}
 .section-title a:hover{color:#1475e1}
-.game-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:10px;margin-bottom:36px}
-.game-card{
+.engine-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:10px;margin-bottom:36px}
+.engine-card{
     background:#203743;
     border-radius:8px;
     overflow:hidden;cursor:pointer;transition:all 0.2s ease;
     position:relative
 }
-.game-card::before{
+.engine-card::before{
     content:'';position:absolute;top:0;left:0;right:0;height:2px;
     background:linear-gradient(90deg,transparent,#3178f6,#009393,transparent);
     z-index:1
 }
-.game-card:hover{background:#1f3541;transform:translateY(-3px);box-shadow:0 6px 20px rgba(0,0,0,0.2)}
-.game-card .thumb{
+.engine-card:hover{background:#1f3541;transform:translateY(-3px);box-shadow:0 6px 20px rgba(0,0,0,0.2)}
+.engine-card .thumb{
     height:100px;
     display:flex;align-items:center;justify-content:center;
     font-size:40px;position:relative
-}
-.game-card .thumb .live{
-    position:absolute;top:8px;left:8px;
-    background:#3178f6;color:#fff;
-    font-size:9px;font-weight:700;padding:2px 7px;
-    border-radius:3px;text-transform:uppercase;letter-spacing:0.3px;
-    display:flex;align-items:center;gap:5px
-}
-.game-card .thumb .live::before{
-    content:'';width:5px;height:5px;border-radius:50%;
-    background:#fff;animation:pulse 1.5s ease-in-out infinite
 }
 @keyframes pulse{
     0%,100%{opacity:1;transform:scale(1)}
     50%{opacity:0.4;transform:scale(0.7)}
 }
-.game-card .info{padding:12px 14px 14px}
-.game-card .info .name{font-size:13px;font-weight:600;color:#f7fafc;margin-bottom:3px}
-.game-card .info .provider{font-size:11px;color:#9fbed0;margin-bottom:8px}
-.game-card .info .meta{display:flex;align-items:center;justify-content:space-between;font-size:11px}
-.game-card .info .meta .playing{color:#f7fafc;font-weight:500;display:flex;align-items:center;gap:5px}
-.game-card .info .meta .playing::before{content:'';width:8px;height:8px;background:#009393;border-radius:50%}
-.game-card .info .meta .category{color:rgba(255,255,255,0.15);font-size:10px}
+.engine-card .info{padding:12px 14px 14px}
+.engine-card .info .name{font-size:13px;font-weight:600;color:#f7fafc;margin-bottom:3px}
+.engine-card .info .provider{font-size:11px;color:#9fbed0;margin-bottom:8px}
+.engine-card .info .meta{display:flex;align-items:center;justify-content:space-between;font-size:11px}
+.engine-card .info .meta .playing{color:#f7fafc;font-weight:500;display:flex;align-items:center;gap:5px}
+.engine-card .info .meta .playing::before{content:'';width:8px;height:8px;background:#009393;border-radius:50%}
+.engine-card .info .meta .category{color:rgba(255,255,255,0.15);font-size:10px}
 .form-section{margin-bottom:36px}
 .form-card{
     background:#203743;
@@ -225,11 +214,18 @@ textarea:focus{border-color:rgba(0,147,147,0.15)}
 @media(max-width:860px){
     .nav-links{display:none}
     .hero h1{font-size:30px}
-    .game-grid{grid-template-columns:1fr}
+    .engine-grid{grid-template-columns:1fr}
     .form-row{grid-template-columns:1fr}
     .content{padding:0 16px 40px}
     .hero{padding:100px 16px 40px}
     .form-section{grid-template-columns:1fr !important}
+}
+@media(max-width:520px){
+    .hero h1{font-size:24px}
+    .hero{padding:84px 12px 28px}
+    .content{padding:0 10px 32px}
+    .nav-right span{display:none}
+    .form-card{padding:16px}
 }
 </style>
 </head>
@@ -279,7 +275,7 @@ textarea:focus{border-color:rgba(0,147,147,0.15)}
                             <div class="upload-hint">or click to browse &bull; PDF or DOCX</div>
                             <div class="file-selected"></div>
                             <button type="button" class="file-remove" id="fileRemove">Remove</button>
-                            <input type="file" name="resume" accept=".pdf,.docx" required>
+                            <input type="file" name="resume" accept=".pdf,.docx" aria-label="Resume file (PDF or DOCX)" required>
                         </div>
                     </div>
                 </div>
@@ -312,9 +308,9 @@ textarea:focus{border-color:rgba(0,147,147,0.15)}
     <div class="section-title">
         <h2>Core Engine</h2>
     </div>
-    <div class="game-grid">
-        <div class="game-card">
-            <div class="thumb">&#128200;<span class="live">Live</span></div>
+    <div class="engine-grid">
+        <div class="engine-card">
+            <div class="thumb">&#128200;</div>
             <div class="info">
                 <div class="name">Keyword Match</div>
                 <div class="provider">{{ stats.skills }} skills database</div>
@@ -324,8 +320,8 @@ textarea:focus{border-color:rgba(0,147,147,0.15)}
                 </div>
             </div>
         </div>
-        <div class="game-card">
-            <div class="thumb">&#129302;<span class="live">Live</span></div>
+        <div class="engine-card">
+            <div class="thumb">&#129302;</div>
             <div class="info">
                 <div class="name">AI Similarity</div>
                 <div class="provider">mpnet-base-v2</div>
@@ -335,8 +331,8 @@ textarea:focus{border-color:rgba(0,147,147,0.15)}
                 </div>
             </div>
         </div>
-        <div class="game-card">
-            <div class="thumb">&#128202;<span class="live">Live</span></div>
+        <div class="engine-card">
+            <div class="thumb">&#128202;</div>
             <div class="info">
                 <div class="name">Vector Search</div>
                 <div class="provider">ChromaDB</div>
@@ -354,13 +350,13 @@ textarea:focus{border-color:rgba(0,147,147,0.15)}
     <div class="table-wrap">
         <table>
             <thead>
-                <tr><th>Candidate</th><th>Score</th><th>Status</th><th>Time</th></tr>
+                <tr><th>Candidate</th><th>Score</th><th>Status</th><th>Time</th><th></th></tr>
             </thead>
             <tbody>
                 {% for r in recent %}
-                <tr><td>{{ r['filename'] }}</td><td class="{{ score_band(r['score']) }}">{{ r['score'] }}%</td><td>{{ r['recommendation'] }}</td><td style="color:#9fbed0;font-size:11px">{{ r['timestamp'] }}</td></tr>
+                <tr><td>{% if r['can_open'] %}<a href="{{ url_for('upload.open_analysis', analysis_id=r['id']) }}" style="color:#3fd0d0;text-decoration:none;font-weight:600" title="Reopen this analysis">{{ r['filename'] }}</a>{% else %}{{ r['filename'] }}{% endif %}</td><td class="{{ score_band(r['score']) }}">{{ r['score'] }}%</td><td>{{ r['recommendation'] }}</td><td style="color:#9fbed0;font-size:11px">{{ r['timestamp'] }}</td><td style="text-align:right"><form action="{{ url_for('upload.remove_analysis', analysis_id=r['id']) }}" method="POST" style="margin:0"><input type="hidden" name="csrf_token" value="{{ csrf_token() }}"><button type="submit" aria-label="Delete {{ r['filename'] }} from history" title="Delete" style="background:none;border:1px solid rgba(255,107,107,0.3);color:#ff6b6b;border-radius:4px;padding:2px 8px;font-size:11px;cursor:pointer">Delete</button></form></td></tr>
                 {% else %}
-                <tr><td colspan="4" style="text-align:center;color:#9fbed0;font-size:12px">No analyses yet — upload a resume to get started</td></tr>
+                <tr><td colspan="5" style="text-align:center;color:#9fbed0;font-size:12px">No analyses yet — upload a resume to get started</td></tr>
                 {% endfor %}
             </tbody>
         </table>

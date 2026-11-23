@@ -202,7 +202,7 @@ def test_upload_saves_matching_score_and_status(test_app, authenticated_client, 
     monkeypatch.setattr(upload_module, "save_history", lambda *a: saved.append(a))
     monkeypatch.setitem(test_app.config, "DEMO_MODE", False)
     _post_real_resume(authenticated_client)
-    (user_id, filename, score, rec), = saved
+    (user_id, filename, score, rec, *_), = saved
     assert rec == recommend(score)
 
 
@@ -342,3 +342,32 @@ def test_security_headers_and_styled_error_pages(authenticated_client):
     assert res.headers["X-Frame-Options"] == "DENY" and "frame-ancestors" in res.headers["Content-Security-Policy"]
     res = authenticated_client.put("/search")
     assert res.status_code == 405 and b"Method Not Allowed" in res.data and b"<html" in res.data.lower()
+
+
+
+def test_saved_analysis_can_be_reopened_and_deleted(test_app, authenticated_client, monkeypatch):
+    """Recent Analyses rows link to the saved result page and can be deleted; only by their owner."""
+    import sqlite3
+    from webapp import upload as upload_module
+    monkeypatch.setattr(upload_module, "_index_resume", lambda *a, **k: None)
+    monkeypatch.setitem(test_app.config, "DEMO_MODE", False)
+    _post_real_resume(authenticated_client)
+    with sqlite3.connect(test_app.config["DATABASE"]) as conn:
+        analysis_id, details = conn.execute("SELECT id, details FROM analyses ORDER BY id DESC LIMIT 1").fetchone()
+    assert details and "full_text" not in details
+    assert f"/analysis/{analysis_id}".encode() in authenticated_client.get("/").data
+    page = authenticated_client.get(f"/analysis/{analysis_id}")
+    assert page.status_code == 200 and b"candidate.pdf" in page.data and b"Saved " in page.data
+    with authenticated_client.session_transaction() as sess:
+        sess["user_id"] = 999  # someone else
+    assert authenticated_client.get(f"/analysis/{analysis_id}").status_code == 404
+    assert authenticated_client.post(f"/analysis/{analysis_id}/delete").status_code == 404
+    with authenticated_client.session_transaction() as sess:
+        sess["user_id"] = 1
+    assert authenticated_client.post(f"/analysis/{analysis_id}/delete").status_code == 302
+    assert authenticated_client.get(f"/analysis/{analysis_id}").status_code == 404
+
+
+def test_empty_search_shows_one_message(authenticated_client):
+    page = authenticated_client.post("/search", data={"job_description": "  "}).data
+    assert b"Please enter a search query" in page and b"No candidates found" not in page

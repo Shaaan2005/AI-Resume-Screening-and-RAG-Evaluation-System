@@ -236,7 +236,7 @@ tr:last-child td{border-bottom:1px solid #f0f8ff}
                 <tr data-recommendation="{{ r['recommendation'] }}">
                     <td><span class="rank-num {% if r['rank'] == 1 %}rank-1{% elif r['rank'] == 2 %}rank-2{% elif r['rank'] == 3 %}rank-3{% endif %}">{% if r['rank'] == 1 %}&#129351;{% elif r['rank'] == 2 %}&#129352;{% elif r['rank'] == 3 %}&#129353;{% else %}{{ r['rank'] }}{% endif %}</span></td>
                     <td><span class="rname">{{ r['resume'] }}</span></td>
-                    <td><span style="font-size:11px;color:#9fbed0;font-weight:500">{{ 'Your upload' if r['source'] == 'upload' else r['category'] }}</span></td>
+                    <td><span style="font-size:11px;color:#9fbed0;font-weight:500">{% if r['source'] == 'upload' %}Your upload{% if r['duplicate_of'] %} (copy of {{ r['duplicate_of'].partition('/')[2] }}, {{ r['category'] }}){% endif %}{% else %}{{ r['category'] }}{% endif %}</span></td>
                     <td><span class="dist {{ score_band(r['similarity']) if r['recommendation'] else '' }}">{{ r['similarity'] }}<span style="font-size:10px;color:#9fbed0;font-weight:500"> (θ={{ r['angle'] }}°)</span></span></td>
                     <td><span class="rec-badge" style="font-size:9px;padding:2px 8px">{{ r['recommendation'] or '—' }}</span></td>
                     <td style="font-size:12px;color:#e2eef4;max-width:140px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis"><span title="{{ r['preview_full'] }}">{{ r['preview'] }}</span></td>
@@ -247,7 +247,7 @@ tr:last-child td{border-bottom:1px solid #f0f8ff}
         </table>
         </div>
         {% else %}
-        <p class="no-data">No candidates found in the database</p>
+        {% if not msg %}<p class="no-data">No candidates found in the database</p>{% endif %}
         {% endif %}
     </div>
 

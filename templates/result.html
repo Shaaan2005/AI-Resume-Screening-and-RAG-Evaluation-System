@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Analysis Result</title>
+<title>{% if error %}Upload Error{% else %}Analysis Result{% endif %}</title>
 <meta name="description" content="AI resume screening: semantic search over resumes and job-description matching.">
 <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 36 36%22%3E%3Crect width=%2236%22 height=%2236%22 rx=%228%22 fill=%22%23009393%22/%3E%3Ctext x=%2218%22 y=%2224%22 text-anchor=%22middle%22 font-size=%2216%22 font-weight=%22800%22 font-family=%22Arial%22 fill=%22%2313232d%22%3EAI%3C/text%3E%3C/svg%3E">
 <style>:focus-visible{outline:2px solid #3fd0d0 !important;outline-offset:2px}</style>
@@ -229,7 +229,7 @@ tr:last-child td{border-bottom:1px solid #f0f8ff}
         {% if category %}
         <span style="background:rgba(0,147,147,0.12);color:#009393;font-size:11px;font-weight:700;padding:3px 10px;border-radius:4px;text-transform:uppercase;letter-spacing:0.4px;margin-left:6px">{{ category }}</span>
         {% endif %}
-        <span style="margin-left:auto;font-size:13px;color:#e2eef4" id="timestamp"></span>
+        <span style="margin-left:auto;font-size:13px;color:#e2eef4" id="timestamp">{% if saved_at %}Saved {{ saved_at }}{% endif %}</span>
     </div>
 
     {% if error %}
@@ -238,7 +238,7 @@ tr:last-child td{border-bottom:1px solid #f0f8ff}
     <div class="scores-grid">
         <div class="score-card">
             <div class="label">Keyword Match</div>
-            <div class="value">{{ result['skills']|length }}<span style="font-size:14px;font-weight:400;color:#e2eef4"> skills</span></div>
+            <div class="value">{{ result['skills']|length }}<span style="font-size:14px;font-weight:400;color:#e2eef4"> {{ 'skill' if result['skills']|length == 1 else 'skills' }}</span></div>
             <div class="progress-wrap"><div class="progress-fill" style="width:{{ result['score'] }}%"></div></div>
             <div class="sub">{% if result['basis'] == 'job' %}{{ result['skills']|length }} of the {{ result['wanted'] }} skills the job description asks for{% else %}{{ result['score'] }}% of the role's skills found (the job description names none){% endif %}</div>
         </div>
@@ -302,7 +302,7 @@ tr:last-child td{border-bottom:1px solid #f0f8ff}
                 <tr data-recommendation="{{ r['recommendation'] }}">
                     <td><span class="rank-num {% if r['rank'] == 1 %}rank-1{% elif r['rank'] == 2 %}rank-2{% elif r['rank'] == 3 %}rank-3{% endif %}">{% if r['rank'] == 1 %}&#129351;{% elif r['rank'] == 2 %}&#129352;{% elif r['rank'] == 3 %}&#129353;{% else %}{{ r['rank'] }}{% endif %}</span></td>
                     <td><span class="rname">{{ r['resume'] }}</span></td>
-                    <td><span style="font-size:11px;color:#9fbed0;font-weight:500">{{ 'Your upload' if r['source'] == 'upload' else r['category'] }}</span></td>
+                    <td><span style="font-size:11px;color:#9fbed0;font-weight:500">{% if r['source'] == 'upload' %}Your upload{% if r['duplicate_of'] %} (copy of {{ r['duplicate_of'].partition('/')[2] }}, {{ r['category'] }}){% endif %}{% else %}{{ r['category'] }}{% endif %}</span></td>
                     <td><span class="dist {{ score_band(r['similarity']) }}">{{ r['similarity'] }}<span style="font-size:10px;color:#9fbed0;font-weight:500"> (θ={{ r['angle'] }}°)</span></span></td>
                     <td><span class="rec-badge" style="font-size:9px;padding:2px 8px">{{ r['recommendation'] }}</span></td>
                     <td style="font-size:12px;color:#e2eef4;max-width:140px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis"><span title="{{ r['preview_full'] }}">{{ r['preview'] }}</span></td>
@@ -350,7 +350,7 @@ tr:last-child td{border-bottom:1px solid #f0f8ff}
     <p class="brand">Made by <span>Utkarsh Rai</span></p>
 </div>
 <script>
-document.getElementById('timestamp').textContent = new Date().toLocaleString('en-IN', {day:'2-digit',month:'short',year:'numeric',hour:'2-digit',minute:'2-digit'});
+{% if not saved_at %}document.getElementById('timestamp').textContent = new Date().toLocaleString('en-IN', {day:'2-digit',month:'short',year:'numeric',hour:'2-digit',minute:'2-digit'});{% endif %}
 function filterRankings(){
     const val = document.getElementById('recFilter').value;
     document.querySelectorAll('#rankingsTable tbody tr').forEach(tr => {

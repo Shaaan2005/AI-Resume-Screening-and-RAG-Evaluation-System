@@ -3,7 +3,7 @@ import os
 import hashlib
 import logging
 
-from flask import Blueprint, request, render_template, current_app, session
+from flask import Blueprint, request, render_template, current_app, session, abort, redirect, url_for
 from werkzeug.utils import secure_filename
 
 from chroma_search import search_candidates, get_collection
@@ -13,7 +13,7 @@ from resume_engine import analyze_resume, extract_resume_text, chunk_text
 from scoring import recommend
 from semantic_match import best_chunk_similarity
 
-from .history import save_history
+from .history import save_history, load_analysis, delete_analysis
 from .security import login_required
 
 logger = logging.getLogger("ResumeScreening")
@@ -153,21 +153,21 @@ def upload():
         collection = get_collection()
         total_candidates = collection.count() if collection else 0
 
-        if not demo_mode:
-            save_history(owner, clean_name, match_score, match_rec)
-
-        return render_template("result.html",
+        page = dict(
             filename=clean_name,
-            error=None,
             result=keyword_result,
             semantic_score=match_score,
             keyword_pct=keyword_result["score"],
             combined_score=match_score,
             combined_rec=match_rec,
-            rankings=rankings,
-            total_candidates=total_candidates,
+            # full_text is the whole resume: not needed to redraw the page, so not stored
+            rankings=[{k: v for k, v in r.items() if k != "full_text"} for r in rankings],
             job_description=job_description,
             category=category)
+        if not demo_mode:
+            save_history(owner, clean_name, match_score, match_rec, page)
+
+        return render_template("result.html", error=None, total_candidates=total_candidates, **page)
     except Exception:
         logger.exception("Error processing resume upload")
         return _error("Something went wrong while analyzing this resume. Please try again or use a different file.",
@@ -178,3 +178,25 @@ def upload():
                 os.remove(file_path)  # visitors' resumes never stay on the server
             except OSError as e:
                 logger.warning(f"Could not delete demo upload {file_path}: {e}")
+
+
+@bp.route("/analysis/<int:analysis_id>")
+@login_required
+def open_analysis(analysis_id):
+    """Reopens one of the user's saved analyses from Recent Analyses."""
+    saved = load_analysis(session["user_id"], analysis_id)
+    if saved is None:
+        abort(404, description="That analysis doesn't exist or can't be reopened.")
+    page, created_at = saved
+    collection = get_collection()
+    return render_template("result.html", error=None, saved_at=created_at,
+                           total_candidates=collection.count() if collection else 0, **page)
+
+
+@bp.route("/analysis/<int:analysis_id>/delete", methods=["POST"])
+@login_required
+def remove_analysis(analysis_id):
+    """Deletes one of the user's analyses from Recent Analyses."""
+    if not delete_analysis(session["user_id"], analysis_id):
+        abort(404, description="That analysis doesn't exist.")
+    return redirect(url_for("search.home"))

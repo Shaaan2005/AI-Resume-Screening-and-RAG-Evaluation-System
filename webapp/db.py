@@ -29,6 +29,9 @@ def init_db(path):
             recommendation TEXT NOT NULL,
             created_at TEXT NOT NULL)""")
         conn.execute("CREATE INDEX IF NOT EXISTS idx_analyses_user ON analyses(user_id, id)")
+        # The full result page of each analysis (JSON), so it can be reopened from the home page
+        if "details" not in {row[1] for row in conn.execute("PRAGMA table_info(analyses)")}:
+            conn.execute("ALTER TABLE analyses ADD COLUMN details TEXT")
         # Failed logins, kept in the database so the lockout survives restarts and
         # is shared by every server process (gunicorn workers).
         conn.execute("""CREATE TABLE IF NOT EXISTS login_failures (

@@ -226,3 +226,23 @@ solid principles
 clean architecture
 hexagonal architecture
 onion architecture
+autocad
+solidworks
+catia
+ansys
+matlab
+simulink
+creo
+revit
+labview
+plc
+cad
+finite element analysis
+gd&t
+six sigma
+lean manufacturing
+3d modeling
+mechanical design
+product design
+thermodynamics
+hvac
