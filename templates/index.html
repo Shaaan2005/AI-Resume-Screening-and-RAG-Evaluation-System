@@ -243,7 +243,7 @@ textarea:focus{border-color:rgba(0,147,147,0.15)}
         {% if user %}
         <a href="/evaluate" style="font-size:13px;color:#009393;font-weight:600;text-decoration:none;margin-right:15px;transition:opacity 0.2s" onmouseover="this.style.opacity=0.8" onmouseout="this.style.opacity=1">📊 Evaluation Dashboard</a>
         <span style="font-size:13px;color:#e2eef4;font-weight:500;margin-right:15px">Hi {{ user.username }}</span>
-        <a href="{{ url_for('auth.logout') }}" class="btn-login">Log Out</a>
+        <form action="{{ url_for('auth.logout') }}" method="POST" style="display:inline;margin:0"><input type="hidden" name="csrf_token" value="{{ csrf_token() }}"><button type="submit" class="btn-login">Log Out</button></form>
         {% else %}
         <a href="{{ url_for('auth.login') }}" class="btn-login">Log In</a>
         <a href="{{ url_for('auth.register') }}" class="btn-register">Register</a>
@@ -293,7 +293,7 @@ textarea:focus{border-color:rgba(0,147,147,0.15)}
             <form action="/search" method="POST" style="padding-top:10px;display:flex;flex-direction:column;flex:1">
                 <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
                 <div class="form-group" style="flex:1;display:flex;flex-direction:column">
-                    <label>Search 240+ indexed resumes</label>
+                    <label>Search {{ stats.resumes }} indexed resumes</label>
                     <textarea name="job_description" placeholder='e.g. "top 5 from engineering" or "best 3 sales with cold calling"' required style="flex:1;min-height:90px;resize:none"></textarea>
                 </div>
                 <div style="margin:8px 0 10px;font-size:11px;color:#9fbed0;font-weight:500">Try: top 3 from <span style="color:#009393">chef</span> &bull; best 5 <span style="color:#009393">sales</span> &bull; 10 <span style="color:#009393">engineer</span> resumes</div>
@@ -315,9 +315,9 @@ textarea:focus{border-color:rgba(0,147,147,0.15)}
             <div class="thumb">&#128200;<span class="live">Live</span></div>
             <div class="info">
                 <div class="name">Keyword Match</div>
-                <div class="provider">228 skills database</div>
+                <div class="provider">{{ stats.skills }} skills database</div>
                 <div class="meta">
-                    <span class="playing">248 active</span>
+                    <span class="playing">{{ stats.departments }} roles</span>
                     <span class="category">Scanning</span>
                 </div>
             </div>
@@ -328,7 +328,7 @@ textarea:focus{border-color:rgba(0,147,147,0.15)}
                 <div class="name">AI Similarity</div>
                 <div class="provider">mpnet-base-v2</div>
                 <div class="meta">
-                    <span class="playing">248 active</span>
+                    <span class="playing">{{ stats.resumes }} resumes</span>
                     <span class="category">768-dim</span>
                 </div>
             </div>
@@ -339,7 +339,7 @@ textarea:focus{border-color:rgba(0,147,147,0.15)}
                 <div class="name">Vector Search</div>
                 <div class="provider">ChromaDB</div>
                 <div class="meta">
-                    <span class="playing">24 chunks</span>
+                    <span class="playing">{{ stats.chunks }} chunks</span>
                     <span class="category">Cosine</span>
                 </div>
             </div>
@@ -356,7 +356,7 @@ textarea:focus{border-color:rgba(0,147,147,0.15)}
             </thead>
             <tbody>
                 {% for r in recent %}
-                <tr><td>{{ r['filename'] }}</td><td class="{% if r['score'] >= 50 %}green{% elif r['score'] >= 30 %}yellow{% else %}red{% endif %}">{{ r['score'] }}%</td><td>{{ r['recommendation'] }}</td><td style="color:#9fbed0;font-size:11px">{{ r['timestamp'] }}</td></tr>
+                <tr><td>{{ r['filename'] }}</td><td class="{{ score_band(r['score']) }}">{{ r['score'] }}%</td><td>{{ r['recommendation'] }}</td><td style="color:#9fbed0;font-size:11px">{{ r['timestamp'] }}</td></tr>
                 {% else %}
                 <tr><td colspan="4" style="text-align:center;color:#9fbed0;font-size:12px">No analyses yet — upload a resume to get started</td></tr>
                 {% endfor %}

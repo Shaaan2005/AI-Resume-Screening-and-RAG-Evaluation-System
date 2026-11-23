@@ -1,7 +1,9 @@
 """Login, registration, and logout routes."""
 import re
+import time
 import sqlite3
 import logging
+import threading
 
 from flask import Blueprint, request, render_template, redirect, url_for, session
 from werkzeug.security import generate_password_hash, check_password_hash
@@ -11,6 +13,35 @@ from .db import connect
 logger = logging.getLogger("ResumeScreening")
 
 bp = Blueprint("auth", __name__)
+
+# Login throttling: after MAX_FAILURES failed attempts for the same username from the
+# same IP within WINDOW seconds, further attempts are refused until the window passes.
+MAX_FAILURES = 5
+WINDOW = 15 * 60
+_failures = {}
+_failures_lock = threading.Lock()
+
+
+def _attempt_key(username):
+    return (request.remote_addr or "?", username.lower())
+
+
+def _recent_failures(key):
+    now = time.time()
+    with _failures_lock:
+        stamps = [t for t in _failures.get(key, []) if now - t < WINDOW]
+        _failures[key] = stamps
+        return len(stamps)
+
+
+def _record_failure(key):
+    with _failures_lock:
+        _failures.setdefault(key, []).append(time.time())
+
+
+def _clear_failures(key):
+    with _failures_lock:
+        _failures.pop(key, None)
 
 
 @bp.route("/login", methods=["GET", "POST"])
@@ -23,19 +54,28 @@ def login():
         username = request.form.get("username", "").strip()
         password = request.form.get("password", "")
 
+        key = _attempt_key(username)
         if not username or not password:
             error = "Username and password are required"
+        elif _recent_failures(key) >= MAX_FAILURES:
+            logger.warning(f"Login throttled for '{username}' from {request.remote_addr}")
+            error = "Too many failed attempts. Please wait 15 minutes and try again."
         else:
             try:
                 with connect() as conn:
-                    cur = conn.execute("SELECT id, username, password FROM users WHERE username = ?", (username,))
+                    # Usernames are case-insensitive, matching how registration checks them
+                    cur = conn.execute("SELECT id, username, password FROM users WHERE username = ? COLLATE NOCASE",
+                                       (username,))
                     row = cur.fetchone()
                 if row and check_password_hash(row[2], password):
+                    _clear_failures(key)
+                    session.clear()  # fresh session on login
                     session["user_id"] = row[0]
                     session["username"] = row[1]
                     session.permanent = True
-                    logger.info(f"User '{username}' logged in successfully.")
+                    logger.info(f"User '{row[1]}' logged in successfully.")
                     return redirect(url_for("search.home"))
+                _record_failure(key)
                 error = "Invalid username or password"
             except Exception as e:
                 logger.error(f"Login database error: {e}")
@@ -99,7 +139,8 @@ def register():
     return render_template("register.html", error=error)
 
 
-@bp.route("/logout")
+@bp.route("/logout", methods=["POST"])
 def logout():
+    """POST-only (with the CSRF check every POST gets), so other sites can't log you out."""
     session.clear()
     return redirect(url_for("auth.login"))

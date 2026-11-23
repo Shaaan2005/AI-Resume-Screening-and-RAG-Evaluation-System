@@ -15,7 +15,7 @@ from webapp import create_app
 
 @pytest.fixture(scope="session")
 def test_app():
-    """Builds a Flask app whose database, uploads, and history all live in a temp dir."""
+    """Builds a Flask app whose database (accounts + history) and uploads live in a temp dir."""
     temp_dir = tempfile.mkdtemp()
     temp_db_path = os.path.join(temp_dir, "test_users.db")
 
@@ -24,7 +24,6 @@ def test_app():
         "WTF_CSRF_ENABLED": False,  # Disabled by default in tests; enabled in security tests
         "DATABASE": temp_db_path,
         "UPLOAD_FOLDER": os.path.join(temp_dir, "uploads"),
-        "HISTORY_FILE": os.path.join(temp_dir, "history.json"),
     })
 
     # create_app() builds the schema; seed a pre-existing test user

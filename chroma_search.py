@@ -21,6 +21,7 @@ import torch
 from sentence_transformers import CrossEncoder
 
 from model_loader import model
+from scoring import recommend
 
 logger = logging.getLogger("ResumeScreening")
 
@@ -55,16 +56,53 @@ SHORT_TECH_TERMS = {"c++", "c#", ".net", "go", "r", "js", "ts", "ui", "ux", "it"
                     "hr", "pr", "bd", "ml", "ai", "db"}
 
 
-def get_collection():
-    """Returns the ChromaDB collection with persistent client.
+ROOT = os.path.dirname(os.path.abspath(__file__))
+RESUMES_DIR = os.path.join(ROOT, "resumes")
 
-    Creates the collection if not present, and handles connection failures gracefully.
+
+def _index_path():
+    """Index folder: CHROMA_PATH if set (relative paths resolve against the project root)."""
+    return os.path.join(ROOT, os.environ.get("CHROMA_PATH", "chromadb_data"))
+
+
+def _dataset_names():
+    names = set()
+    if os.path.isdir(RESUMES_DIR):
+        for cat in os.listdir(RESUMES_DIR):
+            folder = os.path.join(RESUMES_DIR, cat)
+            if os.path.isdir(folder):
+                names.update(os.listdir(folder))
+    return names
+
+
+def tag_untagged_uploads(collection):
+    """One-time migration for indexes built before uploads had owners.
+
+    Records whose file isn't one of the sample resumes are tagged as uploads with
+    owner "legacy", which hides them from every user's search instead of showing
+    them to everyone. Sample resumes need no tag (they pass the non-upload filter).
     """
+    try:
+        got = collection.get(include=["metadatas"])
+    except Exception as e:
+        logger.warning(f"Could not read index for migration: {e}")
+        return 0
+    dataset = _dataset_names()
+    ids = [i for i, m in zip(got["ids"], got["metadatas"])
+           if "source" not in m and m.get("resume") not in dataset]
+    if ids:
+        collection.update(ids=ids, metadatas=[{"source": "upload", "owner": "legacy"}] * len(ids))
+        logger.info(f"Tagged {len(ids)} pre-existing uploaded chunks as legacy (hidden from search)")
+    return len(ids)
+
+
+def get_collection():
+    """Returns the app's ChromaDB collection (created if missing)."""
     global _client, _collection
     if _collection is None:
         try:
             # CHROMA_PATH lets a public demo search its own clean index (see vector_store.py)
-            _client = chromadb.PersistentClient(path=os.environ.get("CHROMA_PATH", "chromadb_data"))
+            _client = chromadb.PersistentClient(path=_index_path())
             try:
                 _collection = _client.get_collection(name="resumes")
             except Exception:
@@ -72,6 +110,7 @@ def get_collection():
                     name="resumes",
                     metadata={"hnsw:space": "cosine"}
                 )
+            tag_untagged_uploads(_collection)
         except Exception as e:
             logger.error(f"Failed to initialize ChromaDB collection: {e}")
             return None
@@ -152,18 +191,48 @@ def _bm25_scores(query, names, collection):
 
 # ── Search ──────────────────────────────────────────────────────────────────
 
+_EMAIL_RE = re.compile(r"[\w.+-]+@[\w-]+\.[\w.-]+")
+_PHONE_RE = re.compile(r"(?<![\w(])(?:\+?\(?\d[\d\s().-]{7,}\d)(?!\w)")
+
+
+def mask_contacts(text):
+    """Hides email addresses and phone numbers in text shown to other users."""
+    text = _EMAIL_RE.sub("[email hidden]", text)
+    # 9+ digits: phone numbers, but not year ranges like "2010 - 2014" (8 digits)
+    return _PHONE_RE.sub(lambda m: "[phone hidden]" if sum(c.isdigit() for c in m.group()) >= 9
+                         else m.group(), text)
+
+
 def _angle(similarity_pct):
     """Angle in degrees for a 0-100 cosine-style score (clipped for acos safety)."""
     return round(math.degrees(math.acos(max(-1.0, min(1.0, similarity_pct / 100)))), 1)
 
 
-def _recommendation(score):
+def _rerank_recommendation(score):
+    """Recommendation on the cross-encoder's 0-100 scale (only used with RESUME_RERANK=1)."""
     return "SHORTLIST" if score >= 60 else ("CONSIDER" if score >= 35 else "REJECT")
 
 
-def search_candidates(job_description, category=None, rerank=None, *, collection=None,
+def _query(collection, embedding, n_results, where):
+    """Runs one vector query; returns parallel lists (ids, distances, metadatas, documents)."""
+    params = {"query_embeddings": [embedding], "n_results": n_results,
+              "include": ["documents", "metadatas", "distances"]}
+    if where:
+        params["where"] = where
+    r = collection.query(**params)
+    if not r or not r.get("ids") or not r["ids"][0]:
+        return [], [], [], []
+    return r["ids"][0], r["distances"][0], r["metadatas"][0], r["documents"][0]
+
+
+def search_candidates(job_description, category=None, rerank=None, *, owner=None, collection=None,
                       reranker=None, alpha=None, keyword_mode=None, rerank_top_n=None):
     """Retrieves and ranks candidate resumes for a job description.
+
+    Visibility: the sample resumes are searchable by everyone (filtered to `category`
+    when given). Uploaded resumes are only ever returned to their `owner` (a user id),
+    and are searched regardless of `category`, since a guessed department for an
+    uploaded resume is unreliable. With owner=None, no uploads are returned.
 
     `rerank` defaults to RERANK_ENABLED (off unless RESUME_RERANK=1).
     Keyword arguments override the module defaults (used by the benchmark):
@@ -201,48 +270,49 @@ def search_candidates(job_description, category=None, rerank=None, *, collection
         logger.error(f"Failed to generate query embedding: {e}")
         return []
 
-    query_params = {
-        "query_embeddings": [query_embedding],
-        "n_results": min(count, 200),
-        "include": ["documents", "metadatas", "distances"]
-    }
-    if category:
-        query_params["where"] = {"category": category}
-
+    not_upload = {"source": {"$ne": "upload"}}
+    shared_filter = {"$and": [{"category": category}, not_upload]} if category else not_upload
     try:
-        results = collection.query(**query_params)
+        hits = list(zip(*_query(collection, query_embedding, min(count, 200), shared_filter)))
+        if owner is not None:
+            mine = {"$and": [{"source": "upload"}, {"owner": str(owner)}]}
+            hits += list(zip(*_query(collection, query_embedding, min(count, 50), mine)))
     except Exception as e:
         logger.error(f"ChromaDB query execution failed: {e}")
         return []
 
-    if not results or "ids" not in results or not results["ids"] or not results["ids"][0]:
+    if not hits:
         return []
+    hits.sort(key=lambda h: h[1])  # best (smallest distance) first across both queries
 
     # Stage 1: aggregate chunks per resume. Chunks arrive best-first, so the first
     # chunk seen for a resume is its best match and leads its re-ranking text.
     seen_resumes = {}
-    for i in range(len(results["ids"][0])):
-        chunk_id = results["ids"][0][i]
-        distance = results["distances"][0][i] if results.get("distances") else 0.5
-        meta = results["metadatas"][0][i] if results.get("metadatas") else {}
-        doc = results["documents"][0][i] if results.get("documents") else ""
-
-        resume_name = meta.get("resume", chunk_id)
+    for chunk_id, distance, meta, doc in hits:
+        meta = meta or {}
+        doc = doc or ""
+        is_upload = meta.get("source") == "upload"
+        key = meta.get("file", meta.get("resume", chunk_id)) if is_upload else meta.get("resume", chunk_id)
         similarity = max(0.0, min(100.0, round((1.0 - distance) * 100, 2)))
 
-        if resume_name not in seen_resumes:
-            seen_resumes[resume_name] = {
+        if key not in seen_resumes:
+            preview = mask_contacts(doc)
+            seen_resumes[key] = {
+                "name": meta.get("resume", chunk_id),
                 "distance": round(distance, 4),
                 "similarity": similarity,
                 "angle": _angle(similarity),
-                "preview": doc[:150] + "..." if len(doc) > 150 else doc,
+                "preview": preview[:150] + "..." if len(preview) > 150 else preview,
                 "full_text": doc,
-                "recommendation": meta.get("recommendation", "REJECT"),
-                "category": meta.get("category", ""),
+                # The recommendation always matches the score shown next to it
+                "recommendation": recommend(similarity),
+                "category": "" if is_upload else meta.get("category", ""),
+                "source": "upload" if is_upload else "dataset",
+                "file": meta.get("file", "") if is_upload else "",
                 "reranked": False,
             }
         else:
-            seen_resumes[resume_name]["full_text"] += " " + doc
+            seen_resumes[key]["full_text"] += " " + doc
 
     # Stage 2: re-rank the top-N resumes with the cross-encoder (+ optional keyword blend)
     if rerank and seen_resumes:
@@ -271,7 +341,7 @@ def search_candidates(job_description, category=None, rerank=None, *, collection
 
                     data["similarity"] = hybrid
                     data["angle"] = _angle(hybrid)
-                    data["recommendation"] = _recommendation(hybrid)
+                    data["recommendation"] = _rerank_recommendation(hybrid)
                     data["keyword_score"] = kw_score
                     data["semantic_score"] = sem_score
                     data["reranked"] = True
@@ -284,16 +354,18 @@ def search_candidates(job_description, category=None, rerank=None, *, collection
                             key=lambda x: (x[1]["reranked"], x[1]["similarity"]), reverse=True)
 
     rankings = []
-    for rank, (name, data) in enumerate(sorted_resumes, 1):
+    for rank, (key, data) in enumerate(sorted_resumes, 1):
         rankings.append({
             "rank": rank,
-            "resume": name,
+            "resume": data["name"],
             "distance": data["distance"],
             "similarity": data["similarity"],
             "angle": data["angle"],
             "preview": data["preview"],
             "recommendation": data["recommendation"],
             "category": data["category"],
+            "source": data["source"],
+            "file": data["file"],
             "keyword_score": data.get("keyword_score", data["similarity"]),
             "semantic_score": data.get("semantic_score", data["similarity"])
         })

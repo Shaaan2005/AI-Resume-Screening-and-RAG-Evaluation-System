@@ -136,8 +136,8 @@ def test_login_empty_fields(client):
 
 
 def test_logout(authenticated_client):
-    """Verifies that logging out clears session and redirects to login."""
-    res = authenticated_client.get("/logout", follow_redirects=False)
+    """Logging out (POST) clears the session and redirects to login."""
+    res = authenticated_client.post("/logout", follow_redirects=False)
     assert res.status_code == 302
     assert res.headers["Location"].endswith("/login")
 
@@ -145,6 +145,39 @@ def test_logout(authenticated_client):
     home_res = authenticated_client.get("/", follow_redirects=False)
     assert home_res.status_code == 302
     assert home_res.headers["Location"].endswith("/login")
+
+
+def test_logout_rejects_get(authenticated_client):
+    """A plain link (GET) can't log a user out, so other sites can't trigger it."""
+    assert authenticated_client.get("/logout").status_code == 405
+    assert authenticated_client.get("/").status_code == 200  # still logged in
+
+
+def test_login_username_is_case_insensitive(client):
+    """Registration treats usernames case-insensitively, so login does too."""
+    res = client.post("/login", data={"username": "EXISTINGUSER", "password": "ValidPass123"})
+    assert res.status_code == 302
+
+
+def test_register_rejects_case_variant_of_existing_username(client):
+    res = client.post("/register", data={
+        "username": "ExistingUser", "email": "other@example.com", "password": "ValidPass123"})
+    assert b"Username already taken" in res.data
+
+
+def test_login_is_throttled_after_repeated_failures(test_app, client):
+    """After 5 wrong passwords, even the right one is refused for a while."""
+    from webapp import auth
+    auth._failures.clear()
+    try:
+        for _ in range(auth.MAX_FAILURES):
+            res = client.post("/login", data={"username": "existinguser", "password": "WrongPass999"})
+            assert b"Invalid username or password" in res.data
+        res = client.post("/login", data={"username": "existinguser", "password": "ValidPass123"})
+        assert res.status_code == 200
+        assert b"Too many failed attempts" in res.data
+    finally:
+        auth._failures.clear()
 
 
 def test_unauthorized_access(client):

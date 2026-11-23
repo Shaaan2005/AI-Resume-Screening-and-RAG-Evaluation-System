@@ -78,12 +78,17 @@ def _contains_skill(skill, text):
     return re.search(pattern, text) is not None
 
 
-def analyze_resume(path, category=None):
-    """Analyzes resume text against a reference skill dictionary.
+def analyze_resume(path, category=None, text=None):
+    """Keyword check: which of the role's skills appear in the resume.
 
-    If `category` matches a key in SKILLS_BY_CATEGORY, the resume is scored
+    If `category` matches a key in SKILLS_BY_CATEGORY, the resume is checked
     against that role's skills only. Otherwise it falls back to the global
-    skills.txt list.
+    skills.txt list. Pass `text` if it was already extracted, to avoid
+    reading the file twice.
+
+    The score is skill coverage (matched / all skills for the role). It's
+    shown as supporting detail; the app's SHORTLIST/CONSIDER/REJECT decision
+    comes from the semantic match score (see scoring.py).
 
     Returns:
       {
@@ -92,7 +97,7 @@ def analyze_resume(path, category=None):
          "recommendation": "SHORTLIST" | "CONSIDER" | "REJECT"
       }
     """
-    text = extract_resume_text(path).lower()
+    text = (text if text is not None else extract_resume_text(path)).lower()
     if not text:
         return {
             "score": 0.0,
@@ -128,7 +133,7 @@ def analyze_resume(path, category=None):
 
 
 def chunk_text(text, chunk_size=200):
-    """Splits document text into overlapping or sequential word chunks."""
+    """Splits document text into consecutive, non-overlapping chunks of `chunk_size` words."""
     if not text or not isinstance(text, str):
         return []
 

@@ -96,21 +96,31 @@ def detect_category(job_description):
 
 # ── Query parsing ───────────────────────────────────────────────────────────
 
+# A number followed by "years"/"months" is experience, not a result count ("need 2 years of python")
+_NOT_DURATION = r'(?!\s*\+|\s*(?:years?|yrs?|months?|mos?)\b)'
+MAX_REQUESTED = 50
+
+
 def parse_requested_count(text):
-    """Extracts how many results the recruiter asked for ("top 5", "three candidates")."""
+    """How many results the recruiter asked for ("top 5", "three candidates"), or None.
+
+    Ignores experience durations ("need 2 years", "3+ yrs") and nonsense counts
+    (0 or below), and caps the count at MAX_REQUESTED.
+    """
     t = text.lower()
-    match = re.search(r'\b(top|best|to|select|choose|pick|find|show|give|get|need|want)\s+(\d+)\b', t)
-    if match:
-        return int(match.group(2))
-    match = re.search(r'\b(top|best|to|select|choose|pick|find|show|give|get|need|want)\s+(' + '|'.join(NUM_WORDS) + r')\b', t)
-    if match:
-        return NUM_WORDS[match.group(2)]
-    match = re.search(r'(\d+)\s*(resume|result|candidate)s?\b', t)
-    if match:
-        return int(match.group(1))
-    match = re.search(r'(' + '|'.join(NUM_WORDS) + r')\s+(resume|result|candidate)s?\b', t)
-    if match:
-        return NUM_WORDS[match.group(1)]
+    verbs = r'\b(top|best|select|choose|pick|find|show|give|get|need|want)\s+'
+    nums = '|'.join(NUM_WORDS)
+    for pattern, as_word in (
+        (verbs + r'(\d+)\b' + _NOT_DURATION, False),
+        (verbs + r'(' + nums + r')\b' + _NOT_DURATION, True),
+        (r'\b(\d+)' + _NOT_DURATION + r'\s+(?:[a-z+#.-]+\s+){0,2}(?:resume|result|candidate|profile|people)s?\b', False),
+        (r'\b(' + nums + r')' + _NOT_DURATION + r'\s+(?:[a-z+#.-]+\s+){0,2}(?:resume|result|candidate|profile|people)s?\b', True),
+    ):
+        match = re.search(pattern, t)
+        if match:
+            value = match.groups()[-1]
+            n = NUM_WORDS[value] if as_word else int(value)
+            return min(n, MAX_REQUESTED) if n > 0 else None
     return None
 
 
@@ -141,17 +151,24 @@ def extract_search_intent(query):
     return " ".join(clean) if clean else None
 
 
+# "it" and "r" are also ordinary English / a lone letter, so they only count as
+# tech terms when written as "IT" / "R"; otherwise "asdfgh it" would pass as a query.
+_AMBIGUOUS_TERMS = {"it": "IT", "r": "R"}
+
+
 def is_garbage(text):
     """True for empty input or keyboard mashing with no real words."""
     if not text or not text.strip():
         return True
-    if re.search(r'\b(c\+\+|c#|\.net|go|r|it|hr|pr|bd|ml|ai|db)\b', text.lower()):
-        return False
     words = extract_words(text)
     if not words:
         return not bool(re.search(r'[a-zA-Z0-9]', text))
+    original_tokens = set(re.findall(r'[A-Za-z0-9+#.-]+', text))
     real = 0
     for w in words:
+        if w in _AMBIGUOUS_TERMS:
+            real += _AMBIGUOUS_TERMS[w] in original_tokens
+            continue
         if w in SHORT_TECH_TERMS:
             real += 1
             continue

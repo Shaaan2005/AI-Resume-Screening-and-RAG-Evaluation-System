@@ -43,7 +43,7 @@ def build_index(db_path=DB_PATH, resumes_dir=RESUMES_DIR):
 
             file_path = os.path.join(category_path, filename)
             text = extract_resume_text(file_path)
-            result = analyze_resume(file_path, category=category)
+            result = analyze_resume(file_path, category=category, text=text)
 
             chunks = chunk_text(text)
             if not chunks:
@@ -51,7 +51,7 @@ def build_index(db_path=DB_PATH, resumes_dir=RESUMES_DIR):
 
             collection.upsert(
                 ids=[f"{filename}_chunk{idx}" for idx in range(len(chunks))],
-                embeddings=[model.encode(chunk).tolist() for chunk in chunks],
+                embeddings=model.encode(chunks).tolist(),  # one batch per resume
                 documents=chunks,
                 metadatas=[{
                     "resume": filename,
@@ -59,7 +59,8 @@ def build_index(db_path=DB_PATH, resumes_dir=RESUMES_DIR):
                     "total_chunks": len(chunks),
                     "recommendation": result["recommendation"],
                     "skill_score": result["score"],
-                    "category": category
+                    "category": category,
+                    "source": "dataset",
                 } for idx in range(len(chunks))]
             )
 

@@ -1,32 +1,35 @@
-"""Recent-analyses history shown on the home page (last 10 uploads)."""
-import os
-import json
+"""Each user's recent analyses, shown on their home page (last 10 uploads)."""
 import logging
+from datetime import datetime
 
-from flask import current_app
+from .db import connect
 
 logger = logging.getLogger("ResumeScreening")
 
 
-def load_history():
-    if current_app.config.get("DEMO_MODE"):
-        return []  # public visitors never see anyone's past uploads
-    path = current_app.config["HISTORY_FILE"]
-    if os.path.exists(path):
-        try:
-            with open(path, "r", encoding="utf-8") as f:
-                return json.load(f)
-        except (json.JSONDecodeError, ValueError, OSError):
-            return []
-    return []
-
-
-def save_history(entry):
+def load_history(user_id, limit=10):
+    """The user's most recent analyses, newest first. Other users' uploads never appear."""
+    if user_id is None:
+        return []
     try:
-        history = load_history()
-        history.insert(0, entry)
-        history = history[:10]
-        with open(current_app.config["HISTORY_FILE"], "w", encoding="utf-8") as f:
-            json.dump(history, f, indent=2)
+        with connect() as conn:
+            rows = conn.execute(
+                "SELECT filename, score, recommendation, created_at FROM analyses "
+                "WHERE user_id = ? ORDER BY id DESC LIMIT ?", (user_id, limit)).fetchall()
     except Exception as e:
-        logger.warning(f"Could not persist history: {e}")
+        logger.warning(f"Could not load history: {e}")
+        return []
+    return [{"filename": f, "score": s, "recommendation": r, "timestamp": t} for f, s, r, t in rows]
+
+
+def save_history(user_id, filename, score, recommendation):
+    """Records one analysis. `score` and `recommendation` must be the pair shown to the user."""
+    try:
+        with connect() as conn:
+            conn.execute(
+                "INSERT INTO analyses (user_id, filename, score, recommendation, created_at) VALUES (?, ?, ?, ?, ?)",
+                (user_id, filename, round(float(score), 2), recommendation,
+                 datetime.now().strftime("%d %b %Y, %I:%M %p")))
+            conn.commit()
+    except Exception as e:
+        logger.warning(f"Could not save history: {e}")

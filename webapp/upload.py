@@ -1,17 +1,17 @@
-"""Single-resume upload: validate, score against a job description, and index."""
+"""Single-resume upload: validate, score against a job description, and index privately."""
 import os
-import uuid
+import hashlib
 import logging
-from datetime import datetime
 
-from flask import Blueprint, request, render_template, current_app
+from flask import Blueprint, request, render_template, current_app, session
 from werkzeug.utils import secure_filename
 
 from chroma_search import search_candidates, get_collection
 from model_loader import model
 from query_parsing import detect_category
 from resume_engine import analyze_resume, extract_resume_text, chunk_text
-from semantic_match import get_similarity
+from scoring import recommend
+from semantic_match import best_chunk_similarity
 
 from .history import save_history
 from .security import login_required
@@ -32,25 +32,35 @@ def _error(message, filename="", job_description=""):
                            rankings=[], total_candidates=0, job_description=job_description, category=None)
 
 
-def _index_resume(unique_filename, resume_text, result, category):
-    """Chunks, embeds, and upserts the uploaded resume into the vector store."""
-    chunks = chunk_text(resume_text)
-    if not chunks:
-        return
+def stored_name(user_id, content, ext):
+    """Owner id + content fingerprint: re-uploading the same file reuses one entry."""
+    return f"{user_id}_{hashlib.sha256(content).hexdigest()[:16]}{ext}"
+
+
+def _index_resume(owner, stored, display_name, chunks, embeddings, keyword_result):
+    """Adds the uploaded resume to the search index, visible only to its owner.
+
+    Chunk ids derive from the stored name, so uploading the same file again
+    replaces its entries instead of adding duplicates. No department is stored:
+    guessing one from a resume was right <50% of the time on the benchmark, so
+    the owner's uploads are searched across all departments instead.
+    """
     collection = get_collection()
-    if not collection:
+    if not collection or not chunks:
         return
     collection.upsert(
-        ids=[f"{unique_filename}_chunk{idx}" for idx in range(len(chunks))],
-        embeddings=[model.encode(chunk).tolist() for chunk in chunks],
+        ids=[f"upload_{stored}_chunk{idx}" for idx in range(len(chunks))],
+        embeddings=embeddings.tolist(),
         documents=chunks,
         metadatas=[{
-            "resume": unique_filename,
+            "resume": display_name,
+            "file": stored,
+            "source": "upload",
+            "owner": str(owner),
             "chunk": idx,
             "total_chunks": len(chunks),
-            "recommendation": result["recommendation"],
-            "skill_score": result["score"],
-            "category": category or ""
+            "skill_score": keyword_result["score"],
+            "category": "",
         } for idx in range(len(chunks))]
     )
 
@@ -73,69 +83,62 @@ def upload():
 
     # 2. Magic-byte signature validation
     try:
-        header = file.read(16)
-        file.seek(0)
+        content = file.read()
     except Exception as e:
-        logger.warning(f"File signature read error: {e}")
+        logger.warning(f"File read error: {e}")
         return _error("Unable to read uploaded file format.", file.filename, job_description)
-    if not header.startswith(FILE_SIGNATURES[ext]):
+    if not content.startswith(FILE_SIGNATURES[ext]):
         kind = "PDF" if ext == ".pdf" else "DOCX"
         return _error(f"Invalid or corrupted {kind} file signature.", file.filename, job_description)
 
-    # 3. Path traversal defense & unique filename generation
+    # 3. Safe display name; storage name = owner + content hash (no path from the user)
+    owner = session["user_id"]
     clean_name = secure_filename(file.filename) or ("resume" + ext)
-    unique_filename = f"{uuid.uuid4().hex[:8]}_{clean_name}"
+    demo_mode = current_app.config.get("DEMO_MODE", False)
+    stored = stored_name(owner, content, ext)
     upload_folder = current_app.config["UPLOAD_FOLDER"]
     os.makedirs(upload_folder, exist_ok=True)
-    file_path = os.path.join(upload_folder, unique_filename)
-    file.save(file_path)
-    demo_mode = current_app.config.get("DEMO_MODE", False)
+    file_path = os.path.join(upload_folder, stored)
+    with open(file_path, "wb") as f:
+        f.write(content)
 
     try:
-        category = detect_category(job_description)
-        result = analyze_resume(file_path, category=category)
+        category = detect_category(job_description)  # the role being hired for
         resume_text = extract_resume_text(file_path)
-        semantic_score = get_similarity(job_description, resume_text)
+        keyword_result = analyze_resume(file_path, category=category, text=resume_text)
 
-        keyword_pct = result['score']
-        combined_score = round(keyword_pct * 0.4 + semantic_score * 0.6, 1)
-        if combined_score >= 60:
-            combined_rec = "SHORTLIST"
-        elif combined_score >= 35:
-            combined_rec = "CONSIDER"
-        else:
-            combined_rec = "REJECT"
+        # One score drives everything shown: best-chunk similarity, same scale as search
+        chunks = chunk_text(resume_text)
+        embeddings = model.encode(chunks) if chunks else []
+        match_score = best_chunk_similarity(model.encode(job_description), embeddings)
+        match_rec = recommend(match_score)
 
         if not demo_mode:
-            _index_resume(unique_filename, resume_text, result, category)
+            _index_resume(owner, stored, clean_name, chunks, embeddings, keyword_result)
 
-        rankings = search_candidates(job_description, category=category)
+        rankings = search_candidates(job_description, category=category, owner=owner)
         collection = get_collection()
         total_candidates = collection.count() if collection else 0
 
         if not demo_mode:
-            save_history({
-                "filename": clean_name,
-                "score": float(semantic_score),
-                "recommendation": result["recommendation"],
-                "timestamp": datetime.now().strftime("%d %b %Y, %I:%M %p")
-            })
+            save_history(owner, clean_name, match_score, match_rec)
 
         return render_template("result.html",
             filename=clean_name,
             error=None,
-            result=result,
-            semantic_score=semantic_score,
-            keyword_pct=keyword_pct,
-            combined_score=combined_score,
-            combined_rec=combined_rec,
+            result=keyword_result,
+            semantic_score=match_score,
+            keyword_pct=keyword_result["score"],
+            combined_score=match_score,
+            combined_rec=match_rec,
             rankings=rankings,
             total_candidates=total_candidates,
             job_description=job_description,
             category=category)
-    except Exception as e:
-        logger.error(f"Error processing resume upload: {e}")
-        return _error(f"Error analyzing resume: {str(e)}", clean_name, job_description)
+    except Exception:
+        logger.exception("Error processing resume upload")
+        return _error("Something went wrong while analyzing this resume. Please try again or use a different file.",
+                      clean_name, job_description)
     finally:
         if demo_mode:
             try:

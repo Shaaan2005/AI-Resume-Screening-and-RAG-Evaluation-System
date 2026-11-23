@@ -105,7 +105,7 @@ python benchmark/run_benchmark.py            # add --rebuild to rebuild its inde
   * Whitelisted category verification to prevent directory/path traversal attacks.
   * Parameterized database access preventing SQL injection.
 * **🛡️ Robust Error Handling:** Centralized custom error handlers (`400`, `403`, `404`, `413`, `500`), bounded cosine similarity domains, and graceful fallbacks if vector models disconnect.
-* **🧪 58-Test Automated Pytest Suite:** Complete automated test suite verifying auth flows, file extraction, vector search, security, and route boundaries.
+* **🧪 77-Test Automated Pytest Suite:** Complete automated test suite verifying auth flows, file extraction, vector search, security, and route boundaries.
 * **📊 Benchmark Dashboard:** The `/evaluate` page shows the retrieval benchmark instantly: every setup compared, plus query-by-query results. LLM-judged RAGAS scoring is available from the command line.
 
 ---
@@ -119,7 +119,7 @@ python benchmark/run_benchmark.py            # add --rebuild to rebuild its inde
 * **Optional Re-Ranker:** `cross-encoder/ms-marco-MiniLM-L-6-v2` (+ `rank_bm25` keyword blend)
 * **Optional LLM Judge (CLI):** Ollama (`llama3`)
 * **Evaluation Framework:** RAGAS, `langchain-ollama`, `langchain-community`
-* **Testing:** Pytest (58 unit and integration tests)
+* **Testing:** Pytest (77 unit and integration tests)
 
 ---
 
@@ -236,20 +236,20 @@ deploy/             # Hugging Face Space deploy script + Space README
 
 ## 🧪 Running Automated Tests
 
-Run the full 58-test suite:
+Run the full 77-test suite:
 
 ```bash
 python -m pytest -v
 ```
 
 ### Test Coverage Highlights:
-- **`tests/test_auth.py` (13 tests):** User registration, RFC email validation, password rules, login sessions, and route protection.
+- **`tests/test_auth.py` (17 tests):** User registration, email validation, password rules, case-insensitive usernames, login throttling, POST-only logout, and route protection.
 - **`tests/test_resume_processing.py` (9 tests):** Document extraction, corrupted PDF defense, sliding text chunking, whole-word skill matching, and role-specific skill scoring.
-- **`tests/test_ai_pipeline.py` (14 tests):** Keyword-coverage matching, technical acronym preservation (`C++`, `Go`), semantic similarity bounds, garbage query suppression, dense-only default, re-ranked-first ordering, and BM25 score normalisation.
-- **`tests/test_routes.py` (16 tests):** HTTP route boundaries, file size limits, magic-byte upload validation, path traversal downloads, the benchmark dashboard, and demo-mode uploads.
+- **`tests/test_ai_pipeline.py` (23 tests):** Keyword-coverage matching, technical acronym preservation (`C++`, `Go`), semantic similarity bounds, garbage query suppression, dense-only default, re-ranked-first ordering, BM25 score normalisation, per-user upload visibility, score-based recommendations, contact masking, and query-count parsing.
+- **`tests/test_routes.py` (22 tests):** HTTP route boundaries, file size limits, magic-byte upload validation, path traversal downloads, the benchmark dashboard, demo-mode uploads, private per-user history, duplicate-free re-uploads, and owner-only file access.
 - **`tests/test_security.py` (6 tests):** CSRF enforcement, password hashing verification, secure cookie headers, and error page sanitization.
 
-**Status:** `58 passed` ✅ (also run on every push by GitHub Actions)
+**Status:** `77 passed` ✅ (also run on every push by GitHub Actions)
 
 ---
 

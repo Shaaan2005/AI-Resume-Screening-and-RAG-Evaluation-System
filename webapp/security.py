@@ -10,7 +10,7 @@ from .db import connect
 
 logger = logging.getLogger("ResumeScreening")
 
-SECRET_KEY_FILE = ".secret_key"
+SECRET_KEY_FILE = os.path.join(os.path.dirname(os.path.dirname(os.path.abspath(__file__))), ".secret_key")
 
 
 def get_or_create_secret_key():
