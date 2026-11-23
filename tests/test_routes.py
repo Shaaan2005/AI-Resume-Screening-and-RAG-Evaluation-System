@@ -43,7 +43,7 @@ def test_upload_missing_job_description(authenticated_client, sample_pdf_bytes):
         "resume": (io.BytesIO(sample_pdf_bytes), "developer.pdf")
     }
     res = authenticated_client.post("/upload", data=data, content_type="multipart/form-data")
-    assert res.status_code == 200
+    assert res.status_code == 400  # a validation error, not a verdict
     assert b"Job description is required" in res.data
 
 
@@ -54,7 +54,7 @@ def test_upload_missing_resume_file(authenticated_client):
         "resume": (io.BytesIO(b""), "")
     }
     res = authenticated_client.post("/upload", data=data, content_type="multipart/form-data")
-    assert res.status_code == 200
+    assert res.status_code == 400  # a validation error, not a verdict
     assert b"Please upload a resume file" in res.data
 
 
@@ -65,7 +65,7 @@ def test_upload_invalid_file_extension(authenticated_client):
         "resume": (io.BytesIO(b"Plain text resume content"), "resume.txt")
     }
     res = authenticated_client.post("/upload", data=data, content_type="multipart/form-data")
-    assert res.status_code == 200
+    assert res.status_code == 400  # a validation error, not a verdict
     assert b"Only PDF and DOCX files are supported" in res.data
 
 
@@ -76,7 +76,7 @@ def test_upload_corrupted_pdf_signature(authenticated_client):
         "resume": (io.BytesIO(b"Not a PDF header file"), "fake.pdf")
     }
     res = authenticated_client.post("/upload", data=data, content_type="multipart/form-data")
-    assert res.status_code == 200
+    assert res.status_code == 400  # a validation error, not a verdict
     assert b"corrupted PDF file signature" in res.data
 
 
@@ -289,6 +289,56 @@ def test_upload_without_readable_text_says_so(test_app, authenticated_client, mo
     stored = upload_module.stored_name(1, pdf, ".pdf")
     res = authenticated_client.post("/upload", content_type="multipart/form-data", data={
         "job_description": "HR recruiter", "resume": (io.BytesIO(pdf), "scan.pdf")})
-    assert res.status_code == 200
+    assert res.status_code == 400  # a validation error, not a verdict
     assert b"No text could be read from this file" in res.data
     assert stored not in os.listdir(test_app.config["UPLOAD_FOLDER"])  # nothing left behind
+
+
+
+@pytest.fixture
+def fake_search(monkeypatch):
+    """Search results that don't need the real index (it isn't built in CI)."""
+    from webapp import search as search_module
+
+    def fake(query, category=None, owner=None):
+        cat = category or "CHEF"
+        return [{"resume": f"{cat[:2]}{i}.pdf", "similarity": 70.0 - i, "angle": 45.0, "preview": "p",
+                 "preview_full": "p", "recommendation": "SHORTLIST", "category": cat, "source": "dataset",
+                 "file": "", "duplicate_of": "", "reranked": False, "distance": 0.3} for i in range(1, 12)]
+    monkeypatch.setattr(search_module, "search_candidates", fake)
+
+
+def _search(client, q, method="post"):
+    call = client.post if method == "post" else client.get
+    return call("/search", **({"data": {"job_description": q}} if method == "post" else {"query_string": {"job_description": q}}))
+
+
+def test_search_works_as_a_get_url(authenticated_client):
+    res = _search(authenticated_client, "best 3 accountants with tax experience", method="get")
+    assert res.status_code == 200 and b"Search Results" in res.data
+
+
+def test_several_named_departments_are_all_searched(authenticated_client, fake_search):
+    res = _search(authenticated_client, "top 2 from chef and sales")
+    assert b"Showing results from CHEF and SALES" in res.data
+
+
+def test_invalid_counts_are_explained(authenticated_client, fake_search):
+    assert b"isn&#39;t a valid number of results" in _search(authenticated_client, "top 0 chef").data
+    assert b"limited to 50" in _search(authenticated_client, "top 500 from engineering").data
+
+
+def test_department_only_search_has_no_verdicts(authenticated_client, fake_search):
+    for q in ("top 3 from chef", "top 500 from engineering"):
+        assert b"without SHORTLIST/REJECT verdicts" in _search(authenticated_client, q).data
+
+
+def test_overlong_search_is_refused_with_a_message(authenticated_client):
+    assert b"limited to 2,000 characters" in _search(authenticated_client, "python " * 400).data
+
+
+def test_security_headers_and_styled_error_pages(authenticated_client):
+    res = authenticated_client.get("/")
+    assert res.headers["X-Frame-Options"] == "DENY" and "frame-ancestors" in res.headers["Content-Security-Policy"]
+    res = authenticated_client.put("/search")
+    assert res.status_code == 405 and b"Method Not Allowed" in res.data and b"<html" in res.data.lower()

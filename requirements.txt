@@ -11,3 +11,4 @@ langchain-ollama==1.1.0
 
 # Tests
 pytest==9.2.0
+ftfy>=6.1

@@ -12,3 +12,4 @@ rank_bm25==0.2.2  # optional BM25 keyword scoring (benchmark / RESUME_RERANK mod
 gunicorn==27.0.1  # production server used in the Docker image (Linux)
 # torch is pulled in by sentence-transformers; install the CPU or CUDA build
 # that matches your machine from https://pytorch.org if the default is wrong.
+ftfy>=6.1

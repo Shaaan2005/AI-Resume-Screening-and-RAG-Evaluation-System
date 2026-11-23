@@ -207,6 +207,15 @@ def mask_contacts(text):
                          else m.group(), text)
 
 
+def _snippet(text, limit=150):
+    """Shortens `text` at a word boundary ("Culinary…", never "Culin…")."""
+    text = " ".join(text.split())
+    if len(text) <= limit:
+        return text
+    cut = text[:limit].rsplit(" ", 1)[0]
+    return cut.rstrip(",;:-–") + "…"
+
+
 def _angle(similarity_pct):
     """Angle in degrees for a 0-100 cosine-style score (clipped for acos safety)."""
     return round(math.degrees(math.acos(max(-1.0, min(1.0, similarity_pct / 100)))), 1)
@@ -306,7 +315,8 @@ def search_candidates(job_description, category=None, rerank=None, *, owner=None
                 "distance": round(distance, 4),
                 "similarity": similarity,
                 "angle": _angle(similarity),
-                "preview": preview[:150] + "..." if len(preview) > 150 else preview,
+                "preview": _snippet(preview),
+                "preview_full": preview[:600],
                 "full_text": doc,
                 # The recommendation always matches the score shown next to it
                 "recommendation": recommend(similarity),

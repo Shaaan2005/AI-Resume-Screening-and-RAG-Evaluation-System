@@ -4,6 +4,9 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Retrieval Benchmark</title>
+<meta name="description" content="AI resume screening: semantic search over resumes and job-description matching.">
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 36 36%22%3E%3Crect width=%2236%22 height=%2236%22 rx=%228%22 fill=%22%23009393%22/%3E%3Ctext x=%2218%22 y=%2224%22 text-anchor=%22middle%22 font-size=%2216%22 font-weight=%22800%22 font-family=%22Arial%22 fill=%22%2313232d%22%3EAI%3C/text%3E%3C/svg%3E">
+<style>:focus-visible{outline:2px solid #3fd0d0 !important;outline-offset:2px}</style>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet">
 <style>
@@ -105,7 +108,9 @@ td.num, th.num{text-align:right;font-variant-numeric:tabular-nums}
         </a>
     </div>
     <div class="nav-right">
-        <a href="/" class="btn-back">← Back to Dashboard</a>
+        {% if user %}<span style="font-size:13px;color:#e2eef4;font-weight:500;margin-right:15px">Hi {{ user.username }}</span>{% endif %}
+        <a href="/" class="btn-back" style="margin-right:10px">← Home</a>
+        <form action="{{ url_for('auth.logout') }}" method="POST" style="display:inline;margin:0"><input type="hidden" name="csrf_token" value="{{ csrf_token() }}"><button type="submit" class="btn-back" style="cursor:pointer;font-family:inherit">Log Out</button></form>
     </div>
 </div>
 
@@ -140,7 +145,7 @@ td.num, th.num{text-align:right;font-variant-numeric:tabular-nums}
         <div class="kpi-card" style="border-left-color:#e2eef4">
             <div class="value" style="color:#e2eef4">{{ '%.0f' % (current.all.p5 * 100) }}%</div>
             <div class="label">Precision @ 5</div>
-            {% if original %}<div class="sub">{{ delta(current.all.p5, original.all.p5) }} vs original</div>{% endif %}
+            {% if original %}{% set d = (current.all.p5 - original.all.p5) * 100 %}<div class="sub"><span class="{{ 'up' if d >= 0 else 'down' }}">{{ '+' if d > 0 else '' }}{{ '%.1f' % d }} pts</span> vs original</div>{% endif %}
         </div>
         <div class="kpi-card" style="border-left-color:#69f0ae">
             <div class="value" style="color:#69f0ae">{{ '%.0f' % current.latency_ms }} ms</div>

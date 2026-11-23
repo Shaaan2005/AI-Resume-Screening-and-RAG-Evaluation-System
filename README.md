@@ -78,12 +78,12 @@ Every ranking choice in this project is measured with a reproducible benchmark (
 
 | Setup | P@5 | MRR | nDCG@10 | Latency |
 | :--- | ---: | ---: | ---: | ---: |
-| **Dense retrieval only (current default)** | **0.550** | **0.835** | **0.516** | **19 ms** |
-| STS cross-encoder + 30% keywords (original design) | 0.442 | 0.656 | 0.408 | 337 ms |
-| MS MARCO MiniLM re-ranker | 0.550 | 0.774 | 0.499 | 148 ms |
-| BGE reranker base | 0.512 | 0.793 | 0.478 | 670 ms |
+| **Dense retrieval only (current default)** | **0.567** | **0.843** | **0.513** | **32 ms** |
+| STS cross-encoder + 30% keywords (original design) | 0.413 | 0.627 | 0.400 | 347 ms |
+| MS MARCO MiniLM re-ranker | 0.554 | 0.805 | 0.502 | 163 ms |
+| BGE reranker base | 0.508 | 0.760 | 0.469 | 663 ms |
 
-**What it showed:** the original re-ranking stage made results *worse* (nDCG@10 0.516 → 0.408) while making search 10–20× slower (timings vary between runs). The STS model it used was trained for sentence similarity, not search relevance. Search-tuned re-rankers (MS MARCO, BGE), BM25 keyword blending, and blending re-ranker and dense scores all came out within noise of plain dense retrieval. So **re-ranking is now off by default** and available as an option (`RESUME_RERANK=1`, MS MARCO MiniLM).
+**What it showed:** the original re-ranking stage made results *worse* (nDCG@10 0.513 → 0.400) while making search 10–20× slower (timings vary between runs). The STS model it used was trained for sentence similarity, not search relevance. Search-tuned re-rankers (MS MARCO, BGE), BM25 keyword blending, and blending re-ranker and dense scores all came out within noise of plain dense retrieval. So **re-ranking is now off by default** and available as an option (`RESUME_RERANK=1`, MS MARCO MiniLM).
 
 **Limits:** 48 queries is small, and category labels can't measure ranking *within* a department (e.g. Python vs. Java engineers), which is where a re-ranker could still help. Full tables, including the held-out test split and blend weights: [`benchmark/RESULTS.md`](benchmark/RESULTS.md).
 
@@ -96,7 +96,7 @@ python benchmark/run_benchmark.py            # add --rebuild to rebuild its inde
 ## 🌟 Key Features
 
 * **🧠 Dense Semantic Search:** `all-mpnet-base-v2` embeddings over 200-word resume chunks in ChromaDB; each resume is ranked by its best-matching chunk.
-* **📏 Benchmark-Driven Ranking:** A reproducible 48-query benchmark showed the original cross-encoder re-ranker lowered nDCG@10 from 0.516 to 0.408, so re-ranking is now opt-in (`RESUME_RERANK=1`, `ms-marco-MiniLM-L-6-v2`, optional BM25 keyword blend).
+* **📏 Benchmark-Driven Ranking:** A reproducible 48-query benchmark showed the original cross-encoder re-ranker lowered nDCG@10 from 0.513 to 0.400, so re-ranking is now opt-in (`RESUME_RERANK=1`, `ms-marco-MiniLM-L-6-v2`, optional BM25 keyword blend).
 * **📁 Multi-Department Support:** Supports 24 specialized industry categories (Engineering, IT, HR, Healthcare, Finance, etc.) with automatic department intent detection.
 * **🔒 Security Hardening:**
   * Cryptographic CSRF tokens on all mutating endpoints (`secrets.compare_digest`).
@@ -105,7 +105,7 @@ python benchmark/run_benchmark.py            # add --rebuild to rebuild its inde
   * Whitelisted category verification to prevent directory/path traversal attacks.
   * Parameterized database access preventing SQL injection.
 * **🛡️ Robust Error Handling:** Centralized custom error handlers (`400`, `403`, `404`, `413`, `500`), bounded cosine similarity domains, and graceful fallbacks if vector models disconnect.
-* **🧪 87-Test Automated Pytest Suite:** Complete automated test suite verifying auth flows, file extraction, vector search, security, and route boundaries.
+* **🧪 98-Test Automated Pytest Suite:** Complete automated test suite verifying auth flows, file extraction, vector search, security, and route boundaries.
 * **📊 Benchmark Dashboard:** The `/evaluate` page shows the retrieval benchmark instantly: every setup compared, plus query-by-query results. LLM-judged RAGAS scoring is available from the command line.
 
 ---
@@ -119,7 +119,7 @@ python benchmark/run_benchmark.py            # add --rebuild to rebuild its inde
 * **Optional Re-Ranker:** `cross-encoder/ms-marco-MiniLM-L-6-v2` (+ `rank_bm25` keyword blend)
 * **Optional LLM Judge (CLI):** Ollama (`llama3`)
 * **Evaluation Framework:** RAGAS, `langchain-ollama`, `langchain-community`
-* **Testing:** Pytest (87 unit and integration tests)
+* **Testing:** Pytest (98 unit and integration tests)
 
 ---
 
@@ -236,7 +236,7 @@ deploy/             # Hugging Face Space deploy script + Space README
 
 ## 🧪 Running Automated Tests
 
-Run the full 87-test suite:
+Run the full 98-test suite:
 
 ```bash
 python -m pytest -v
@@ -245,11 +245,11 @@ python -m pytest -v
 ### Test Coverage Highlights:
 - **`tests/test_auth.py` (18 tests):** User registration, email validation, password rules, case-insensitive usernames, login throttling stored in the database (survives restarts, shared by workers), POST-only logout, and route protection.
 - **`tests/test_resume_processing.py` (9 tests):** Document extraction, corrupted PDF defense, sliding text chunking, whole-word skill matching, and role-specific skill scoring.
-- **`tests/test_ai_pipeline.py` (29 tests):** Keyword-coverage matching, technical acronym preservation (`C++`, `Go`), semantic similarity bounds, garbage query suppression, dense-only default, re-ranked-first ordering, BM25 score normalisation, per-user upload visibility, score-based recommendations, contact masking, query-count parsing, department detection (named departments win over the model's guess), searching the full query sentence instead of stripped keywords, and an uploaded copy of a sample resume replacing it in results.
-- **`tests/test_routes.py` (25 tests):** HTTP route boundaries, file size limits, magic-byte upload validation, path traversal downloads, the benchmark dashboard, demo-mode uploads, private per-user history, duplicate-free re-uploads, owner-only file access, a clear notice when no resume matches well, and a clear error for scanned PDFs with no readable text.
+- **`tests/test_ai_pipeline.py` (34 tests):** Keyword-coverage matching, technical acronym preservation (`C++`, `Go`), semantic similarity bounds, garbage query suppression, dense-only default, re-ranked-first ordering, BM25 score normalisation, per-user upload visibility, score-based recommendations, contact masking, query-count parsing, department detection (named departments win over the model's guess), searching the full query sentence instead of stripped keywords, an uploaded copy of a sample resume replacing it in results, no department for queries with no job words, repaired garbled PDF text, and keyword scores measured against the job description's skills.
+- **`tests/test_routes.py` (31 tests):** HTTP route boundaries, file size limits, magic-byte upload validation, path traversal downloads, the benchmark dashboard, demo-mode uploads, private per-user history, duplicate-free re-uploads, owner-only file access, a clear notice when no resume matches well, a clear error for scanned PDFs with no readable text, shareable GET search URLs, multi-department searches, count validation, verdict-free department browsing, security headers, and styled error pages.
 - **`tests/test_security.py` (6 tests):** CSRF enforcement, password hashing verification, secure cookie headers, and error page sanitization.
 
-**Status:** `87 passed` ✅ (also run on every push by GitHub Actions)
+**Status:** `98 passed` ✅ (also run on every push by GitHub Actions)
 
 ---
 

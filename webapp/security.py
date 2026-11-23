@@ -4,6 +4,7 @@ import secrets
 import logging
 from functools import wraps
 
+from werkzeug.exceptions import HTTPException
 from flask import request, render_template, abort, redirect, url_for, session, current_app
 
 from .db import connect
@@ -81,17 +82,46 @@ def _csrf_protect():
 
         if not session_token or not sent_token or not secrets.compare_digest(str(sent_token), str(session_token)):
             logger.warning(f"CSRF validation failed for {request.path} from IP {request.remote_addr}")
-            abort(403, description="CSRF validation failed: Token missing or invalid")
+            # Usually a page left open until the session expired (8 hours), or opened before
+            # a log-out in another tab: explain how to recover instead of a bare 403.
+            return _error_page(403, "Page Expired",
+                               "This page was open too long or your session ended, so the form can't be "
+                               "sent. Go back, refresh the page, and try again.")
 
 
 def _error_page(code, title, message):
     return render_template("error.html", code=code, title=title, message=message), code
 
 
+# Pages only load their own scripts/styles plus Google Fonts.
+CONTENT_SECURITY_POLICY = (
+    "default-src 'self'; "
+    "script-src 'self' 'unsafe-inline'; "
+    "style-src 'self' 'unsafe-inline' https://fonts.googleapis.com; "
+    "font-src 'self' https://fonts.gstatic.com; "
+    "img-src 'self' data:; "
+    "frame-ancestors 'none'; base-uri 'self'; form-action 'self'"
+)
+
+
+def _security_headers(response):
+    response.headers.setdefault("Content-Security-Policy", CONTENT_SECURITY_POLICY)
+    response.headers.setdefault("X-Frame-Options", "DENY")
+    response.headers.setdefault("X-Content-Type-Options", "nosniff")
+    response.headers.setdefault("Referrer-Policy", "same-origin")
+    return response
+
+
 def register_security(app):
-    """Wires CSRF, the template context, and custom error pages into `app`."""
+    """Wires CSRF, security headers, the template context, and custom error pages into `app`."""
     app.context_processor(_inject_csrf_and_user)
     app.before_request(_csrf_protect)
+    app.after_request(_security_headers)
+
+    @app.errorhandler(HTTPException)
+    def other_http_error(e):
+        # Every other status (405, 429, ...) gets the same styled page as 403/404
+        return _error_page(e.code or 500, e.name, e.description or "")
 
     @app.errorhandler(400)
     def bad_request_error(e):

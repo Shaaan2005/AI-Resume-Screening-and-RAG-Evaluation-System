@@ -25,11 +25,12 @@ FILE_SIGNATURES = {".pdf": b"%PDF-", ".docx": b"PK\x03\x04"}
 
 
 def _error(message, filename="", job_description=""):
-    """Renders the result page in an error state with zeroed scores."""
+    """The result page showing only the error (no scores or verdict), with HTTP 400."""
     return render_template("result.html", error=message,
                            filename=filename, result={"score": 0, "skills": [], "recommendation": "REJECT"},
                            semantic_score=0, keyword_pct=0, combined_score=0, combined_rec="REJECT",
-                           rankings=[], total_candidates=0, job_description=job_description, category=None)
+                           rankings=[], total_candidates=0, job_description=job_description,
+                           category=None), 400
 
 
 def stored_name(user_id, content, ext):
@@ -136,7 +137,8 @@ def upload():
                 os.remove(file_path)
             return _error("No text could be read from this file. It may be a scanned image; "
                           "please upload a PDF or DOCX with selectable text.", clean_name, job_description)
-        keyword_result = analyze_resume(file_path, category=category, text=resume_text)
+        keyword_result = analyze_resume(file_path, category=category, text=resume_text,
+                                        job_description=job_description)
 
         # One score drives everything shown: best-chunk similarity, same scale as search
         chunks = chunk_text(resume_text)

@@ -105,12 +105,16 @@ _DEPARTMENT_ALIASES = {
     "BPO": ["bpo", "call cent(?:er|re)s?"],
     "BUSINESS-DEVELOPMENT": ["business[ -]development", "business developers?"],
     "CHEF": ["chefs?", "cooks?", "culinary"],
-    "CONSTRUCTION": ["construction", "(?:real estate|property|housing|land) developers?"],
+    "CONSTRUCTION": ["construction", "(?:real estate|property|housing|land) developers?",
+                     "(?:civil|site|structural) engineers?"],
     "CONSULTANT": ["consultants?", "consulting"],
     "DESIGNER": ["designers?"],
     "DIGITAL-MEDIA": ["digital[ -]media"],
     # "developer" alone means software, but not in "business / real estate / property developer"
-    "ENGINEERING": ["engineering", _NOT_NON_SOFTWARE + "developers?", "programmers?", "coders?"],
+    "ENGINEERING": ["engineering", _NOT_NON_SOFTWARE + "developers?", "programmers?", "coders?",
+                    # engineering disciplines (the model alone sent "Mechanical Engineer" to AUTOMOBILE)
+                    "(?:mechanical|electrical|electronics?|chemical|thermal|industrial|manufacturing|"
+                    "software|hardware|test|qa|design|product) engineers?"],
     "FINANCE": ["finance"],
     "FITNESS": ["fitness"],
     "HEALTHCARE": ["health ?care", "doctors?", "nurses?", "physicians?"],
@@ -153,7 +157,47 @@ def detect_category(job_description):
         if ce is not None:
             scores = ce.predict([(job_description, _CAT_DESCRIPTIONS[c]) for c in named])
             return named[int(scores.argmax())]
+    if not job_words(job_description):
+        # Nothing job-related to go on ("hello world", "best 5 astronaut"). The model
+        # would still pick a department (usually FITNESS), so say none matched instead.
+        return None
     return cross_encoder_category_detect(job_description)
+
+
+# Words that make a query job-related: every skill plus the words describing each
+# department. On the 70+ labeled test queries every real one contains one, while
+# 14 of 15 nonsense queries contain none. (The model's confidence could not tell
+# them apart: "hello world" scored higher than half the real queries.)
+_GENERIC_WORDS = {"category", "query", "includes", "this", "manager", "management", "experience",
+                  "experienced", "senior", "junior", "lead", "team", "work", "good", "best", "need",
+                  "someone", "person", "people", "professional", "specialist", "officer", "executive",
+                  "assistant", "analyst", "coordinator"}
+
+
+def _stem(word):
+    for suffix in ("ing", "ers", "er", "s"):
+        if len(word) > len(suffix) + 3 and word.endswith(suffix):
+            return word[: -len(suffix)]
+    return word
+
+
+def _build_job_vocabulary():
+    vocab = set()
+    for description in _CAT_DESCRIPTIONS.values():
+        vocab |= {_stem(w) for w in re.findall(r"[a-z+#]+", description.lower().split("includes", 1)[1])
+                  if len(w) >= 3}
+    for skills in SKILLS_BY_CATEGORY.values():
+        for skill in skills:
+            vocab |= {_stem(w) for w in re.findall(r"[a-z+#]+", skill.lower()) if len(w) >= 3}
+    return vocab - {_stem(w) for w in _GENERIC_WORDS | SKIP_WORDS | INTENT_NOISE}
+
+
+_JOB_VOCABULARY = _build_job_vocabulary()
+
+
+def job_words(query):
+    """The words in a query that relate to some job or skill (empty for "hello world")."""
+    return [w for w in re.findall(r"[a-z+#]+", query.lower()) if _stem(w) in _JOB_VOCABULARY]
 
 
 # ── Query parsing ───────────────────────────────────────────────────────────

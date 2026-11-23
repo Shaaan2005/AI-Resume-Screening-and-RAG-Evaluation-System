@@ -4,6 +4,9 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>AI Resume Screening</title>
+<meta name="description" content="AI resume screening: semantic search over resumes and job-description matching.">
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 36 36%22%3E%3Crect width=%2236%22 height=%2236%22 rx=%228%22 fill=%22%23009393%22/%3E%3Ctext x=%2218%22 y=%2224%22 text-anchor=%22middle%22 font-size=%2216%22 font-weight=%22800%22 font-family=%22Arial%22 fill=%22%2313232d%22%3EAI%3C/text%3E%3C/svg%3E">
+<style>:focus-visible{outline:2px solid #3fd0d0 !important;outline-offset:2px}</style>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet">
 <style>
@@ -154,7 +157,7 @@ textarea:focus{border-color:rgba(0,147,147,0.15)}
     justify-content:center;font-size:15px;color:#009393
 }
 .upload-text{font-size:12px;font-weight:500;color:#f7fafc}
-.upload-hint{font-size:10px;color:#9fbed0}
+.upload-hint{font-size:12px;color:#9fbed0}
 .file-selected{font-size:12px;color:#009393;font-weight:500;display:none}
 .file-remove{
     display:none;position:absolute;top:8px;right:10px;z-index:3;
@@ -241,7 +244,7 @@ textarea:focus{border-color:rgba(0,147,147,0.15)}
     </div>
     <div class="nav-right">
         {% if user %}
-        <a href="/evaluate" style="font-size:13px;color:#009393;font-weight:600;text-decoration:none;margin-right:15px;transition:opacity 0.2s" onmouseover="this.style.opacity=0.8" onmouseout="this.style.opacity=1">📊 Evaluation Dashboard</a>
+        <a href="/evaluate" style="font-size:13px;color:#009393;font-weight:600;text-decoration:none;margin-right:15px;transition:opacity 0.2s" onmouseover="this.style.opacity=0.8" onmouseout="this.style.opacity=1">📊 Benchmark</a>
         <span style="font-size:13px;color:#e2eef4;font-weight:500;margin-right:15px">Hi {{ user.username }}</span>
         <form action="{{ url_for('auth.logout') }}" method="POST" style="display:inline;margin:0"><input type="hidden" name="csrf_token" value="{{ csrf_token() }}"><button type="submit" class="btn-login">Log Out</button></form>
         {% else %}
@@ -265,12 +268,12 @@ textarea:focus{border-color:rgba(0,147,147,0.15)}
                 <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
                 <div class="form-row" style="grid-template-columns:1fr">
                     <div class="form-group">
-                        <label>Job Description</label>
-                        <textarea name="job_description" placeholder="e.g. Looking for a Python Developer with Flask, SQL, Machine Learning..." required></textarea>
+                        <label for="jobDescription">Job Description</label>
+                        <textarea id="jobDescription" name="job_description" maxlength="5000" placeholder="e.g. Looking for a Python Developer with Flask, SQL, Machine Learning..." required></textarea>
                     </div>
                     <div class="form-group">
                         <label>Upload Resume</label>
-                        <div class="file-upload" id="fileUpload">
+                        <div class="file-upload" id="fileUpload" tabindex="0" role="button" aria-label="Choose a resume file, PDF or DOCX">
                             <div class="upload-icon">&#128196;</div>
                             <div class="upload-text">Drop your resume here</div>
                             <div class="upload-hint">or click to browse &bull; PDF or DOCX</div>
@@ -290,11 +293,10 @@ textarea:focus{border-color:rgba(0,147,147,0.15)}
         </div>
         <div class="form-card" style="border-left-color:rgba(0,147,147,0.3);display:flex;flex-direction:column">
             <div class="badge-top" style="background:#009393;color:#13232d">Smart Search</div>
-            <form action="/search" method="POST" style="padding-top:10px;display:flex;flex-direction:column;flex:1">
-                <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
+            <form action="/search" method="GET" style="padding-top:10px;display:flex;flex-direction:column;flex:1">
                 <div class="form-group" style="flex:1;display:flex;flex-direction:column">
                     <label>Search {{ stats.resumes }} indexed resumes</label>
-                    <textarea name="job_description" placeholder='e.g. "top 5 from engineering" or "best 3 sales with cold calling"' required style="flex:1;min-height:90px;resize:none"></textarea>
+                    <textarea name="job_description" aria-label="Search query" maxlength="2000" placeholder='e.g. "top 5 from engineering" or "best 3 sales with cold calling"' required style="flex:1;min-height:90px;resize:none"></textarea>
                 </div>
                 <div style="margin:8px 0 10px;font-size:11px;color:#9fbed0;font-weight:500">Try: top 3 from <span style="color:#009393">chef</span> &bull; best 5 <span style="color:#009393">sales</span> &bull; 10 <span style="color:#009393">engineer</span> resumes</div>
                 <div class="submit-wrap" style="margin-top:0">
@@ -392,6 +394,7 @@ function updateFile(){
 input?.addEventListener('change', updateFile);
 removeBtn?.addEventListener('click', function(e){ e.stopPropagation(); input.value = ''; updateFile(); });
 upload?.addEventListener('click', function(e){ if(e.target !== removeBtn) input.click(); });
+upload?.addEventListener('keydown', function(e){ if((e.key === 'Enter' || e.key === ' ') && e.target === upload){ e.preventDefault(); input.click(); } });
 submitBtn?.closest('form')?.addEventListener('submit', function(){ submitBtn.classList.add('loading'); });
 searchBtn?.closest('form')?.addEventListener('submit', function(){ searchBtn.classList.add('loading'); });
 upload?.addEventListener('dragover', function(e){ e.preventDefault(); this.classList.add('dragover'); });

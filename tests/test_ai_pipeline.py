@@ -358,3 +358,38 @@ def test_upload_match_score_reads_the_whole_resume():
     filler = " ".join(["gardening landscaping lawn care hedge trimming"] * 120)  # ~720 words
     resume = filler + " senior python developer building django rest apis and docker deployments"
     assert get_similarity("python django developer", resume) > get_similarity("python django developer", filler) + 10
+
+
+
+# ── Audit fixes ─────────────────────────────────────────────────────────────
+
+def test_no_department_for_queries_with_no_job_words():
+    assert detect_category("hello world") is None
+    assert detect_category("best 5 astronaut") is None
+    assert detect_category("need a mechanic") == "AUTOMOBILE"  # real queries still resolve
+
+
+def test_engineering_disciplines_are_engineering():
+    assert detect_category("Mechanical Engineer with AutoCAD, SolidWorks") == "ENGINEERING"
+    assert detect_category("civil engineer for bridge projects") == "CONSTRUCTION"
+
+
+def test_garbled_text_and_placeholders_are_cleaned():
+    from resume_engine import clean_text
+    assert clean_text("Company Name â€“ City") == "Company Name – City"
+    assert clean_text("achieved Â·Â Maintained") == "achieved · Maintained"
+    assert clean_text("Dedicated [job title] with 5 years") == "Dedicated with 5 years"
+
+
+def test_snippets_end_on_a_whole_word():
+    from chroma_search import _snippet
+    s = _snippet("word " * 60)
+    assert s.endswith("word…") and len(s) <= 151
+
+
+def test_keyword_match_uses_the_job_descriptions_skills(tmp_path):
+    from resume_engine import analyze_resume
+    r = analyze_resume("x.pdf", category="ENGINEERING", text="python docker kubernetes microservices",
+                       job_description="Need python and docker")
+    assert r["basis"] == "job" and r["wanted"] == 2 and r["score"] == 100.0
+    assert "microservices" not in r["skills"]  # not asked for by the job

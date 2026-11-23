@@ -4,6 +4,9 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Analysis Result</title>
+<meta name="description" content="AI resume screening: semantic search over resumes and job-description matching.">
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 36 36%22%3E%3Crect width=%2236%22 height=%2236%22 rx=%228%22 fill=%22%23009393%22/%3E%3Ctext x=%2218%22 y=%2224%22 text-anchor=%22middle%22 font-size=%2216%22 font-weight=%22800%22 font-family=%22Arial%22 fill=%22%2313232d%22%3EAI%3C/text%3E%3C/svg%3E">
+<style>:focus-visible{outline:2px solid #3fd0d0 !important;outline-offset:2px}</style>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet">
 <style>
@@ -199,7 +202,7 @@ tr:last-child td{border-bottom:1px solid #f0f8ff}
     </div>
     <div class="nav-right">
         {% if user %}
-        <a href="/evaluate" style="font-size:13px;color:#009393;font-weight:600;text-decoration:none;margin-right:15px;transition:opacity 0.2s" onmouseover="this.style.opacity=0.8" onmouseout="this.style.opacity=1">📊 Evaluation Dashboard</a>
+        <a href="/evaluate" style="font-size:13px;color:#009393;font-weight:600;text-decoration:none;margin-right:15px;transition:opacity 0.2s" onmouseover="this.style.opacity=0.8" onmouseout="this.style.opacity=1">📊 Benchmark</a>
         <span style="font-size:13px;color:#e2eef4;font-weight:500;margin-right:15px">Hi {{ user.username }}</span>
         <form action="{{ url_for('auth.logout') }}" method="POST" style="display:inline;margin:0"><input type="hidden" name="csrf_token" value="{{ csrf_token() }}"><button type="submit" class="btn-login">Log Out</button></form>
         {% else %}
@@ -229,12 +232,15 @@ tr:last-child td{border-bottom:1px solid #f0f8ff}
         <span style="margin-left:auto;font-size:13px;color:#e2eef4" id="timestamp"></span>
     </div>
 
+    {% if error %}
+    <a href="/" class="btn-submit" style="display:inline-block;text-decoration:none;padding:10px 18px;margin-bottom:20px">&#8592; Fix and try again</a>
+    {% else %}
     <div class="scores-grid">
         <div class="score-card">
             <div class="label">Keyword Match</div>
             <div class="value">{{ result['skills']|length }}<span style="font-size:14px;font-weight:400;color:#e2eef4"> skills</span></div>
             <div class="progress-wrap"><div class="progress-fill" style="width:{{ result['score'] }}%"></div></div>
-            <div class="sub">{{ result['score'] }}% of the role's skills found</div>
+            <div class="sub">{% if result['basis'] == 'job' %}{{ result['skills']|length }} of the {{ result['wanted'] }} skills the job description asks for{% else %}{{ result['score'] }}% of the role's skills found (the job description names none){% endif %}</div>
         </div>
         <div class="score-card">
             <div class="label">Match Score</div>
@@ -299,7 +305,7 @@ tr:last-child td{border-bottom:1px solid #f0f8ff}
                     <td><span style="font-size:11px;color:#9fbed0;font-weight:500">{{ 'Your upload' if r['source'] == 'upload' else r['category'] }}</span></td>
                     <td><span class="dist {{ score_band(r['similarity']) }}">{{ r['similarity'] }}<span style="font-size:10px;color:#9fbed0;font-weight:500"> (θ={{ r['angle'] }}°)</span></span></td>
                     <td><span class="rec-badge" style="font-size:9px;padding:2px 8px">{{ r['recommendation'] }}</span></td>
-                    <td style="font-size:12px;color:#e2eef4;max-width:140px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis">{{ r['preview'] }}</td>
+                    <td style="font-size:12px;color:#e2eef4;max-width:140px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis"><span title="{{ r['preview_full'] }}">{{ r['preview'] }}</span></td>
                     <td><a href="{{ ('/my-uploads/' ~ r['file']) if r['source'] == 'upload' else ('/resume/' ~ r['category'] ~ '/' ~ r['resume']) }}" target="_blank" style="display:inline-flex;align-items:center;gap:4px;background:rgba(0,147,147,0.1);color:#009393;font-size:11px;font-weight:700;padding:4px 10px;border-radius:4px;text-decoration:none;white-space:nowrap;border:1px solid rgba(0,147,147,0.2);transition:all 0.15s" onmouseover="this.style.background='rgba(0,147,147,0.2)'" onmouseout="this.style.background='rgba(0,147,147,0.1)'">&#128196; Open</a></td>
                 </tr>
                 {% endfor %}
@@ -310,6 +316,7 @@ tr:last-child td{border-bottom:1px solid #f0f8ff}
         <p class="no-data">No candidates in vector database</p>
         {% endif %}
     </div>
+    {% endif %}
 
     <div class="pipeline-card">
         <div class="title">Pipeline</div>

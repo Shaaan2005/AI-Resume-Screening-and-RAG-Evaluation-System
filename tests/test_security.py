@@ -10,7 +10,7 @@ def test_csrf_missing_token_rejected(csrf_client):
         "password": "ValidPass123"
     })
     assert res.status_code == 403
-    assert b"Forbidden" in res.data or b"CSRF" in res.data
+    assert b"Page Expired" in res.data and b"refresh the page" in res.data
 
 
 def test_csrf_invalid_token_rejected(csrf_client):

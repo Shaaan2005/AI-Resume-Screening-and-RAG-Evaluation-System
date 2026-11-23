@@ -1,8 +1,9 @@
 import os
 import re
 import logging
-import pdfplumber
 import docx
+import ftfy
+import pdfplumber
 
 from skills_config import SKILLS_BY_CATEGORY
 
@@ -26,6 +27,26 @@ def _load_skills():
 
 
 skills = _load_skills()
+
+# Many sample PDFs carry text that was mis-decoded before it reached us ("â€“" for "–",
+# "Â·" for "·"). ftfy repairs most of it; these are sequences where one original byte
+# was lost (it came out as a zero-width space), so ftfy can't recover them alone.
+_LOST_BYTE_FIXES = {"â€\u200b": "”", "â—\u200b": "●", "ï¼\u200b": "-", "ï¼": "-"}
+# Template placeholders left in some sample resumes ("Dedicated [job title] with ...")
+_PLACEHOLDER = re.compile(r"\[(?:number|job title|objective|area|type|time period|company name|"
+                          r"city|state|name of [^\]\n]{1,40})\]", re.I)
+
+
+def clean_text(text):
+    """Repairs garbled characters and removes template placeholders."""
+    if not text:
+        return ""
+    for broken, fixed in _LOST_BYTE_FIXES.items():
+        text = text.replace(broken, fixed)
+    text = ftfy.fix_text(text).replace("\u200b", "").replace("\xa0", " ")
+    text = re.sub(r"Â(?=\s|$)", "", text)  # a broken non-breaking space
+    text = _PLACEHOLDER.sub("", text)
+    return re.sub(r"[ \t]{2,}", " ", text)
 
 
 def extract_resume_text(path):
@@ -64,7 +85,7 @@ def extract_resume_text(path):
             logger.warning(f"Failed to extract DOCX text from {path}: {e}")
             return ""
 
-    return text.strip()
+    return clean_text(text).strip()
 
 
 def _contains_skill(skill, text):
@@ -78,8 +99,11 @@ def _contains_skill(skill, text):
     return re.search(pattern, text) is not None
 
 
-def analyze_resume(path, category=None, text=None):
-    """Keyword check: which of the role's skills appear in the resume.
+def analyze_resume(path, category=None, text=None, job_description=None):
+    """Keyword check: which of the wanted skills appear in the resume.
+
+    With a `job_description` that names known skills, those are the wanted
+    skills ("9 of the 9 skills the job asks for"). Otherwise:
 
     If `category` matches a key in SKILLS_BY_CATEGORY, the resume is checked
     against that role's skills only. Otherwise it falls back to the global
@@ -105,9 +129,15 @@ def analyze_resume(path, category=None, text=None):
             "recommendation": "REJECT"
         }
 
-    reference = SKILLS_BY_CATEGORY.get(category) if category else None
-    if not reference:
-        reference = skills
+    role_skills = SKILLS_BY_CATEGORY.get(category) if category else None
+    reference = role_skills or skills
+    basis = "role" if role_skills else "all"
+    if job_description:
+        jd = job_description.lower()
+        wanted = list(dict.fromkeys(s for s in list(role_skills or []) + list(skills) if _contains_skill(s, jd)))
+        if wanted:
+            # Measured against what the job asks for, not a role template the job may not need
+            reference, basis = wanted, "job"
 
     matched_skills = [s for s in reference if _contains_skill(s, text)]
 
@@ -128,7 +158,9 @@ def analyze_resume(path, category=None, text=None):
     return {
         "score": score,
         "skills": matched_skills,
-        "recommendation": recommendation
+        "recommendation": recommendation,
+        "wanted": len(reference),
+        "basis": basis,
     }
 
 
