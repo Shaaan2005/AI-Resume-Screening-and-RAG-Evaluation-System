@@ -29,8 +29,8 @@ Combines dense vector search (`all-mpnet-base-v2`), cross-encoder department det
 </p>
 
 > **📥 Downloadable Video Assets:**
-> * 📹 **[Download Full Walkthrough (MP4, 42 s)](assets/demo_full.mp4?raw=true)** *(3.6 MB)*
-> * ⚡ **[Download 1080p Highlight Reel (MP4, 2× speed, 21 s)](assets/demo_highlight.mp4?raw=true)** *(3.6 MB)*
+> * 📹 **[Download Full Walkthrough (MP4, 42 s)](assets/demo_full.mp4?raw=true)** *(3.5 MB)*
+> * ⚡ **[Download 1080p Highlight Reel (MP4, 2× speed, 21 s)](assets/demo_highlight.mp4?raw=true)** *(3.7 MB)*
 
 
 
