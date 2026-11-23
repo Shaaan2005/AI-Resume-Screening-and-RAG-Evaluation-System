@@ -29,7 +29,7 @@ import chromadb  # noqa: E402
 
 import chroma_search  # noqa: E402
 from chroma_search import search_candidates, RERANK_TOP_N  # noqa: E402
-from query_parsing import detect_category, extract_search_intent  # noqa: E402
+from query_parsing import detect_category, search_text  # noqa: E402
 
 INDEX_PATH = os.path.join("benchmark", ".index")
 QUERIES_PATH = os.path.join("benchmark", "queries.json")
@@ -131,12 +131,12 @@ def run(queries, collection, **kwargs):
 
 
 def run_full_pipeline(queries, collection, **kwargs):
-    """Mimics the web app's /search: detect category, filter to it, search the intent."""
+    """Mimics the web app's /search: detect category, filter to it, search the cleaned query."""
     rankings, correct = [], 0
     for q in queries:
         detected = detect_category(q["query"])
         correct += int(detected == q["category"])
-        intent = extract_search_intent(q["query"]) or q["query"]
+        intent = search_text(q["query"])
         rankings.append(search_candidates(intent, category=detected, collection=collection, **kwargs))
     return rankings, correct / len(queries)
 

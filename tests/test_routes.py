@@ -245,6 +245,33 @@ def test_upload_errors_do_not_leak_exception_text(test_app, authenticated_client
     assert b"Something went wrong" in res.data
 
 
+def test_weak_matches_are_explained(authenticated_client, monkeypatch):
+    """When nothing reaches CONSIDER, the page says so instead of only listing REJECTs."""
+    from webapp import search as search_module
+    weak = [{"resume": "E1.pdf", "similarity": 21.0, "angle": 77.9, "preview": "", "full_text": "",
+             "recommendation": "REJECT", "category": "ENGINEERING", "source": "dataset", "file": "",
+             "duplicate_of": "", "reranked": False, "distance": 0.79}]
+    monkeypatch.setattr(search_module, "search_candidates", lambda *a, **k: [dict(r) for r in weak])
+    res = authenticated_client.post("/search", data={"job_description": "top 5 python developers with Django"})
+    assert b"No strong matches" in res.data and b"21%" in res.data
+
+
+def test_upload_detects_an_exact_copy_of_a_sample_resume():
+    import numpy as np
+    from webapp.upload import _dataset_twin
+
+    class Col:
+        def __init__(self, distance):
+            self.distance = distance
+
+        def query(self, **kwargs):
+            return {"ids": [["AC1_chunk0"]], "distances": [[self.distance]],
+                    "metadatas": [[{"resume": "AC1.pdf", "category": "ACCOUNTANT"}]]}
+    emb = np.zeros((2, 4))
+    assert _dataset_twin(Col(0.0001), emb) == "ACCOUNTANT/AC1.pdf"
+    assert _dataset_twin(Col(0.2), emb) == ""
+
+
 def test_home_page_shows_live_numbers(authenticated_client):
     page = authenticated_client.get("/").data
     assert b"248 active" not in page and b"24 chunks" not in page

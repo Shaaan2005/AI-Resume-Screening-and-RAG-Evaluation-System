@@ -285,6 +285,45 @@ def test_named_department_beats_the_models_guess():
     assert detect_category("finance team") == "FINANCE"
 
 
+def test_non_software_developers_are_not_engineering():
+    assert detect_category("real estate developer with land acquisition experience") == "CONSTRUCTION"
+    assert detect_category("business developer for new partnerships") == "BUSINESS-DEVELOPMENT"
+    assert detect_category("martial arts trainer") != "ARTS"
+    assert detect_category("web developer") == "ENGINEERING"
+
+
+def test_search_text_keeps_the_sentence_and_drops_commands():
+    from query_parsing import search_text
+    assert search_text("Experienced HR recruiter for talent acquisition and onboarding") == \
+        "Experienced HR recruiter for talent acquisition and onboarding"
+    assert search_text("top 5 python developers with SQL and Django") == "python developers with SQL and Django"
+    assert search_text("show me 10 engineer resumes") == "engineer"
+    assert search_text("best 3 sales with cold calling") == "sales with cold calling"
+    assert search_text("top 5") == "top 5"  # nothing left: fall back to the original
+
+
+def test_full_sentence_scores_higher_than_stripped_keywords():
+    """The reason for search_text: keyword-only text scored ~12 points lower on the benchmark."""
+    from query_parsing import search_text
+    q = "Experienced HR recruiter for talent acquisition and onboarding"
+    full = search_candidates(search_text(q), category="HR")[0]["similarity"]
+    stripped = search_candidates(extract_search_intent(q), category="HR")[0]["similarity"]
+    assert full > stripped
+
+
+def test_upload_that_copies_a_sample_resume_replaces_it():
+    rows = [
+        ("A1.pdf", "ACCOUNTANT", 0.30, "ledger"),
+        ("copy.pdf", "", 0.30, "ledger", {"source": "upload", "owner": "1", "file": "1_x.pdf",
+                                          "duplicate_of": "ACCOUNTANT/A1.pdf"}),
+        ("A2.pdf", "ACCOUNTANT", 0.40, "tax"),
+    ]
+    names = [r["resume"] for r in search_candidates("ledger", owner=1, collection=_FakeCollection(rows))]
+    assert names == ["copy.pdf", "A2.pdf"]
+    # other users still see the sample resume
+    assert [r["resume"] for r in search_candidates("ledger", collection=_FakeCollection(rows))] == ["A1.pdf", "A2.pdf"]
+
+
 def test_several_named_departments_are_settled_by_the_model():
     assert detect_category("fashion designer") in {"APPAREL", "DESIGNER"}
 

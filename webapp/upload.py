@@ -37,6 +37,27 @@ def stored_name(user_id, content, ext):
     return f"{user_id}_{hashlib.sha256(content).hexdigest()[:16]}{ext}"
 
 
+# Cosine distance below which two chunks are the same text (identical text gives ~0)
+SAME_TEXT_DISTANCE = 0.01
+
+
+def _dataset_twin(collection, embeddings):
+    """"CATEGORY/name" of the sample resume this upload is a copy of, or "".
+
+    Lets search show the owner one entry ("Your upload") instead of two.
+    """
+    try:
+        r = collection.query(query_embeddings=[embeddings[0].tolist()], n_results=1,
+                             where={"source": {"$ne": "upload"}}, include=["metadatas", "distances"])
+    except Exception as e:
+        logger.warning(f"Duplicate check failed: {e}")
+        return ""
+    if r["ids"] and r["ids"][0] and r["distances"][0][0] < SAME_TEXT_DISTANCE:
+        meta = r["metadatas"][0][0]
+        return f"{meta.get('category', '')}/{meta.get('resume', '')}"
+    return ""
+
+
 def _index_resume(owner, stored, display_name, chunks, embeddings, keyword_result):
     """Adds the uploaded resume to the search index, visible only to its owner.
 
@@ -48,6 +69,7 @@ def _index_resume(owner, stored, display_name, chunks, embeddings, keyword_resul
     collection = get_collection()
     if not collection or not chunks:
         return
+    twin = _dataset_twin(collection, embeddings)
     collection.upsert(
         ids=[f"upload_{stored}_chunk{idx}" for idx in range(len(chunks))],
         embeddings=embeddings.tolist(),
@@ -61,6 +83,7 @@ def _index_resume(owner, stored, display_name, chunks, embeddings, keyword_resul
             "total_chunks": len(chunks),
             "skill_score": keyword_result["score"],
             "category": "",
+            "duplicate_of": twin,
         } for idx in range(len(chunks))]
     )
 

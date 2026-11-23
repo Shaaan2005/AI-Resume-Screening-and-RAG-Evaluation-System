@@ -12,6 +12,8 @@
 **Internship Duration:** 2 Months (June 1, 2026 – July 31, 2026)  
 **GitHub Repository:** https://github.com/Shaaan2005/AI-Resume-Screening-and-RAG-Evaluation-System  
 
+> **Note:** This report describes the system as submitted at the end of the internship (July 2026). The code has changed since: ranking is now dense vector search only (the benchmark showed the cross-encoder re-ranking and keyword blend did not help), the code is split into `webapp/`, `query_parsing.py` and `chroma_search.py` instead of one `app.py`, and departments named in a query are used directly before the model's guess. See the [README](../README.md) and [benchmark/RESULTS.md](../benchmark/RESULTS.md) for the current design and numbers.
+
 ---
 
 ## TABLE OF CONTENTS

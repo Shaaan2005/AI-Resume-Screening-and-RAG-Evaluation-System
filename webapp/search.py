@@ -8,8 +8,9 @@ from werkzeug.utils import secure_filename
 
 import resume_engine
 from chroma_search import search_candidates, get_collection, RESUMES_DIR, _dataset_names
-from query_parsing import (detect_category, extract_search_intent, is_garbage,
-                           meaningful_terms, parse_requested_count)
+from query_parsing import (detect_category, is_garbage, meaningful_terms,
+                           parse_requested_count, search_text)
+from scoring import CONSIDER_AT
 from skills_config import SKILLS_BY_CATEGORY
 
 from .history import load_history
@@ -66,7 +67,7 @@ def search():
         return _results(job_description,
             "Please be more specific — try adding skills or a department name")
 
-    search_intent = extract_search_intent(job_description) or job_description
+    search_intent = search_text(job_description)
     logger.info(f"[SMART SEARCH] Query: '{job_description}' -> Intent: '{search_intent}'")
     owner = session.get("user_id")
 
@@ -116,6 +117,12 @@ def search():
 
     for i, r in enumerate(rankings, 1):
         r["rank"] = i
+
+    best = max(r["similarity"] for r in rankings)
+    if best < CONSIDER_AT:
+        weak = (f"No strong matches: the best resume scores {best:.0f}% (CONSIDER starts at {CONSIDER_AT:.0f}%). "
+                "These are the closest resumes available, but the collection may have no one for this role.")
+        msg = f"{msg} {weak}" if msg else weak
 
     collection = get_collection()
     total_candidates = collection.count() if collection else 0

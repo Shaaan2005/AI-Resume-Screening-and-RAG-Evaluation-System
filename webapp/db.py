@@ -29,6 +29,13 @@ def init_db(path):
             recommendation TEXT NOT NULL,
             created_at TEXT NOT NULL)""")
         conn.execute("CREATE INDEX IF NOT EXISTS idx_analyses_user ON analyses(user_id, id)")
+        # Failed logins, kept in the database so the lockout survives restarts and
+        # is shared by every server process (gunicorn workers).
+        conn.execute("""CREATE TABLE IF NOT EXISTS login_failures (
+            ip TEXT NOT NULL,
+            username TEXT NOT NULL,
+            at REAL NOT NULL)""")
+        conn.execute("CREATE INDEX IF NOT EXISTS idx_login_failures ON login_failures(ip, username, at)")
         conn.commit()
 
 

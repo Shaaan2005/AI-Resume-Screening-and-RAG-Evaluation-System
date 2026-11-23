@@ -92,23 +92,25 @@ def cross_encoder_category_detect(query, threshold=0.3):
 # Words that name a department outright. When a query uses one, the recruiter has
 # told us the department, so we trust it instead of the cross-encoder's guess
 # (which, e.g., sent "top 5 from engineering" to CONSTRUCTION).
+_NOT_NON_SOFTWARE = r"(?<!business )(?<!estate )(?<!property )(?<!land )(?<!housing )"
 _DEPARTMENT_ALIASES = {
     "ACCOUNTANT": ["accountants?", "accounting"],
     "ADVOCATE": ["advocates?", "lawyers?", "attorneys?"],
     "AGRICULTURE": ["agriculture", "agricultural", "farmers?"],
     "APPAREL": ["apparel", "fashion", "garments?", "textiles?"],
-    "ARTS": ["arts", "artists?"],
+    "ARTS": ["(?<!martial )arts", "artists?"],
     "AUTOMOBILE": ["automobiles?", "automotive"],
     "AVIATION": ["aviation", "pilots?"],
     "BANKING": ["banking", "bankers?"],
     "BPO": ["bpo", "call cent(?:er|re)s?"],
-    "BUSINESS-DEVELOPMENT": ["business[ -]development"],
+    "BUSINESS-DEVELOPMENT": ["business[ -]development", "business developers?"],
     "CHEF": ["chefs?", "cooks?", "culinary"],
-    "CONSTRUCTION": ["construction"],
+    "CONSTRUCTION": ["construction", "(?:real estate|property|housing|land) developers?"],
     "CONSULTANT": ["consultants?", "consulting"],
     "DESIGNER": ["designers?"],
     "DIGITAL-MEDIA": ["digital[ -]media"],
-    "ENGINEERING": ["engineering", "developers?", "programmers?", "coders?"],
+    # "developer" alone means software, but not in "business / real estate / property developer"
+    "ENGINEERING": ["engineering", _NOT_NON_SOFTWARE + "developers?", "programmers?", "coders?"],
     "FINANCE": ["finance"],
     "FITNESS": ["fitness"],
     "HEALTHCARE": ["health ?care", "doctors?", "nurses?", "physicians?"],
@@ -199,6 +201,25 @@ def meaningful_terms(text):
     """Query terms that carry search meaning (tech acronyms or 3+ chars, not filler)."""
     return [w for w in extract_words(text)
             if (w in SHORT_TECH_TERMS or len(w) >= 3) and w not in SKIP_WORDS]
+
+
+_COMMAND = re.compile(
+    r"\b(?:top|best|show|give|find|list|get|select|pick|choose)\b(?:\s+me)?(?:\s+(?:the|all))?"
+    r"(?:\s*(?:\d+|" + "|".join(NUM_WORDS) + r")\b)?", re.I)
+_RESULT_NOUNS = re.compile(r"\b(?:resumes?|candidates?|profiles?|results?)\b|\b(?:all|every)\s+departments?\b", re.I)
+
+
+def search_text(query):
+    """The text to embed for a search: the query minus "top 5" / "show me" / "resumes".
+
+    Everything else stays, because the embedding model reads natural sentences
+    best. Stripping down to keywords (`extract_search_intent`) both ranked worse
+    (benchmark P@5 0.48 vs 0.56) and scored ~12 points lower, which pushed
+    good matches under the SHORTLIST/CONSIDER thresholds.
+    """
+    t = _RESULT_NOUNS.sub(" ", _COMMAND.sub(" ", query))
+    t = re.sub(r"\s+", " ", t).strip(" ,.;:")
+    return t if meaningful_terms(t) else query
 
 
 def extract_search_intent(query):

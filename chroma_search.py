@@ -309,10 +309,17 @@ def search_candidates(job_description, category=None, rerank=None, *, owner=None
                 "category": "" if is_upload else meta.get("category", ""),
                 "source": "upload" if is_upload else "dataset",
                 "file": meta.get("file", "") if is_upload else "",
+                "duplicate_of": meta.get("duplicate_of", "") if is_upload else "",
                 "reranked": False,
             }
         else:
             seen_resumes[key]["full_text"] += " " + doc
+
+    # An upload that is a copy of a sample resume replaces it, so it isn't listed twice
+    twins = {r["duplicate_of"] for r in seen_resumes.values() if r["duplicate_of"]}
+    if twins:
+        seen_resumes = {k: r for k, r in seen_resumes.items()
+                        if r["source"] == "upload" or f"{r['category']}/{r['name']}" not in twins}
 
     # Stage 2: re-rank the top-N resumes with the cross-encoder (+ optional keyword blend)
     if rerank and seen_resumes:

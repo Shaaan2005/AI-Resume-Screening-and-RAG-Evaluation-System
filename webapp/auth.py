@@ -3,7 +3,6 @@ import re
 import time
 import sqlite3
 import logging
-import threading
 
 from flask import Blueprint, request, render_template, redirect, url_for, session
 from werkzeug.security import generate_password_hash, check_password_hash
@@ -16,10 +15,9 @@ bp = Blueprint("auth", __name__)
 
 # Login throttling: after MAX_FAILURES failed attempts for the same username from the
 # same IP within WINDOW seconds, further attempts are refused until the window passes.
+# Stored in the database (login_failures), so restarts and multiple workers can't reset it.
 MAX_FAILURES = 5
 WINDOW = 15 * 60
-_failures = {}
-_failures_lock = threading.Lock()
 
 
 def _attempt_key(username):
@@ -27,21 +25,23 @@ def _attempt_key(username):
 
 
 def _recent_failures(key):
-    now = time.time()
-    with _failures_lock:
-        stamps = [t for t in _failures.get(key, []) if now - t < WINDOW]
-        _failures[key] = stamps
-        return len(stamps)
+    with connect() as conn:
+        conn.execute("DELETE FROM login_failures WHERE at < ?", (time.time() - WINDOW,))
+        conn.commit()
+        return conn.execute("SELECT COUNT(*) FROM login_failures WHERE ip = ? AND username = ?",
+                            key).fetchone()[0]
 
 
 def _record_failure(key):
-    with _failures_lock:
-        _failures.setdefault(key, []).append(time.time())
+    with connect() as conn:
+        conn.execute("INSERT INTO login_failures (ip, username, at) VALUES (?, ?, ?)", (*key, time.time()))
+        conn.commit()
 
 
 def _clear_failures(key):
-    with _failures_lock:
-        _failures.pop(key, None)
+    with connect() as conn:
+        conn.execute("DELETE FROM login_failures WHERE ip = ? AND username = ?", key)
+        conn.commit()
 
 
 @bp.route("/login", methods=["GET", "POST"])

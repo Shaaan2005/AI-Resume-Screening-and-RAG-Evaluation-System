@@ -165,10 +165,17 @@ def test_register_rejects_case_variant_of_existing_username(client):
     assert b"Username already taken" in res.data
 
 
+def _clear_login_failures(app):
+    import sqlite3
+    with sqlite3.connect(app.config["DATABASE"]) as conn:
+        conn.execute("DELETE FROM login_failures")
+        conn.commit()
+
+
 def test_login_is_throttled_after_repeated_failures(test_app, client):
     """After 5 wrong passwords, even the right one is refused for a while."""
     from webapp import auth
-    auth._failures.clear()
+    _clear_login_failures(test_app)
     try:
         for _ in range(auth.MAX_FAILURES):
             res = client.post("/login", data={"username": "existinguser", "password": "WrongPass999"})
@@ -177,7 +184,23 @@ def test_login_is_throttled_after_repeated_failures(test_app, client):
         assert res.status_code == 200
         assert b"Too many failed attempts" in res.data
     finally:
-        auth._failures.clear()
+        _clear_login_failures(test_app)
+
+
+def test_login_failures_are_stored_in_the_database(test_app, client):
+    """Kept in SQLite, not process memory: a restart or another worker sees the same count."""
+    import sqlite3
+    _clear_login_failures(test_app)
+    try:
+        client.post("/login", data={"username": "ExistingUser", "password": "WrongPass999"})
+        with sqlite3.connect(test_app.config["DATABASE"]) as conn:
+            rows = conn.execute("SELECT username FROM login_failures").fetchall()
+        assert rows == [("existinguser",)]
+        client.post("/login", data={"username": "existinguser", "password": "ValidPass123"})
+        with sqlite3.connect(test_app.config["DATABASE"]) as conn:
+            assert conn.execute("SELECT COUNT(*) FROM login_failures").fetchone()[0] == 0  # cleared on success
+    finally:
+        _clear_login_failures(test_app)
 
 
 def test_unauthorized_access(client):
