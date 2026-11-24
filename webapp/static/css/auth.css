@@ -1,0 +1,69 @@
+/* Login / Register: calm animated grid background, split layout, responsive inputs. */
+.motion [data-intro]{visibility:hidden}
+
+body.auth{min-height:100vh;min-height:100svh}
+body.auth::before{display:none}                 /* the auth grid replaces the page grid */
+
+/* ---------- Background: grid of squares, a few cells light up (React Bits "Squares") ---------- */
+.auth-bg{position:fixed;inset:0;z-index:-1;overflow:hidden;pointer-events:none}
+.auth-bg .grid{position:absolute;inset:-64px;
+    background-image:linear-gradient(rgba(255,255,255,.05) 1px,transparent 1px),linear-gradient(90deg,rgba(255,255,255,.05) 1px,transparent 1px);
+    background-size:64px 64px;will-change:transform;
+    mask-image:radial-gradient(ellipse 80% 80% at 30% 40%,#000 20%,transparent 85%);
+    -webkit-mask-image:radial-gradient(ellipse 80% 80% at 30% 40%,#000 20%,transparent 85%)}
+.auth-bg .cell{position:absolute;width:63px;height:63px;background:var(--lime);opacity:0;border-radius:2px}
+.auth-bg .cell.lit{opacity:.06}
+.auth-bg .vbeam{position:absolute;left:0;right:0;top:0;height:140px;opacity:.55;will-change:transform;
+    background:linear-gradient(to bottom,transparent,rgba(198,255,61,.07) 80%,rgba(198,255,61,.35) 99%,transparent);transform:translateY(-160px)}
+
+/* ---------- Layout ---------- */
+.auth-top{position:fixed;top:0;left:0;right:0;z-index:10;display:flex;align-items:center;justify-content:space-between;padding:20px clamp(16px,4vw,40px)}
+.auth-top .back{font-family:var(--mono);font-size:12px;letter-spacing:.06em;color:var(--muted);text-decoration:none}
+.auth-top .back:hover{color:var(--lime)}
+.auth-shell{min-height:100vh;min-height:100svh;display:grid;grid-template-columns:1.1fr minmax(380px,.9fr);align-items:center;gap:clamp(32px,6vw,96px);
+    max-width:1200px;margin:0 auto;padding:96px clamp(16px,4vw,40px) 48px}
+.auth-story h1{font-size:clamp(40px,5.4vw,76px);font-weight:600;letter-spacing:-.05em;line-height:.98;margin:18px 0 22px}
+.auth-story h1 span{color:var(--lime)}
+.auth-story > p{font-size:17px;color:var(--text-2);max-width:440px;line-height:1.6}
+.signals{list-style:none;display:flex;flex-direction:column;gap:12px;margin-top:36px}
+.signals li{display:flex;align-items:center;gap:14px;font-family:var(--mono);font-size:13px;color:var(--text-2)}
+.signals li b{display:inline-flex;align-items:center;justify-content:center;width:28px;height:28px;border-radius:8px;border:1px solid var(--lime-line);background:var(--lime-dim);color:var(--lime);font-weight:600;font-size:12px}
+
+/* ---------- Card ---------- */
+.auth-card{background:rgba(13,17,23,.86);backdrop-filter:blur(10px);-webkit-backdrop-filter:blur(10px);padding:clamp(26px,4vw,40px);width:100%;max-width:460px;justify-self:end}
+.auth-card h2{font-size:30px;font-weight:600;letter-spacing:-.03em;line-height:1.1}
+.auth-sub{color:var(--muted);font-size:15px;margin:8px 0 26px}
+.form-error{display:flex;gap:10px;align-items:flex-start;border:1px solid rgba(255,122,107,.45);background:rgba(255,122,107,.08);color:#ffc2b9;border-radius:10px;padding:12px 14px;font-size:14px;font-weight:500;margin-bottom:20px;line-height:1.5}
+.form-error svg{flex-shrink:0;margin-top:1px;color:var(--coral)}
+
+/* Inputs: the label lights up and a lime line draws under the field on focus */
+.afield{margin-bottom:18px}
+.afield label{display:flex;justify-content:space-between;font-family:var(--mono);font-size:12px;letter-spacing:.06em;text-transform:uppercase;color:var(--text-2);margin-bottom:8px;transition:color .2s}
+.afield:focus-within label{color:var(--lime)}
+.control{position:relative}
+.control .text-input{height:50px;padding-right:14px}
+.control::after{content:'';position:absolute;left:12px;right:12px;bottom:-1px;height:2px;border-radius:2px;background:var(--lime);transform:scaleX(0);transition:transform .45s var(--ease-out);pointer-events:none}
+.afield:focus-within .control::after{transform:scaleX(1)}
+.control.has-toggle .text-input{padding-right:76px}
+.pw-btn{position:absolute;right:6px;top:50%;transform:translateY(-50%);height:38px;padding:0 12px;border-radius:8px;border:1px solid var(--line-2);background:var(--ink-2);color:var(--text-2);font-family:var(--mono);font-size:12px;cursor:pointer;transition:border-color .2s,color .2s}
+.pw-btn:hover{border-color:var(--lime-line);color:var(--lime)}
+.hint{font-size:13px;color:var(--muted);margin-top:8px}
+
+/* Password rules (register): live, mirror the server's rule */
+.rules{list-style:none;display:flex;flex-wrap:wrap;gap:6px 14px;margin-top:10px;font-family:var(--mono);font-size:12px;color:var(--muted)}
+.rules li{display:flex;align-items:center;gap:6px;transition:color .2s}
+.rules li::before{content:'';width:14px;height:14px;border-radius:50%;border:1.5px solid currentColor;transition:background-color .2s,border-color .2s}
+.rules li.ok{color:var(--lime)}
+.rules li.ok::before{background:var(--lime);border-color:var(--lime);box-shadow:inset 0 0 0 3px var(--ink-2)}
+
+.auth-card .btn-block{margin-top:8px;height:52px;font-size:16px}
+.auth-foot{text-align:center;margin-top:22px;font-size:15px;color:var(--muted)}
+.auth-foot a{color:var(--lime);text-decoration:none;font-weight:600}
+.auth-foot a:hover{text-decoration:underline}
+
+@media (max-width:899px){
+    .auth-shell{grid-template-columns:1fr;padding-top:84px;gap:28px}
+    .auth-story h1{font-size:clamp(34px,9vw,48px);margin:10px 0 0}
+    .auth-story > p,.signals,.auth-story .eyebrow{display:none}
+    .auth-card{justify-self:stretch;max-width:none}
+}

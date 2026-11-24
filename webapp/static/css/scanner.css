@@ -30,7 +30,7 @@
 html{background:var(--ink);color-scheme:dark}
 body{
     font-family:var(--display);font-size:16px;line-height:1.55;color:var(--text);
-    background:var(--ink);min-height:100vh;-webkit-font-smoothing:antialiased;overflow-x:hidden
+    background:transparent;min-height:100vh;-webkit-font-smoothing:antialiased;overflow-x:hidden
 }
 /* Fine lab grid + grain, fixed behind everything */
 body::before{
