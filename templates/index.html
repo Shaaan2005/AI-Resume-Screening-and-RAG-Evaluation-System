@@ -42,38 +42,59 @@
             <p class="scroll-cue" aria-hidden="true"><i></i>Scroll to scan</p>
         </div>
 
-        <!-- Illustration of a sample resume being scanned (decorative) -->
-        <div class="scanner" data-scanner data-intro aria-hidden="true">
-            <div class="jd-chip"><b>JOB</b>Python Developer · Flask · SQL · Machine Learning · Docker</div>
-            <div class="paper">
-                <div class="paper-head">
-                    <svg viewBox="0 0 44 44"><circle cx="22" cy="22" r="22" fill="#1d232a"/><text x="22" y="27.5" text-anchor="middle" font-family="Space Grotesk, sans-serif" font-size="15" font-weight="700" fill="#c6ff3d">AR</text></svg>
-                    <div><div class="paper-name">Ananya Rao</div><div class="paper-role">Backend Engineer · Bengaluru · 4 yrs</div></div>
-                </div>
-                <div class="paper-sec">EXPERIENCE</div>
-                <p class="line"><span class="real">Built <span class="mark" data-skill="flask">Flask</span> REST APIs serving 1.2M requests a day</span></p>
-                <p class="line"><span class="real">Cut report time 70% with <span class="mark" data-skill="sql">SQL</span> window functions</span></p>
-                <p class="line"><span class="real">Shipped a churn model in <span class="mark" data-skill="python">Python</span> and scikit-learn</span></p>
-                <div class="paper-sec">PROJECTS</div>
-                <p class="line"><span class="real">Resume ranker with <span class="mark" data-skill="ml">Machine Learning</span> embeddings</span></p>
-                <p class="line"><span class="real">Containerised six services with <span class="mark" data-skill="docker">Docker</span> and CI</span></p>
-                <div class="paper-sec">EDUCATION</div>
-                <p class="line"><span class="real">B.Tech Computer Science, VIT Vellore, 2021</span></p>
-                <div class="beam"></div>
-                <div class="stamp">SHORTLIST</div>
+        <!-- Live demo: pick or type a role, a sample resume for it is scanned (client-side illustration) -->
+        <div class="scanner" data-scanner data-intro>
+            <form class="try" id="tryForm" action="#analyze" aria-label="Try the scanner on a sample resume">
+                <label for="tryRole" class="try-label">Job</label>
+                <input id="tryRole" class="try-input" type="text" value="Python Developer" autocomplete="off" maxlength="40" list="tryRoles" aria-describedby="tryHint">
+                <datalist id="tryRoles"><option value="Python Developer"><option value="Data Analyst"><option value="Accountant"><option value="Chef"><option value="Sales Executive"><option value="Product Designer"></datalist>
+                <button type="submit" class="try-btn">Scan <span aria-hidden="true">↻</span></button>
+            </form>
+            <div class="try-row">
+                <span class="try-hint" id="tryHint">Try a role:</span>
+                <button type="button" class="try-chip" data-role="Data Analyst">Data Analyst</button>
+                <button type="button" class="try-chip" data-role="Accountant">Accountant</button>
+                <button type="button" class="try-chip" data-role="Chef">Chef</button>
+                <button type="button" class="try-chip" data-role="Sales Executive">Sales</button>
+                <button type="button" class="try-chip" data-role="Product Designer">Designer</button>
             </div>
-            <div class="readout">
-                <div>
-                    <div class="readout-label">Matched skills <b><span data-matched>5</span>/5</b></div>
-                    <div class="tray">
-                        <span class="chip" data-skill="flask">Flask</span><span class="chip" data-skill="sql">SQL</span><span class="chip" data-skill="python">Python</span><span class="chip" data-skill="ml">ML</span><span class="chip" data-skill="docker">Docker</span>
+            <p class="sr-only" id="scanStatus" aria-live="polite">Sample Python Developer resume: 5 of 6 skills found, 83%, SHORTLIST.</p>
+
+            <div class="scan-visual" aria-hidden="true">
+                <div class="jd-skills"><b>WANTS</b><span data-wants>Python · Flask · SQL · Machine Learning · Docker · AWS</span></div>
+                <div class="paper">
+                    <div class="paper-head">
+                        <svg viewBox="0 0 44 44"><circle cx="22" cy="22" r="22" fill="#1d232a"/><text x="22" y="27.5" text-anchor="middle" font-family="Space Grotesk, sans-serif" font-size="15" font-weight="700" fill="#c6ff3d" data-initials>AR</text></svg>
+                        <div><div class="paper-name" data-name>Ananya Rao</div><div class="paper-role" data-role-line>Backend Engineer · Bengaluru · 4 yrs</div></div>
+                    </div>
+                    <div class="paper-body" data-body>
+                        <div class="paper-sec">EXPERIENCE</div>
+                        <p class="line"><span class="real">Built <span class="mark" data-skill="flask">Flask</span> REST APIs serving 1.2M requests a day</span></p>
+                        <p class="line"><span class="real">Cut report time 70% with <span class="mark" data-skill="sql">SQL</span> window functions</span></p>
+                        <p class="line"><span class="real">Shipped a churn model in <span class="mark" data-skill="python">Python</span> and scikit-learn</span></p>
+                        <div class="paper-sec">PROJECTS</div>
+                        <p class="line"><span class="real">Resume ranker with <span class="mark" data-skill="machine-learning">Machine Learning</span> embeddings</span></p>
+                        <p class="line"><span class="real">Containerised six services with <span class="mark" data-skill="docker">Docker</span> and CI</span></p>
+                        <div class="paper-sec">EDUCATION</div>
+                        <p class="line"><span class="real">B.Tech Computer Science, VIT Vellore, 2021</span></p>
+                    </div>
+                    <div class="beam"></div>
+                    <div class="stamp band-green" data-stamp>SHORTLIST</div>
+                </div>
+                <div class="readout">
+                    <div>
+                        <div class="readout-label">Skills found <b><span data-matched>5</span>/<span data-total>6</span></b></div>
+                        <div class="tray" data-tray>
+                            <span class="chip" data-skill="python">Python</span><span class="chip" data-skill="flask">Flask</span><span class="chip" data-skill="sql">SQL</span><span class="chip" data-skill="machine-learning">Machine Learning</span><span class="chip" data-skill="docker">Docker</span><span class="chip miss" data-skill="aws">AWS</span>
+                        </div>
+                    </div>
+                    <div class="score">
+                        <div class="readout-label">Keyword match</div>
+                        <div class="score-num"><span data-score="83">83</span><small>%</small></div>
+                        <div class="score-bar"><i style="transform:scaleX(.83)"></i></div>
                     </div>
                 </div>
-                <div class="score">
-                    <div class="readout-label">Match</div>
-                    <div class="score-num"><span data-score="86">86</span><small>%</small></div>
-                    <div class="score-bar"><i></i></div>
-                </div>
+                <p class="sample-note">Sample resumes, keyword match only. <a href="#analyze" tabindex="-1">Run a real screen</a> for the full AI score.</p>
             </div>
         </div>
     </div>
@@ -166,12 +187,56 @@
     </div>
 </section>
 
+<!-- ============ Story: one resume through the pipeline (pinned + scrubbed on desktop) ============ -->
+<section class="section story" id="how" aria-labelledby="howTitle">
+    <div class="wrap">
+        <div class="section-head">
+            <div>
+                <p class="eyebrow"><span class="idx">02</span> Pipeline</p>
+                <h2 class="reveal-title" id="howTitle">Follow one resume through the engine.</h2>
+            </div>
+            <p>Four stages, from a job description in plain words to a ranked shortlist.</p>
+        </div>
+        <div class="story-stage">
+            <ol class="story-steps">
+                <li class="story-step"><span class="n">STEP 01</span><h3>Department detection</h3><p>A cross-encoder reads the job description and picks the department to search.</p></li>
+                <li class="story-step"><span class="n">STEP 02</span><h3>Keyword match</h3><p>Checks which skills the job asks for appear in the resume.</p></li>
+                <li class="story-step"><span class="n">STEP 03</span><h3>Semantic similarity</h3><p>Scores every section of the resume against the job; the best section decides the verdict.</p></li>
+                <li class="story-step"><span class="n">STEP 04</span><h3>Vector search</h3><p>Ranks the closest resumes in the index by cosine similarity.</p></li>
+            </ol>
+            <!-- Illustration of the four stages on a sample resume (decorative; the steps describe it) -->
+            <div class="story-visual" aria-hidden="true">
+                <div class="sv-top">
+                    <div class="sv-jd"><b>JOB</b>Backend engineer with Python, SQL and AWS</div>
+                    <div class="sv-dept">Department <span>ENGINEERING</span></div>
+                </div>
+                <div class="sv-body">
+                    <div class="sv-card">
+                        <div class="sv-head"><b>Rohan Sharma</b><span>Backend Engineer · 5 yrs</span></div>
+                        <div class="sv-sec"><div class="sv-name">Summary</div><p>Engineer focused on <span class="sv-kw"><i></i>Python</span> services</p><div class="sv-sim"><span><i style="transform:scaleX(.52)"></i></span><em>0.52</em></div></div>
+                        <div class="sv-sec best"><span class="sv-best"></span><div class="sv-name">Experience</div><p>Moved billing to <span class="sv-kw"><i></i>AWS</span>, tuned <span class="sv-kw"><i></i>SQL</span> 4×</p><div class="sv-sim"><span><i style="transform:scaleX(.78)"></i></span><em>0.78</em></div></div>
+                        <div class="sv-sec"><div class="sv-name">Skills</div><p>Go, Kafka, Redis, Terraform</p><div class="sv-sim"><span><i style="transform:scaleX(.41)"></i></span><em>0.41</em></div></div>
+                        <div class="sv-kwcount">Keywords <b>3 / 3</b></div>
+                    </div>
+                    <ol class="sv-rank">
+                        <li class="sv-rank-head">Vector search · Engineering</li>
+                        <li><span>#1</span>E12.pdf<em>0.81</em></li>
+                        <li class="me"><span>#2</span>Rohan Sharma<em>0.78</em></li>
+                        <li><span>#3</span>E4.pdf<em>0.74</em></li>
+                        <li><span>#4</span>E9.pdf<em>0.70</em></li>
+                    </ol>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
 <!-- ============ Core engine ============ -->
 <section class="section" aria-labelledby="engineTitle">
     <div class="wrap">
         <div class="section-head">
             <div>
-                <p class="eyebrow"><span class="idx">02</span> Core engine</p>
+                <p class="eyebrow"><span class="idx">03</span> Core engine</p>
                 <h2 class="reveal-title" id="engineTitle">Three signals, one verdict.</h2>
             </div>
             <p>{% if stats.index_updated %}Index updated {{ stats.index_updated }}. {% endif %}Every status below is read live from the index.</p>
@@ -206,7 +271,7 @@
     <div class="wrap">
         <div class="section-head">
             <div>
-                <p class="eyebrow"><span class="idx">03</span> History</p>
+                <p class="eyebrow"><span class="idx">04</span> History</p>
                 <h2 class="reveal-title" id="recentTitle">Recent Analyses</h2>
             </div>
             <p>Your last screens. Open one to see the full breakdown again.</p>
@@ -232,26 +297,6 @@
     </div>
 </section>
 
-{% if not recent %}
-<!-- ============ How it works ============ -->
-<section class="section" aria-labelledby="howTitle">
-    <div class="wrap">
-        <div class="section-head">
-            <div>
-                <p class="eyebrow"><span class="idx">04</span> Pipeline</p>
-                <h2 class="reveal-title" id="howTitle">How it works</h2>
-            </div>
-        </div>
-        <div class="pipeline">
-            <div class="pipe-track" aria-hidden="true"><div class="pipe-fill"></div></div>
-            <div class="step reveal"><span class="n">STEP 01</span><h3>Department detection</h3><p>A cross-encoder reads the job description and picks the department to search.</p></div>
-            <div class="step reveal"><span class="n">STEP 02</span><h3>Keyword match</h3><p>Checks which skills the job asks for appear in the resume.</p></div>
-            <div class="step reveal"><span class="n">STEP 03</span><h3>Semantic similarity</h3><p>Scores every section of the resume against the job; the best section decides the verdict.</p></div>
-            <div class="step reveal"><span class="n">STEP 04</span><h3>Vector search</h3><p>Ranks the closest resumes in the index by cosine similarity.</p></div>
-        </div>
-    </div>
-</section>
-{% endif %}
 </main>
 
 {% include 'partials/footer.html' %}
