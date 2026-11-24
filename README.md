@@ -25,12 +25,14 @@ Combines dense vector search (`all-mpnet-base-v2`), cross-encoder department det
 </p>
 
 <p align="center">
-  <em>Live Walkthrough: Semantic Smart Search (242 Resumes) ➔ 1-on-1 Resume & JD Matching ➔ Retrieval Benchmark</em>
+  <em>Live Walkthrough: Scanning Hero with Live Role Demo ➔ Semantic Smart Search (242 Resumes) ➔ 1-on-1 Resume & JD Matching (SHORTLIST) ➔ Candidate Rankings</em>
 </p>
 
 > **📥 Downloadable Video Assets:**
-> * 📹 **[Download Full Walkthrough (MP4, 42 s)](assets/demo_full.mp4?raw=true)** *(3.8 MB)*
-> * ⚡ **[Download 1080p Highlight Reel (MP4, 2× speed, 21 s)](assets/demo_highlight.mp4?raw=true)** *(3.9 MB)*
+> * 📹 **[Download Full Walkthrough (MP4, 84 s)](assets/demo_full.mp4?raw=true)**: also covers the pipeline story and the retrieval benchmark *(5.6 MB)*
+> * ⚡ **[Download 1920×1200 Highlight Reel (MP4, 2× speed, 42 s)](assets/demo_highlight.mp4?raw=true)** *(7.2 MB)*
+> * 📱 **[Download Phone Walkthrough (MP4, vertical, 32 s)](assets/demo_mobile.mp4?raw=true)** *(5.4 MB)*
+> * 🖼️ **[Cover Image (PNG, 1920×1200)](assets/demo_poster.png?raw=true)**
 
 
 
@@ -117,6 +119,7 @@ python benchmark/run_benchmark.py            # add --rebuild to rebuild its inde
 ## 🛠️ Tech Stack
 
 * **Backend Framework:** Python 3.11+, Flask, SQLite3
+* **Frontend:** Jinja templates with plain CSS/JS; GSAP (ScrollTrigger, SplitText), Lenis smooth scrolling and Motion for animation, effects adapted from React Bits. The libraries are vendored in `webapp/static/vendor/`, so the app works offline and its Content-Security-Policy can allow same-origin scripts only. Every page respects `prefers-reduced-motion`.
 * **Vector Database:** ChromaDB (HNSW cosine space)
 * **Embedding Model:** `sentence-transformers` (`all-mpnet-base-v2`, 768 dimensions)
 * **Department Detection:** `cross-encoder/stsb-distilroberta-base`
