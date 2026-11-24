@@ -52,7 +52,7 @@ Write-Host ""
 $log = Join-Path $root "tunnel.log"
 Remove-Item $log -ErrorAction SilentlyContinue
 try {
-    & $cf tunnel --no-autoupdate --logfile $log --url $url
+    & $cf tunnel --no-autoupdate --protocol http2 --logfile $log --url $url
 }
 finally {
     Write-Host "Stopping the public link and returning the app to normal local mode..." -ForegroundColor Cyan
