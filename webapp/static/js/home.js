@@ -223,8 +223,12 @@
             document.querySelector('.scan-hero').classList.add('pinned');
             scanST = ScrollTrigger.create({
                 trigger: '.scan-hero', start: 'top top', end: '+=130%',
-                pin: true, scrub: 0.6, animation: tl, invalidateOnRefresh: true
+                pin: true, scrub: 0.6, animation: tl, invalidateOnRefresh: true,
+                // Rebuilt after a role swap, i.e. after the story trigger: measure it first anyway,
+                // or the story below is positioned as if the hero had no pinned height.
+                refreshPriority: 1
             });
+            ScrollTrigger.sort();
         } else {
             tl.timeScale(1 / 3.2);
             ScrollTrigger.create({ trigger: paper, start: 'top 85%', once: true, onEnter: function () { tl.play(); } });
@@ -375,5 +379,14 @@
         S.counters('[data-count]');
         S.drift();
         ScrollTrigger.refresh();
+        // Links like /#analyze: the pinned sections add height after the browser has already
+        // jumped to the anchor, so jump again now that the layout is final.
+        if (location.hash.length > 1) {
+            var target = document.getElementById(location.hash.slice(1));
+            if (target) {
+                var y = target.getBoundingClientRect().top + window.scrollY - (document.querySelector('.nav').offsetHeight + 24);
+                if (S.lenis) S.lenis.scrollTo(y, { immediate: true, force: true }); else window.scrollTo(0, y);
+            }
+        }
     });
 })();
