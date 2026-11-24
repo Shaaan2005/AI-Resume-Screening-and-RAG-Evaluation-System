@@ -5,213 +5,133 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Retrieval Benchmark</title>
 <meta name="description" content="AI resume screening: semantic search over resumes and job-description matching.">
-<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 36 36%22%3E%3Crect width=%2236%22 height=%2236%22 rx=%228%22 fill=%22%23009393%22/%3E%3Ctext x=%2218%22 y=%2224%22 text-anchor=%22middle%22 font-size=%2216%22 font-weight=%22800%22 font-family=%22Arial%22 fill=%22%2313232d%22%3EAI%3C/text%3E%3C/svg%3E">
-<style>:focus-visible{outline:2px solid #3fd0d0 !important;outline-offset:2px}</style>
-<link rel="preconnect" href="https://fonts.googleapis.com">
-<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet">
-<style>
-*{margin:0;padding:0;box-sizing:border-box}
-body{
-    font-family:'Inter',sans-serif;
-    background:#1a2e39;
-    min-height:100vh;
-    color:#f7fafc;
-    -webkit-font-smoothing:antialiased;
-    background-image: radial-gradient(rgba(255,255,255,0.015) 1px,transparent 1px);
-    background-size:24px 24px
-}
-.nav{
-    position:fixed;top:0;left:0;right:0;z-index:100;
-    display:flex;align-items:center;justify-content:space-between;
-    padding:0 32px;height:72px;
-    background:#13232d;
-    border-bottom:1px solid rgba(255,255,255,0.04)
-}
-.nav-left{display:flex;align-items:center}
-.nav-logo{display:flex;align-items:center;gap:10px;text-decoration:none}
-.nav-logo svg{width:36px;height:36px}
-.nav-logo span{font-size:18px;font-weight:700;color:#f7fafc;letter-spacing:-0.2px}
-.nav-right{display:flex;align-items:center;gap:15px}
-.nav-right .btn-back{
-    padding:7px 16px;background:transparent;color:#d5e4ec;
-    border:1px solid rgba(255,255,255,0.2);border-radius:6px;
-    font-family:'Inter',sans-serif;font-size:13px;font-weight:600;
-    cursor:pointer;transition:all 0.15s;text-decoration:none
-}
-.nav-right .btn-back:hover{border-color:#00a3a3;color:#f7fafc}
-.content{max-width:1200px;margin:0 auto;padding:110px 32px 60px}
-.hero{text-align:center;margin-bottom:40px}
-.hero h1{font-size:36px;font-weight:800;letter-spacing:-1px;margin-bottom:10px}
-.hero h1 span{color:#009393}
-.hero p{font-size:15px;color:#9fbed0}
-.kpi-row{display:grid;grid-template-columns:repeat(4,1fr);gap:15px;margin-bottom:30px}
-.kpi-card{
-    background:#203743;border-radius:8px;padding:24px;
-    border-left:4px solid #009393;box-shadow:0 4px 15px rgba(0,0,0,0.15);
-    text-align:center;position:relative;overflow:hidden
-}
-.kpi-card::before{
-    content:'';position:absolute;top:0;left:0;right:0;height:2px;
-    background:linear-gradient(90deg,transparent,#009393,transparent);
-}
-.kpi-card .value{font-size:36px;font-weight:800;color:#009393;margin-bottom:5px}
-.kpi-card .label{font-size:12px;font-weight:700;color:#9fbed0;text-transform:uppercase;letter-spacing:1px}
-.kpi-card .sub{font-size:12px;color:#9fbed0;margin-top:8px}
-.kpi-card .sub .up{color:#69f0ae;font-weight:700}
-.kpi-card .sub .down{color:#ff6b6b;font-weight:700}
-.scorecard-card{
-    background:#203743;border-radius:8px;padding:24px;
-    box-shadow:0 4px 15px rgba(0,0,0,0.15);margin-bottom:20px
-}
-.scorecard-header{font-size:18px;font-weight:700;color:#f7fafc;margin-bottom:16px;letter-spacing:-0.2px}
-.note{font-size:13px;color:#9fbed0;line-height:1.6;margin-bottom:16px}
-.note strong{color:#e2eef4}
-.note code, .empty code{background:#13232d;padding:2px 6px;border-radius:4px;font-size:12px;color:#e2eef4}
-.table-wrap{border-radius:6px;overflow:hidden;border:1px solid rgba(255,255,255,0.06)}
-table{width:100%;border-collapse:collapse}
-th, td{padding:14px 16px;text-align:left;border-bottom:1px solid rgba(255,255,255,0.04)}
-th{background:#13232d;font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:0.8px;color:#9fbed0}
-td{font-size:13px;color:#e2eef4}
-tr:hover td{background:rgba(255,255,255,0.02)}
-tr.current td{background:rgba(0,147,147,0.10)}
-td.num, th.num{text-align:right;font-variant-numeric:tabular-nums}
-.tag{
-    display:inline-block;padding:3px 8px;border-radius:4px;
-    font-size:10px;font-weight:700;text-transform:uppercase;letter-spacing:0.3px
-}
-.tag-dept{background:rgba(0,147,147,0.12);color:#009393}
-.tag-current{background:#009393;color:#13232d;margin-left:6px}
-.tag-original{background:rgba(255,107,107,0.12);color:#ff6b6b;margin-left:6px}
-.tag-hit{background:rgba(105,240,174,0.12);color:#69f0ae}
-.tag-miss{background:rgba(255,255,255,0.05);color:#9fbed0}
-.cats .tag{margin:2px 3px 2px 0}
-.score-badge{font-weight:700;color:#009393}
-.empty{text-align:center;padding:60px 20px;color:#9fbed0}
-@media(max-width:860px){
-    .kpi-row{grid-template-columns:1fr 1fr}
-    .content{padding:100px 16px 40px}
-}
-</style>
+{% include 'partials/head.html' %}
+<link rel="stylesheet" href="{{ url_for('static', filename='css/result.css') }}">
+<link rel="stylesheet" href="{{ url_for('static', filename='css/bench.css') }}">
 </head>
 <body>
+<a class="skip-link" href="#main">Skip to content</a>
+<div class="glow" aria-hidden="true"></div>
+{% include 'partials/nav.html' %}
 
-<div class="nav">
-    <div class="nav-left">
-        <a href="/" class="nav-logo">
-            <svg viewBox="0 0 36 36" fill="none"><rect width="36" height="36" rx="8" fill="#009393"/><text x="50%" y="55%" dominant-baseline="middle" text-anchor="middle" fill="#13232d" font-size="16" font-weight="800" font-family="Inter">AI</text></svg>
-            <span>AI Resume Screening</span>
-        </a>
-    </div>
-    <div class="nav-right">
-        {% if user %}<span style="font-size:13px;color:#e2eef4;font-weight:500;margin-right:15px">Hi {{ user.username }}</span>{% endif %}
-        <a href="/" class="btn-back" style="margin-right:10px">← Home</a>
-        <form action="{{ url_for('auth.logout') }}" method="POST" style="display:inline;margin:0"><input type="hidden" name="csrf_token" value="{{ csrf_token() }}"><button type="submit" class="btn-back" style="cursor:pointer;font-family:inherit">Log Out</button></form>
-    </div>
-</div>
+<main class="page wrap" id="main">
+    <nav class="crumbs" aria-label="Breadcrumb" data-intro>
+        <a href="/">&#8592; Home</a><span class="sep" aria-hidden="true">/</span><span aria-current="page">Benchmark</span>
+    </nav>
 
-<div class="content">
-    <div class="hero">
-        <h1>Retrieval <span>Benchmark</span></h1>
-        <p>How well search ranks the right resumes, measured on labeled recruiter queries</p>
-    </div>
+    <header class="bench-head" data-intro>
+        <p class="eyebrow"><span class="idx">●</span> Evaluation</p>
+        <h1 class="bench-title">Retrieval <span>Benchmark</span></h1>
+        <p class="bench-sub">How well search ranks the right resumes, measured on labeled recruiter queries</p>
+    </header>
 
 {% if not results %}
-    <div class="scorecard-card empty">
+    <div class="panel empty-state">
         No benchmark results found yet. Run <code>python benchmark/run_benchmark.py</code> to generate them.
     </div>
 {% else %}
+    {# Change vs the original setup: arrow + sign + number, never colour alone #}
     {% macro delta(new, old) -%}
         {%- set d = new - old -%}
-        <span class="{{ 'up' if d >= 0 else 'down' }}">{{ '+' if d > 0 else '' }}{{ '%.3f' % d }}</span>
+        <span class="{{ 'up' if d >= 0 else 'down' }}">{{ '▲' if d >= 0 else '▼' }} {{ '+' if d > 0 else '' }}{{ '%.3f' % d }}</span>
     {%- endmacro %}
 
     {% if current %}
-    <div class="kpi-row">
-        <div class="kpi-card">
-            <div class="value">{{ '%.3f' % current.all.ndcg10 }}</div>
-            <div class="label">nDCG@10</div>
-            {% if original %}<div class="sub">{{ delta(current.all.ndcg10, original.all.ndcg10) }} vs original</div>{% endif %}
+    <section class="kpi-row" aria-label="Current setup">
+        <div class="panel kpi spotlight reveal">
+            <div class="kpi-label">nDCG@10</div>
+            <div class="kpi-value"><span data-count="{{ '%.3f' % current.all.ndcg10 }}">{{ '%.3f' % current.all.ndcg10 }}</span></div>
+            <div class="gauge" aria-hidden="true"><i style="transform:scaleX({{ '%.4f' % ([[current.all.ndcg10, 1]|min, 0]|max) }})"></i></div>
+            {% if original %}<div class="kpi-sub">{{ delta(current.all.ndcg10, original.all.ndcg10) }} vs original</div>{% endif %}
         </div>
-        <div class="kpi-card" style="border-left-color:#3178f6">
-            <div class="value" style="color:#3178f6">{{ '%.3f' % current.all.mrr }}</div>
-            <div class="label">MRR</div>
-            {% if original %}<div class="sub">{{ delta(current.all.mrr, original.all.mrr) }} vs original</div>{% endif %}
+        <div class="panel kpi spotlight reveal">
+            <div class="kpi-label">MRR</div>
+            <div class="kpi-value"><span data-count="{{ '%.3f' % current.all.mrr }}">{{ '%.3f' % current.all.mrr }}</span></div>
+            <div class="gauge" aria-hidden="true"><i style="transform:scaleX({{ '%.4f' % ([[current.all.mrr, 1]|min, 0]|max) }})"></i></div>
+            {% if original %}<div class="kpi-sub">{{ delta(current.all.mrr, original.all.mrr) }} vs original</div>{% endif %}
         </div>
-        <div class="kpi-card" style="border-left-color:#e2eef4">
-            <div class="value" style="color:#e2eef4">{{ '%.0f' % (current.all.p5 * 100) }}%</div>
-            <div class="label">Precision @ 5</div>
-            {% if original %}{% set d = (current.all.p5 - original.all.p5) * 100 %}<div class="sub"><span class="{{ 'up' if d >= 0 else 'down' }}">{{ '+' if d > 0 else '' }}{{ '%.1f' % d }} pts</span> vs original</div>{% endif %}
+        <div class="panel kpi spotlight reveal">
+            <div class="kpi-label">Precision @ 5</div>
+            <div class="kpi-value"><span data-count="{{ '%.0f' % (current.all.p5 * 100) }}">{{ '%.0f' % (current.all.p5 * 100) }}</span><small>%</small></div>
+            <div class="gauge" aria-hidden="true"><i style="transform:scaleX({{ '%.4f' % ([[current.all.p5, 1]|min, 0]|max) }})"></i></div>
+            {% if original %}{% set d = (current.all.p5 - original.all.p5) * 100 %}<div class="kpi-sub"><span class="{{ 'up' if d >= 0 else 'down' }}">{{ '▲' if d >= 0 else '▼' }} {{ '+' if d > 0 else '' }}{{ '%.1f' % d }} pts</span> vs original</div>{% endif %}
         </div>
-        <div class="kpi-card" style="border-left-color:#69f0ae">
-            <div class="value" style="color:#69f0ae">{{ '%.0f' % current.latency_ms }} ms</div>
-            <div class="label">Search latency</div>
-            {% if original %}<div class="sub">{{ '%.0f' % (original.latency_ms / current.latency_ms) }}× faster than original</div>{% endif %}
+        <div class="panel kpi spotlight reveal">
+            <div class="kpi-label">Search latency</div>
+            <div class="kpi-value"><span data-count="{{ '%.0f' % current.latency_ms }}">{{ '%.0f' % current.latency_ms }}</span><small> ms</small></div>
+            <div class="gauge muted" aria-hidden="true"></div>
+            {% if original %}<div class="kpi-sub"><span class="up">▲ {{ '%.0f' % (original.latency_ms / current.latency_ms) }}×</span> faster than original</div>{% endif %}
         </div>
-    </div>
+    </section>
     {% endif %}
 
-    <div class="scorecard-card">
-        <div class="scorecard-header">Setups compared</div>
+    <section class="panel block reveal" aria-labelledby="setupsTitle">
+        <div class="block-head"><h2 id="setupsTitle">Setups compared</h2></div>
         <p class="note">
             {{ results.queries }} labeled queries (2 per job category) against {{ results.index.resumes }} resumes.
             A result counts as <strong>relevant</strong> when it comes from the query's job category.
             The original design re-ranked results with a sentence-similarity cross-encoder; it scored lower and ran slower,
             so the app now uses <strong>dense retrieval only</strong>.
         </p>
-        <div class="table-wrap">
+        <div class="table-wrap bench-table">
             <table>
                 <thead>
                     <tr>
-                        <th>Setup</th>
-                        <th class="num">P@5</th>
-                        <th class="num">P@10</th>
-                        <th class="num">MRR</th>
-                        <th class="num">nDCG@10</th>
-                        <th class="num">Latency</th>
+                        <th scope="col">Setup</th>
+                        <th scope="col" class="num">P@5</th>
+                        <th scope="col" class="num">P@10</th>
+                        <th scope="col" class="num">MRR</th>
+                        <th scope="col" class="num">nDCG@10</th>
+                        <th scope="col" class="num">Latency</th>
                     </tr>
                 </thead>
                 <tbody>
                     {% for c in results.configs %}
-                    <tr class="{{ 'current' if c.is_current else '' }}">
-                        <td style="font-weight:500">{{ c.label }}
+                    <tr class="setup-row {{ 'current' if c.is_current else '' }}">
+                        <td class="setup">{{ c.label }}
                             {% if c.is_current %}<span class="tag tag-current">In use</span>{% endif %}
                             {% if c.is_original %}<span class="tag tag-original">Original</span>{% endif %}
                         </td>
                         <td class="num">{{ '%.3f' % c.all.p5 }}</td>
                         <td class="num">{{ '%.3f' % c.all.p10 }}</td>
                         <td class="num">{{ '%.3f' % c.all.mrr }}</td>
-                        <td class="num score-badge">{{ '%.3f' % c.all.ndcg10 }}</td>
+                        <td class="num ndcg"><span class="ndcg-bar" aria-hidden="true"><i style="transform:scaleX({{ '%.4f' % ([[c.all.ndcg10, 1]|min, 0]|max) }})"></i></span><b>{{ '%.3f' % c.all.ndcg10 }}</b></td>
                         <td class="num">{{ '%.0f' % c.latency_ms }} ms</td>
                     </tr>
                     {% endfor %}
                 </tbody>
             </table>
         </div>
-    </div>
+    </section>
 
     {% if current and current.per_query %}
-    <div class="scorecard-card">
-        <div class="scorecard-header">Query by query (current setup)</div>
-        <p class="note">Job categories of the top 5 results for each query. Green means it matches the query's category.</p>
-        <div class="table-wrap">
+    <section class="block" aria-labelledby="queriesTitle">
+        <div class="section-head" style="margin:56px 0 22px">
+            <div>
+                <p class="eyebrow"><span class="idx">↳</span> Current setup</p>
+                <h2 class="reveal-title" id="queriesTitle">Query by query</h2>
+            </div>
+            <p>Job categories of the top 5 results for each query. ✓ means it matches the query's category.</p>
+        </div>
+        <div class="table-wrap bench-table">
             <table>
                 <thead>
                     <tr>
-                        <th style="width:4%">#</th>
-                        <th style="width:40%">Query</th>
-                        <th style="width:14%">Category</th>
-                        <th class="num" style="width:7%">P@5</th>
-                        <th class="num" style="width:8%">First hit</th>
-                        <th style="width:27%">Top 5 results</th>
+                        <th scope="col" style="width:4%">#</th>
+                        <th scope="col" style="width:38%">Query</th>
+                        <th scope="col" style="width:14%">Category</th>
+                        <th scope="col" class="num" style="width:7%">P@5</th>
+                        <th scope="col" class="num" style="width:8%">First hit</th>
+                        <th scope="col" style="width:29%">Top 5 results</th>
                     </tr>
                 </thead>
                 <tbody>
                     {% for q in current.per_query %}
-                    <tr>
-                        <td>{{ loop.index }}</td>
-                        <td style="font-weight:500">{{ q.query }}</td>
+                    <tr class="q-row">
+                        <td class="mono" style="color:var(--muted)">{{ loop.index }}</td>
+                        <td class="query-cell">{{ q.query }}</td>
                         <td><span class="tag tag-dept">{{ q.category }}</span></td>
-                        <td class="num score-badge">{{ '%.0f' % (q.p5 * 100) }}%</td>
+                        <td class="num"><b>{{ '%.0f' % (q.p5 * 100) }}%</b></td>
                         <td class="num">{{ ('#%d' % q.first_relevant_rank) if q.first_relevant_rank else '—' }}</td>
                         <td class="cats">{% for cat in q.top5 %}<span class="tag {{ 'tag-hit' if cat == q.category else 'tag-miss' }}">{{ cat }}</span>{% endfor %}</td>
                     </tr>
@@ -219,11 +139,11 @@ td.num, th.num{text-align:right;font-variant-numeric:tabular-nums}
                 </tbody>
             </table>
         </div>
-    </div>
+    </section>
     {% endif %}
 
-    <div class="scorecard-card">
-        <div class="scorecard-header">Reading these numbers</div>
+    <section class="panel block reveal" aria-labelledby="readTitle">
+        <div class="block-head"><h2 id="readTitle">Reading these numbers</h2></div>
         <p class="note">
             <strong>P@5</strong>: share of the top 5 results from the right category.
             <strong>MRR</strong>: how high the first right result appears (1.0 = always first).
@@ -248,9 +168,12 @@ td.num, th.num{text-align:right;font-variant-numeric:tabular-nums}
             (e.g. Python vs Java engineers). Refresh these results with <code>python benchmark/run_benchmark.py</code>;
             full tables are in <code>benchmark/RESULTS.md</code>.
         </p>
-    </div>
+    </section>
 {% endif %}
-</div>
+</main>
 
+{% include 'partials/footer.html' %}
+{% include 'partials/scripts.html' %}
+<script defer src="{{ url_for('static', filename='js/bench.js') }}"></script>
 </body>
 </html>
