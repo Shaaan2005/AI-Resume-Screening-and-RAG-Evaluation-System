@@ -4,400 +4,429 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>AI Resume Screening</title>
-<link rel="preconnect" href="https://fonts.googleapis.com">
-<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet">
-<style>
-*{margin:0;padding:0;box-sizing:border-box}
-body{
-    font-family:'Inter',sans-serif;
-    background:#1a2e39;
-    min-height:100vh;
-    color:#f7fafc;
-    -webkit-font-smoothing:antialiased;
-    background-image:
-        radial-gradient(rgba(255,255,255,0.015) 1px,transparent 1px);
-    background-size:24px 24px
-}
-.nav{
-    position:fixed;top:0;left:0;right:0;z-index:100;
-    display:flex;align-items:center;justify-content:space-between;
-    padding:0 32px;height:72px;
-    background:#13232d;
-    border-bottom:1px solid rgba(255,255,255,0.04)
-}
-.nav::after{
-    content:'';position:absolute;bottom:-2px;left:50%;transform:translateX(-50%);
-    width:200px;height:2px;background:linear-gradient(90deg,transparent,#009393,transparent);
-    border-radius:2px
-}
-.nav-left{display:flex;align-items:center}
-.nav-logo{display:flex;align-items:center;gap:10px;text-decoration:none}
-.nav-logo svg{width:36px;height:36px}
-.nav-logo span{font-size:18px;font-weight:700;color:#f7fafc;letter-spacing:-0.2px}
-.nav-right{display:flex;align-items:center;gap:10px}
-.nav-right .btn-login{
-    padding:8px 18px;background:#3178f6;color:#fff;
-    border:none;border-radius:6px;
-    font-family:'Inter',sans-serif;font-size:13px;font-weight:600;
-    cursor:pointer;transition:all 0.15s;text-decoration:none
-}
-.nav-right .btn-login:hover{background:#1475e1}
-.nav-right .btn-register{
-    padding:8px 18px;background:#009393;color:#13232d;
-    border:none;border-radius:6px;
-    font-family:'Inter',sans-serif;font-size:13px;font-weight:700;
-    cursor:pointer;transition:all 0.15s;text-decoration:none
-}
-.nav-right .btn-register:hover{background:#007a7a}
-.hero{
-    padding:120px 32px 48px;
-    text-align:center
-}
-.hero h1{
-    font-size:48px;font-weight:800;letter-spacing:-1.5px;line-height:1.05;
-    margin-bottom:12px;color:#f7fafc
-}
-.hero h1 span{color:#009393}
-.hero p{
-    font-size:15px;color:#9fbed0;max-width:440px;margin:0 auto;line-height:1.6
-}
-.content{max-width:1200px;margin:0 auto;padding:0 32px 60px}
-.section-title{
-    display:flex;align-items:center;justify-content:space-between;
-    margin-bottom:14px
-}
-.section-title h2{font-size:18px;font-weight:700;color:#f7fafc;letter-spacing:-0.2px}
-.section-title a{font-size:13px;color:#3178f6;text-decoration:none;font-weight:600}
-.section-title a:hover{color:#1475e1}
-.game-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:10px;margin-bottom:36px}
-.game-card{
-    background:#203743;
-    border-radius:8px;
-    overflow:hidden;cursor:pointer;transition:all 0.2s ease;
-    position:relative
-}
-.game-card::before{
-    content:'';position:absolute;top:0;left:0;right:0;height:2px;
-    background:linear-gradient(90deg,transparent,#3178f6,#009393,transparent);
-    z-index:1
-}
-.game-card:hover{background:#1f3541;transform:translateY(-3px);box-shadow:0 6px 20px rgba(0,0,0,0.2)}
-.game-card .thumb{
-    height:100px;
-    display:flex;align-items:center;justify-content:center;
-    font-size:40px;position:relative
-}
-.game-card .thumb .live{
-    position:absolute;top:8px;left:8px;
-    background:#3178f6;color:#fff;
-    font-size:9px;font-weight:700;padding:2px 7px;
-    border-radius:3px;text-transform:uppercase;letter-spacing:0.3px;
-    display:flex;align-items:center;gap:5px
-}
-.game-card .thumb .live::before{
-    content:'';width:5px;height:5px;border-radius:50%;
-    background:#fff;animation:pulse 1.5s ease-in-out infinite
-}
-@keyframes pulse{
-    0%,100%{opacity:1;transform:scale(1)}
-    50%{opacity:0.4;transform:scale(0.7)}
-}
-.game-card .info{padding:12px 14px 14px}
-.game-card .info .name{font-size:13px;font-weight:600;color:#f7fafc;margin-bottom:3px}
-.game-card .info .provider{font-size:11px;color:#9fbed0;margin-bottom:8px}
-.game-card .info .meta{display:flex;align-items:center;justify-content:space-between;font-size:11px}
-.game-card .info .meta .playing{color:#f7fafc;font-weight:500;display:flex;align-items:center;gap:5px}
-.game-card .info .meta .playing::before{content:'';width:8px;height:8px;background:#009393;border-radius:50%}
-.game-card .info .meta .category{color:rgba(255,255,255,0.15);font-size:10px}
-.form-section{margin-bottom:36px}
-.form-card{
-    background:#203743;
-    border-radius:8px;padding:14px 16px 16px;position:relative;
-    border-left:3px solid rgba(0,147,147,0.2);
-    box-shadow:0 1px 3px rgba(0,0,0,0.12)
-}
-.form-card .badge-top{
-    position:absolute;top:-1px;left:18px;
-    background:#3178f6;color:#fff;
-    font-size:8px;font-weight:700;padding:2px 10px;
-    border-radius:0 0 4px 4px;text-transform:uppercase;letter-spacing:0.4px
-}
-.form-row{display:grid;grid-template-columns:1fr 1fr;gap:10px}
-.form-group label{
-    display:block;font-size:13px;font-weight:700;
-    color:#e2eef4;margin-bottom:6px;
-    letter-spacing:-0.1px
-}
-textarea{
-    width:100%;height:130px;
-    background:#13232d;border:1px solid rgba(255,255,255,0.04);border-radius:6px;
-    padding:10px 12px;font-family:'Inter',sans-serif;font-size:13px;
-    color:#f7fafc;resize:none;transition:all 0.15s;line-height:1.5;outline:none
-}
-textarea::placeholder{color:#9fbed0}
-textarea:focus{border-color:rgba(0,147,147,0.15)}
-.file-upload{
-    position:relative;display:flex;flex-direction:column;
-    align-items:center;justify-content:center;gap:4px;
-    height:130px;background:#13232d;
-    border:2px dashed rgba(255,255,255,0.04);border-radius:6px;
-    cursor:pointer;transition:all 0.15s;padding:12px
-}
-.file-upload:hover{border-color:rgba(0,147,147,0.15)}
-.file-upload input[type="file"]{
-    position:absolute;top:0;left:0;width:100%;height:100%;
-    opacity:0;cursor:pointer;z-index:2;pointer-events:none
-}
-.upload-icon{
-    width:32px;height:32px;background:rgba(0,147,147,0.1);
-    border-radius:6px;display:flex;align-items:center;
-    justify-content:center;font-size:15px;color:#009393
-}
-.upload-text{font-size:12px;font-weight:500;color:#f7fafc}
-.upload-hint{font-size:10px;color:#9fbed0}
-.file-selected{font-size:12px;color:#009393;font-weight:500;display:none}
-.file-remove{
-    display:none;position:absolute;top:8px;right:10px;z-index:3;
-    background:rgba(255,255,255,0.04);border:1px solid rgba(255,255,255,0.06);
-    color:#9fbed0;font-size:10px;font-weight:600;
-    cursor:pointer;padding:3px 10px;border-radius:4px;
-    transition:all 0.15s;font-family:'Inter',sans-serif;width:auto
-}
-.file-remove:hover{background:rgba(255,255,255,0.08)}
-.file-upload.has-file .file-remove{display:block}
-.file-upload.has-file .upload-icon,.file-upload.has-file .upload-text,
-.file-upload.has-file .upload-hint{display:none}
-.file-upload.has-file .file-selected{display:block}
-.file-upload.dragover{border-color:#009393 !important;background:rgba(0,147,147,0.06) !important}
-.submit-wrap{margin-top:10px}
-.btn-submit{
-    width:100%;padding:9px 20px;background:#3178f6;color:#fff;
-    font-family:'Inter',sans-serif;font-size:14px;font-weight:600;
-    border:none;border-radius:6px;cursor:pointer;transition:all 0.15s;
-    display:flex;align-items:center;justify-content:center;gap:8px
-}
-.btn-submit:hover{background:#1475e1}
-.btn-submit .spinner{
-    display:none;width:16px;height:16px;
-    border:2px solid rgba(255,255,255,0.2);border-top-color:#fff;
-    border-radius:50%;animation:spin 0.7s linear infinite
-}
-@keyframes spin{to{transform:rotate(360deg)}}
-.btn-submit.loading{cursor:not-allowed;opacity:0.85}
-.btn-submit.loading .spinner{display:inline-block}
-.table-wrap{
-    border-radius:8px;overflow:hidden;margin-bottom:36px;
-    box-shadow:0 1px 3px rgba(0,0,0,0.12);
-    border-left:3px solid rgba(0,147,147,0.2)
-}
-.table-wrap table{width:100%;border-collapse:collapse}
-.table-wrap th, .table-wrap td{border:1px solid #f0f8ff}
-.table-wrap th{
-    text-align:left;padding:10px 14px;
-    font-size:10px;font-weight:600;text-transform:uppercase;
-    letter-spacing:0.4px;color:#9fbed0;
-    background:#203743;
-    border-bottom:1px solid #f0f8ff
-}
-.table-wrap td{
-    padding:10px 14px;font-size:12px;color:#f7fafc;
-    border-bottom:1px solid #f0f8ff
-}
-.table-wrap tr:nth-child(even) td{background:rgba(255,255,255,0.02)}
-.table-wrap tr:last-child td{border-bottom:1px solid #f0f8ff}
-.table-wrap .green{color:#69f0ae}
-.table-wrap .red{color:#ff6b6b}
-.table-wrap .yellow{color:#ffd54f}
-.footer{
-    background:#13232d;
-    border-top:1px solid rgba(255,255,255,0.04);
-    padding:40px 32px 32px;
-    margin-top:48px;
-    text-align:center
-}
-.footer p{font-size:12px;color:#9fbed0;margin-bottom:4px}
-.footer .brand{color:#9fbed0;font-size:11px}
-.footer .brand span{color:#009393;font-weight:600}
-.footer-desc{font-size:15px;color:#e2eef4;line-height:1.5;margin-bottom:16px;font-weight:400}
-@media(max-width:860px){
-    .nav-links{display:none}
-    .hero h1{font-size:30px}
-    .game-grid{grid-template-columns:1fr}
-    .form-row{grid-template-columns:1fr}
-    .content{padding:0 16px 40px}
-    .hero{padding:100px 16px 40px}
-    .form-section{grid-template-columns:1fr !important}
-}
-</style>
+<meta name="description" content="AI resume screening: semantic search over resumes and job-description matching.">
+{% include 'partials/head.html' %}
+<link rel="stylesheet" href="{{ url_for('static', filename='css/home.css') }}">
 </head>
 <body>
+<a class="skip-link" href="#analyze">Skip to New Analysis</a>
+<div class="glow" aria-hidden="true"></div>
 
-<div class="nav">
-    <div class="nav-left">
-        <a href="/" class="nav-logo">
-            <svg viewBox="0 0 36 36" fill="none"><rect width="36" height="36" rx="8" fill="#009393"/><text x="50%" y="55%" dominant-baseline="middle" text-anchor="middle" fill="#13232d" font-size="16" font-weight="800" font-family="Inter">AI</text></svg>
-            <span>AI Resume Screening</span>
-        </a>
-    </div>
-    <div class="nav-right">
-        {% if user %}
-        <a href="/evaluate" style="font-size:13px;color:#009393;font-weight:600;text-decoration:none;margin-right:15px;transition:opacity 0.2s" onmouseover="this.style.opacity=0.8" onmouseout="this.style.opacity=1">📊 Evaluation Dashboard</a>
-        <span style="font-size:13px;color:#e2eef4;font-weight:500;margin-right:15px">Hi {{ user.username }}</span>
-        <a href="{{ url_for('logout') }}" class="btn-login">Log Out</a>
-        {% else %}
-        <a href="{{ url_for('login') }}" class="btn-login">Log In</a>
-        <a href="{{ url_for('register') }}" class="btn-register">Register</a>
-        {% endif %}
-    </div>
+<!-- Line icons (decorative; every use is aria-hidden) -->
+<svg width="0" height="0" style="position:absolute" aria-hidden="true">
+    <symbol id="i-brain" viewBox="0 0 24 24"><circle cx="12" cy="12" r="3"/><path d="M12 2v4M12 18v4M2 12h4M18 12h4M4.9 4.9l2.8 2.8M16.3 16.3l2.8 2.8M4.9 19.1l2.8-2.8M16.3 7.7l2.8-2.8"/></symbol>
+    <symbol id="i-db" viewBox="0 0 24 24"><ellipse cx="12" cy="5" rx="8" ry="3"/><path d="M4 5v6c0 1.7 3.6 3 8 3s8-1.3 8-3V5"/><path d="M4 11v6c0 1.7 3.6 3 8 3s8-1.3 8-3v-6"/></symbol>
+    <symbol id="i-file" viewBox="0 0 24 24"><path d="M14 3H6a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V9z"/><path d="M14 3v6h6M8 13h8M8 17h5"/></symbol>
+    <symbol id="i-tag" viewBox="0 0 24 24"><path d="M20.6 13.4l-7.2 7.2a2 2 0 0 1-2.8 0L3 13V3h10l7.6 7.6a2 2 0 0 1 0 2.8z"/><circle cx="7.5" cy="7.5" r="1.5"/></symbol>
+</svg>
 
-</div>
+{% include 'partials/nav.html' %}
 
-<div class="hero">
-    <h1>Screening, <span>Intelligence.</span></h1>
-    <p>Upload a resume and job description for automated AI-powered evaluation</p>
-</div>
+<main>
+<!-- ============ Hero: the scanner ============ -->
+<section class="scan-hero" aria-labelledby="heroTitle">
+    <div class="wrap scan-stage">
+        <div class="hero-copy">
+            <p class="eyebrow" data-intro><span class="live-dot {{ '' if stats.online else 'off' }}" aria-hidden="true"></span>{{ 'Index live' if stats.online else 'Index offline' }} · {{ stats.resumes }} resumes · {{ stats.departments }} roles</p>
+            <h1 class="hero-title" id="heroTitle" data-intro>Screening, <span>Intelligence.</span></h1>
+            <p class="hero-sub" data-intro>Give it a job description and a resume. It reads every section, finds the skills the job asks for and gives a clear verdict: shortlist, consider or reject.</p>
+            <div class="hero-ctas" data-intro>
+                <a href="#analyze" class="btn btn-primary">Analyze a resume <span class="arrow" aria-hidden="true">→</span></a>
+                <a href="#search" class="btn btn-ghost">Search {{ stats.resumes }} resumes</a>
+            </div>
+            <div class="hero-facts" data-intro>
+                <div><b>{{ stats.skills }}</b><span>skills tracked</span></div>
+                <div><b>768</b><span>dim embeddings</span></div>
+                <div><b>3</b><span>clear verdicts</span></div>
+            </div>
+            <p class="scroll-cue" aria-hidden="true"><i></i>Scroll to scan</p>
+        </div>
 
-<div class="content">
-    <div class="form-section" style="display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-bottom:24px">
-        <div class="form-card">
-            <div class="badge-top">New Analysis</div>
-            <form action="/upload" method="POST" enctype="multipart/form-data" style="padding-top:10px">
-                <div class="form-row" style="grid-template-columns:1fr">
-                    <div class="form-group">
-                        <label>Job Description</label>
-                        <textarea name="job_description" placeholder="e.g. Looking for a Python Developer with Flask, SQL, Machine Learning..." required></textarea>
+        <!-- Live demo: pick or type a role, a sample resume for it is scanned (client-side illustration) -->
+        <div class="scanner" data-scanner data-intro>
+            <form class="try" id="tryForm" action="#analyze" aria-label="Try the scanner on a sample resume">
+                <label for="tryRole" class="try-label">Job</label>
+                <input id="tryRole" class="try-input" type="text" value="Python Developer" autocomplete="off" maxlength="40" list="tryRoles" aria-describedby="tryHint">
+                <datalist id="tryRoles"><option value="Python Developer"><option value="Data Analyst"><option value="Accountant"><option value="Chef"><option value="Sales Executive"><option value="Product Designer"></datalist>
+                <button type="submit" class="try-btn">Scan <span aria-hidden="true">↻</span></button>
+            </form>
+            <div class="try-row">
+                <span class="try-hint" id="tryHint">Try a role:</span>
+                <button type="button" class="try-chip" data-role="Data Analyst">Data Analyst</button>
+                <button type="button" class="try-chip" data-role="Accountant">Accountant</button>
+                <button type="button" class="try-chip" data-role="Chef">Chef</button>
+                <button type="button" class="try-chip" data-role="Sales Executive">Sales</button>
+                <button type="button" class="try-chip" data-role="Product Designer">Designer</button>
+            </div>
+            <p class="sr-only" id="scanStatus" aria-live="polite">Sample Python Developer resume: 5 of 6 skills found, 83%, SHORTLIST.</p>
+
+            <div class="scan-visual" aria-hidden="true">
+                <div class="jd-skills"><b>WANTS</b><span data-wants>Python · Flask · SQL · Machine Learning · Docker · AWS</span></div>
+                <div class="paper">
+                    <div class="paper-head">
+                        <svg viewBox="0 0 44 44"><circle cx="22" cy="22" r="22" fill="#1d232a"/><text x="22" y="27.5" text-anchor="middle" font-family="Space Grotesk, sans-serif" font-size="15" font-weight="700" fill="#c6ff3d" data-initials>AR</text></svg>
+                        <div><div class="paper-name" data-name>Ananya Rao</div><div class="paper-role" data-role-line>Backend Engineer · Bengaluru · 4 yrs</div></div>
                     </div>
-                    <div class="form-group">
-                        <label>Upload Resume</label>
-                        <div class="file-upload" id="fileUpload">
-                            <div class="upload-icon">&#128196;</div>
-                            <div class="upload-text">Drop your resume here</div>
-                            <div class="upload-hint">or click to browse &bull; PDF only</div>
-                            <div class="file-selected"></div>
-                            <button type="button" class="file-remove" id="fileRemove">Remove</button>
-                            <input type="file" name="resume" accept=".pdf" required>
+                    <div class="paper-body" data-body>
+                        <div class="paper-sec">EXPERIENCE</div>
+                        <p class="line"><span class="real">Built <span class="mark" data-skill="flask">Flask</span> REST APIs serving 1.2M requests a day</span></p>
+                        <p class="line"><span class="real">Cut report time 70% with <span class="mark" data-skill="sql">SQL</span> window functions</span></p>
+                        <p class="line"><span class="real">Shipped a churn model in <span class="mark" data-skill="python">Python</span> and scikit-learn</span></p>
+                        <div class="paper-sec">PROJECTS</div>
+                        <p class="line"><span class="real">Resume ranker with <span class="mark" data-skill="machine-learning">Machine Learning</span> embeddings</span></p>
+                        <p class="line"><span class="real">Containerised six services with <span class="mark" data-skill="docker">Docker</span> and CI</span></p>
+                        <div class="paper-sec">EDUCATION</div>
+                        <p class="line"><span class="real">B.Tech Computer Science, VIT Vellore, 2021</span></p>
+                    </div>
+                    <div class="beam"></div>
+                    <div class="stamp band-green" data-stamp>SHORTLIST</div>
+                </div>
+                <div class="readout">
+                    <div>
+                        <div class="readout-label">Skills found <b><span data-matched>5</span>/<span data-total>6</span></b></div>
+                        <div class="tray" data-tray>
+                            <span class="chip" data-skill="python">Python</span><span class="chip" data-skill="flask">Flask</span><span class="chip" data-skill="sql">SQL</span><span class="chip" data-skill="machine-learning">Machine Learning</span><span class="chip" data-skill="docker">Docker</span><span class="chip miss" data-skill="aws">AWS</span>
                         </div>
                     </div>
+                    <div class="score">
+                        <div class="readout-label">Keyword match</div>
+                        <div class="score-num"><span data-score="83">83</span><small>%</small></div>
+                        <div class="score-bar"><i style="transform:scaleX(.83)"></i></div>
+                    </div>
                 </div>
-                <div class="submit-wrap">
-                    <button type="submit" class="btn-submit" id="submitBtn">
-                        <span class="spinner"></span>
-                        <span class="btn-text">Analyze Resume</span>
-                    </button>
-                </div>
-            </form>
-        </div>
-        <div class="form-card" style="border-left-color:rgba(0,147,147,0.3);display:flex;flex-direction:column">
-            <div class="badge-top" style="background:#009393;color:#13232d">Smart Search</div>
-            <form action="/search" method="POST" style="padding-top:10px;display:flex;flex-direction:column;flex:1">
-                <div class="form-group" style="flex:1;display:flex;flex-direction:column">
-                    <label>Search 240+ indexed resumes</label>
-                    <textarea name="job_description" placeholder='e.g. "top 5 from engineering" or "best 3 sales with cold calling"' required style="flex:1;min-height:90px;resize:none"></textarea>
-                </div>
-                <div style="margin:8px 0 10px;font-size:11px;color:#9fbed0;font-weight:500">Try: top 3 from <span style="color:#009393">chef</span> &bull; best 5 <span style="color:#009393">sales</span> &bull; 10 <span style="color:#009393">engineer</span> resumes</div>
-                <div class="submit-wrap" style="margin-top:0">
-                    <button type="submit" class="btn-submit" id="searchBtn" style="background:#009393">
-                        <span class="spinner"></span>
-                        <span class="btn-text">Smart Search</span>
-                    </button>
-                </div>
-            </form>
+                <p class="sample-note">Sample resumes, keyword match only. <a href="#analyze" tabindex="-1">Run a real screen</a> for the full AI score.</p>
+            </div>
         </div>
     </div>
+</section>
 
-    <div class="section-title">
-        <h2>Core Engine</h2>
+<!-- ============ Workbench ============ -->
+<section class="section" aria-labelledby="benchTitle">
+    <div class="wrap">
+        <div class="section-head">
+            <div>
+                <p class="eyebrow"><span class="idx">01</span> Workbench</p>
+                <h2 class="reveal-title" id="benchTitle">Run a screen.</h2>
+            </div>
+            <p>Score one resume against a job, or search the whole index in plain English.</p>
+        </div>
+
+        <div class="form-section">
+            <section class="panel reveal" id="analyze" aria-labelledby="analyzeTitle">
+                <div class="panel-head"><span class="num">A</span><h3 id="analyzeTitle">New Analysis</h3><span class="aside">PDF · DOCX</span></div>
+                <form action="/upload" method="POST" enctype="multipart/form-data" id="analyzeForm" novalidate>
+                    <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
+                    <div class="field">
+                        <label for="jobDescription">Job Description</label>
+                        <textarea id="jobDescription" name="job_description" maxlength="5000" placeholder="e.g. Looking for a Python Developer with Flask, SQL, Machine Learning..." required data-lenis-prevent></textarea>
+                    </div>
+                    <div class="field">
+                        <span class="field-label" id="resumeLabel">Resume</span>
+                        <div class="file-upload" id="fileUpload" tabindex="0" role="button" aria-labelledby="resumeLabel" aria-describedby="uploadHint fileError">
+                            <div class="upload-icon"><svg class="icon" aria-hidden="true"><use href="#i-file"/></svg></div>
+                            <div class="upload-text">Drop your resume here</div>
+                            <div class="upload-hint" id="uploadHint">or click / press Enter to browse &bull; PDF or DOCX, max 16 MB</div>
+                            <div class="file-chip" id="fileChip">
+                                <svg class="icon" aria-hidden="true"><use href="#i-file"/></svg>
+                                <span class="name" id="fileName"></span><span class="size" id="fileSize"></span>
+                                <button type="button" id="fileRemove" aria-label="Remove selected file">&#10005;</button>
+                            </div>
+                            <input type="file" id="resumeInput" name="resume" accept=".pdf,.docx" aria-labelledby="resumeLabel" tabindex="-1">
+                        </div>
+                        <div class="field-error" id="fileError" role="alert"></div>
+                    </div>
+                    <button type="submit" class="btn btn-primary btn-block" id="submitBtn" aria-describedby="analyzeHint">
+                        <span class="spinner" aria-hidden="true"></span><span class="btn-text">Analyze Resume</span>
+                    </button>
+                    <div class="form-hint" id="analyzeHint" aria-live="polite">Add a job description and a resume file to start.</div>
+                    <ol class="stages" id="stages" aria-live="polite" aria-label="Analysis progress">
+                        <li>Extracting text</li><li>Matching skills</li><li>Semantic scoring</li><li>Ranking</li>
+                    </ol>
+                </form>
+            </section>
+
+            <section class="panel reveal" id="search" aria-labelledby="searchTitle">
+                <div class="panel-head"><span class="num">B</span><h3 id="searchTitle">Smart Search</h3><span class="aside">Plain English</span></div>
+                <form action="/search" method="GET" id="searchForm">
+                    <div class="field">
+                        <label for="searchQuery">Search {{ stats.resumes }} indexed resumes</label>
+                        <input class="text-input" type="search" id="searchQuery" name="job_description" maxlength="2000" placeholder='e.g. "best 3 sales with cold calling"' required autocomplete="off">
+                    </div>
+                    <div class="examples"><span>Try</span>
+                        <button type="button" class="example" data-q="top 3 from chef">top 3 from chef</button>
+                        <button type="button" class="example" data-q="best 5 sales with cold calling">best 5 sales</button>
+                        <button type="button" class="example" data-q="10 mechanical engineer resumes with AutoCAD">10 engineer resumes</button>
+                    </div>
+                    <details class="advanced">
+                    <summary>Advanced: department and number of results</summary>
+                    <div class="search-row">
+                        <div>
+                            <label for="searchDept">Department</label>
+                            <select id="searchDept" name="department">
+                                <option value="">Detect from query</option>
+                                {% for d in stats.department_names %}<option value="{{ d }}">{{ d|dept_label }}</option>{% endfor %}
+                            </select>
+                        </div>
+                        <div>
+                            <label for="searchTop">Results</label>
+                            <select id="searchTop" name="top">
+                                <option value="">From query (default 10)</option>
+                                <option value="3">Top 3</option><option value="5">Top 5</option>
+                                <option value="10">Top 10</option><option value="20">Top 20</option>
+                            </select>
+                        </div>
+                    </div>
+                    </details>
+                    <button type="submit" class="btn btn-ghost btn-block" id="searchBtn">
+                        <span class="spinner" aria-hidden="true"></span><span class="btn-text">Smart Search</span>
+                    </button>
+                    <p class="search-note">The department is detected from your words. Ask for a number of results, a role and the skills you care about.</p>
+                </form>
+            </section>
+        </div>
     </div>
-    <div class="game-grid">
-        <div class="game-card">
-            <div class="thumb">&#128200;<span class="live">Live</span></div>
-            <div class="info">
+</section>
+
+<!-- ============ Story: one resume through the pipeline (pinned + scrubbed on desktop) ============ -->
+<section class="section story" id="how" aria-labelledby="howTitle">
+    <div class="wrap">
+        <div class="section-head">
+            <div>
+                <p class="eyebrow"><span class="idx">02</span> Pipeline</p>
+                <h2 class="reveal-title" id="howTitle">Follow one resume through the engine.</h2>
+            </div>
+            <p>Four stages, from a job description in plain words to a ranked shortlist.</p>
+        </div>
+        <div class="story-stage">
+            <ol class="story-steps">
+                <li class="story-step"><span class="n">STEP 01</span><h3>Department detection</h3><p>A cross-encoder reads the job description and picks the department to search.</p></li>
+                <li class="story-step"><span class="n">STEP 02</span><h3>Keyword match</h3><p>Checks which skills the job asks for appear in the resume.</p></li>
+                <li class="story-step"><span class="n">STEP 03</span><h3>Semantic similarity</h3><p>Scores every section of the resume against the job; the best section decides the verdict.</p></li>
+                <li class="story-step"><span class="n">STEP 04</span><h3>Vector search</h3><p>Ranks the closest resumes in the index by cosine similarity.</p></li>
+            </ol>
+            <!-- Illustration of the four stages on a sample resume (decorative; the steps describe it) -->
+            <div class="story-visual" aria-hidden="true">
+                <div class="sv-top">
+                    <div class="sv-jd"><b>JOB</b>Backend engineer with Python, SQL and AWS</div>
+                    <div class="sv-dept">Department <span>ENGINEERING</span></div>
+                </div>
+                <div class="sv-body">
+                    <div class="sv-card">
+                        <div class="sv-head"><b>Rohan Sharma</b><span>Backend Engineer · 5 yrs</span></div>
+                        <div class="sv-sec"><div class="sv-name">Summary</div><p>Engineer focused on <span class="sv-kw"><i></i>Python</span> services</p><div class="sv-sim"><span><i style="transform:scaleX(.52)"></i></span><em>0.52</em></div></div>
+                        <div class="sv-sec best"><span class="sv-best"></span><div class="sv-name">Experience</div><p>Moved billing to <span class="sv-kw"><i></i>AWS</span>, tuned <span class="sv-kw"><i></i>SQL</span> 4×</p><div class="sv-sim"><span><i style="transform:scaleX(.78)"></i></span><em>0.78</em></div></div>
+                        <div class="sv-sec"><div class="sv-name">Skills</div><p>Go, Kafka, Redis, Terraform</p><div class="sv-sim"><span><i style="transform:scaleX(.41)"></i></span><em>0.41</em></div></div>
+                        <div class="sv-kwcount">Keywords <b>3 / 3</b></div>
+                    </div>
+                    <ol class="sv-rank">
+                        <li class="sv-rank-head">Vector search · Engineering</li>
+                        <li><span>#1</span>E12.pdf<em>0.81</em></li>
+                        <li class="me"><span>#2</span>Rohan Sharma<em>0.78</em></li>
+                        <li><span>#3</span>E4.pdf<em>0.74</em></li>
+                        <li><span>#4</span>E9.pdf<em>0.70</em></li>
+                    </ol>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- ============ Core engine ============ -->
+<section class="section" aria-labelledby="engineTitle">
+    <div class="wrap">
+        <div class="section-head">
+            <div>
+                <p class="eyebrow"><span class="idx">03</span> Core engine</p>
+                <h2 class="reveal-title" id="engineTitle">Three signals, one verdict.</h2>
+            </div>
+            <p>{% if stats.index_updated %}Index updated {{ stats.index_updated }}. {% endif %}Every status below is read live from the index.</p>
+        </div>
+        <div class="engine-grid">
+            {% set status_cls = 'online' if stats.online else 'offline' %}
+            {% set status_txt = 'Online' if stats.online else 'Offline' %}
+            <div class="panel engine-card spotlight reveal">
+                <div class="head"><div class="glyph"><svg class="icon" aria-hidden="true"><use href="#i-tag"/></svg></div><span class="status online">Ready</span></div>
+                <b class="big" data-count="{{ stats.skills }}">{{ stats.skills }}</b><span class="unit">skills in the database</span>
                 <div class="name">Keyword Match</div>
-                <div class="provider">228 skills database</div>
-                <div class="meta">
-                    <span class="playing">248 active</span>
-                    <span class="category">Scanning</span>
-                </div>
+                <div class="meta"><span>{{ stats.departments }} roles</span><span>Whole-term matching</span></div>
             </div>
-        </div>
-        <div class="game-card">
-            <div class="thumb">&#129302;<span class="live">Live</span></div>
-            <div class="info">
+            <div class="panel engine-card spotlight reveal">
+                <div class="head"><div class="glyph"><svg class="icon" aria-hidden="true"><use href="#i-brain"/></svg></div><span class="status {{ status_cls }}">{{ status_txt }}</span></div>
+                <b class="big" data-count="{{ stats.resumes }}">{{ stats.resumes }}</b><span class="unit">resumes embedded</span>
                 <div class="name">AI Similarity</div>
-                <div class="provider">mpnet-base-v2</div>
-                <div class="meta">
-                    <span class="playing">248 active</span>
-                    <span class="category">768-dim</span>
-                </div>
+                <div class="meta"><span>all-mpnet-base-v2</span><span>768-dim</span></div>
             </div>
-        </div>
-        <div class="game-card">
-            <div class="thumb">&#128202;<span class="live">Live</span></div>
-            <div class="info">
+            <div class="panel engine-card spotlight reveal">
+                <div class="head"><div class="glyph"><svg class="icon" aria-hidden="true"><use href="#i-db"/></svg></div><span class="status {{ status_cls }}">{{ status_txt }}</span></div>
+                <b class="big" data-count="{{ stats.chunks }}">{{ stats.chunks }}</b><span class="unit">vector chunks</span>
                 <div class="name">Vector Search</div>
-                <div class="provider">ChromaDB</div>
-                <div class="meta">
-                    <span class="playing">24 chunks</span>
-                    <span class="category">Cosine</span>
-                </div>
+                <div class="meta"><span>ChromaDB</span><span>Cosine</span></div>
             </div>
         </div>
     </div>
+</section>
 
-    <div class="section-title">
-        <h2>Recent Analyses</h2>
+<!-- ============ History ============ -->
+<section class="section" aria-labelledby="recentTitle">
+    <div class="wrap">
+        <div class="section-head">
+            <div>
+                <p class="eyebrow"><span class="idx">04</span> History</p>
+                <h2 class="reveal-title" id="recentTitle">Recent Analyses</h2>
+            </div>
+            <p>Your last screens. Open one to see the full breakdown again.</p>
+        </div>
+        <div class="table-wrap reveal">
+            <table>
+                <thead><tr><th scope="col">Candidate</th><th scope="col">Score</th><th scope="col">Status</th><th scope="col">Time</th><th scope="col"><span class="sr-only">Actions</span></th></tr></thead>
+                <tbody>
+                    {% for r in recent %}
+                    <tr>
+                        <td>{% if r['can_open'] %}<a href="{{ url_for('upload.open_analysis', analysis_id=r['id']) }}" title="Reopen this analysis">{{ r['filename'] }}</a>{% else %}{{ r['filename'] }}{% endif %}</td>
+                        <td class="score-cell {{ verdict_band(r['recommendation']) }}">{{ r['score'] }}%</td>
+                        <td><span class="verdict {{ verdict_band(r['recommendation']) }}">{{ r['recommendation'] }}</span></td>
+                        <td class="mono" style="color:var(--muted);font-size:13px">{{ r['timestamp'] }}</td>
+                        <td style="text-align:right"><form action="{{ url_for('upload.remove_analysis', analysis_id=r['id']) }}" method="POST" style="margin:0" class="confirm-delete" data-name="{{ r['filename'] }}"><input type="hidden" name="csrf_token" value="{{ csrf_token() }}"><button type="submit" class="btn-delete" aria-label="Delete {{ r['filename'] }} from history">Delete</button></form></td>
+                    </tr>
+                    {% else %}
+                    <tr class="empty-row"><td colspan="5">No analyses yet. Upload a resume above to get started.</td></tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
     </div>
-    <div class="table-wrap">
-        <table>
-            <thead>
-                <tr><th>Candidate</th><th>Score</th><th>Status</th><th>Time</th></tr>
-            </thead>
-            <tbody>
-                {% for r in recent %}
-                <tr><td>{{ r['filename'] }}</td><td class="{% if r['score'] >= 50 %}green{% elif r['score'] >= 30 %}yellow{% else %}red{% endif %}">{{ r['score'] }}%</td><td>{{ r['recommendation'] }}</td><td style="color:#9fbed0;font-size:11px">{{ r['timestamp'] }}</td></tr>
-                {% else %}
-                <tr><td colspan="4" style="text-align:center;color:#9fbed0;font-size:12px">No analyses yet — upload a resume to get started</td></tr>
-                {% endfor %}
-            </tbody>
-        </table>
-    </div>
-</div>
+</section>
 
-<div class="footer">
-    <p class="footer-desc">AI Resume Screening System — Automated candidate evaluation using keyword matching, semantic similarity, ChromaDB vector search, and cross-encoder re-ranking for intelligent hiring decisions.</p>
-    <p class="brand">Made by <span>Utkarsh Rai</span></p>
-</div>
+</main>
+
+{% include 'partials/footer.html' %}
 
 <script>
-const upload = document.getElementById('fileUpload');
-const input = upload?.querySelector('input[type="file"]');
-const removeBtn = document.getElementById('fileRemove');
-const selected = upload?.querySelector('.file-selected');
-const submitBtn = document.getElementById('submitBtn');
-const searchBtn = document.getElementById('searchBtn');
+(function(){
+    const MAX_BYTES = 16 * 1024 * 1024;
+    const ALLOWED = ['.pdf', '.docx'];
+    const form = document.getElementById('analyzeForm');
+    const jd = document.getElementById('jobDescription');
+    const zone = document.getElementById('fileUpload');
+    const input = document.getElementById('resumeInput');
+    const chipName = document.getElementById('fileName');
+    const chipSize = document.getElementById('fileSize');
+    const removeBtn = document.getElementById('fileRemove');
+    const fileError = document.getElementById('fileError');
+    const submitBtn = document.getElementById('submitBtn');
+    const hint = document.getElementById('analyzeHint');
+    const stages = document.getElementById('stages');
+    let file = null;
 
-function updateFile(){
-    if(input.files[0]){
-        selected.textContent = '\u2713 ' + input.files[0].name;
-        upload.classList.add('has-file');
-        input.removeAttribute('required');
-    } else {
-        upload.classList.remove('has-file');
-        selected.textContent = '';
-        input.setAttribute('required', '');
+    function formatSize(bytes){
+        return bytes >= 1048576 ? (bytes / 1048576).toFixed(1) + ' MB' : Math.max(1, Math.round(bytes / 1024)) + ' KB';
     }
-}
-input?.addEventListener('change', updateFile);
-removeBtn?.addEventListener('click', function(e){ e.stopPropagation(); input.value = ''; updateFile(); });
-upload?.addEventListener('click', function(e){ if(e.target !== removeBtn) input.click(); });
-submitBtn?.closest('form')?.addEventListener('submit', function(){ submitBtn.classList.add('loading'); });
-searchBtn?.closest('form')?.addEventListener('submit', function(){ searchBtn.classList.add('loading'); });
-upload?.addEventListener('dragover', function(e){ e.preventDefault(); this.classList.add('dragover'); });
-upload?.addEventListener('dragleave', function(e){ e.preventDefault(); this.classList.remove('dragover'); });
-upload?.addEventListener('drop', function(e){
-    e.preventDefault(); this.classList.remove('dragover');
-    if(e.dataTransfer.files.length){ input.files = e.dataTransfer.files; updateFile(); }
-});
+    function fileProblem(f){
+        const name = f.name.toLowerCase();
+        if(!ALLOWED.some(ext => name.endsWith(ext))) return 'Only PDF and DOCX files are supported.';
+        if(f.size > MAX_BYTES) return 'This file is ' + formatSize(f.size) + '; the limit is 16 MB.';
+        if(f.size === 0) return 'This file is empty.';
+        return '';
+    }
+    function refresh(){
+        const hasJd = jd.value.trim().length > 0;
+        const missing = [];
+        if(!hasJd) missing.push('a job description');
+        if(!file) missing.push('a resume file (PDF or DOCX)');
+        submitBtn.disabled = missing.length > 0;
+        hint.textContent = missing.length ? 'Add ' + missing.join(' and ') + ' to start.' : 'Ready to analyze.';
+    }
+    function setFile(f){
+        fileError.textContent = '';
+        zone.classList.remove('has-error');
+        if(f){
+            const problem = fileProblem(f);
+            if(problem){
+                fileError.textContent = problem;
+                zone.classList.add('has-error');
+                f = null;
+            }
+        }
+        file = f || null;
+        if(file){
+            const dt = new DataTransfer();
+            dt.items.add(file);
+            input.files = dt.files;
+            chipName.textContent = file.name;
+            chipSize.textContent = formatSize(file.size);
+            zone.classList.add('has-file');
+        } else {
+            input.value = '';
+            zone.classList.remove('has-file');
+        }
+        refresh();
+    }
+    input.addEventListener('change', () => setFile(input.files[0]));
+    removeBtn.addEventListener('click', e => { e.stopPropagation(); setFile(null); zone.focus(); });
+    zone.addEventListener('click', e => { if(!removeBtn.contains(e.target)) input.click(); });
+    zone.addEventListener('keydown', e => {
+        if((e.key === 'Enter' || e.key === ' ') && e.target === zone){ e.preventDefault(); input.click(); }
+    });
+    ['dragenter', 'dragover'].forEach(t => zone.addEventListener(t, e => { e.preventDefault(); zone.classList.add('dragover'); }));
+    ['dragleave', 'dragend'].forEach(t => zone.addEventListener(t, e => { e.preventDefault(); zone.classList.remove('dragover'); }));
+    zone.addEventListener('drop', e => {
+        e.preventDefault();
+        zone.classList.remove('dragover');
+        if(e.dataTransfer.files.length) setFile(e.dataTransfer.files[0]);
+    });
+    jd.addEventListener('input', refresh);
+
+    // Staged progress while the server works (the request is one round trip, so stages advance on a timer)
+    form.addEventListener('submit', e => {
+        if(submitBtn.disabled){ e.preventDefault(); return; }
+        submitBtn.disabled = true;
+        document.getElementById('searchBtn').disabled = true;
+        submitBtn.classList.add('loading');
+        submitBtn.querySelector('.btn-text').textContent = 'Analyzing…';
+        hint.textContent = '';
+        stages.classList.add('active');
+        const items = stages.querySelectorAll('li');
+        let i = 0;
+        const step = () => {
+            items.forEach((li, j) => { li.className = j < i ? 'done' : (j === i ? 'current' : ''); });
+            if(i < items.length - 1){ i++; setTimeout(step, 1400); }
+        };
+        step();
+    });
+    // Coming back with the browser's Back button: reset the form state
+    window.addEventListener('pageshow', () => {
+        submitBtn.classList.remove('loading');
+        submitBtn.querySelector('.btn-text').textContent = 'Analyze Resume';
+        document.getElementById('searchBtn').disabled = false;
+        document.getElementById('searchBtn').classList.remove('loading');
+        stages.classList.remove('active');
+        setFile(input.files[0] || null);
+    });
+
+    const adv = document.querySelector('details.advanced');
+    if(adv && (document.getElementById('searchDept').value || document.getElementById('searchTop').value)) adv.open = true;
+    // Smart Search: example queries fill the box and run; Enter submits (single-line input)
+    const searchForm = document.getElementById('searchForm');
+    const query = document.getElementById('searchQuery');
+    const searchBtn = document.getElementById('searchBtn');
+    document.querySelectorAll('.example').forEach(b => b.addEventListener('click', () => {
+        query.value = b.dataset.q;
+        searchForm.requestSubmit();
+    }));
+    searchForm.addEventListener('submit', e => {
+        if(!query.value.trim()){ e.preventDefault(); query.focus(); return; }
+        searchBtn.disabled = true;
+        submitBtn.disabled = true;
+        searchBtn.classList.add('loading');
+        searchBtn.querySelector('.btn-text').textContent = 'Searching…';
+    });
+    document.querySelectorAll('form.confirm-delete').forEach(f => f.addEventListener('submit', e => {
+        if(!confirm('Delete "' + f.dataset.name + '" from your history? This can\'t be undone.')) e.preventDefault();
+    }));
+    refresh();
+})();
 </script>
+{% include 'partials/scripts.html' %}
+<script defer src="{{ url_for('static', filename='js/home.js') }}"></script>
 </body>
 </html>

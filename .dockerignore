@@ -1,0 +1,32 @@
+# Keep the image small and free of local data. Mirrored in deploy/deploy_hf_space.py.
+.git
+.github
+**/__pycache__
+.pytest_cache
+.venv
+venv
+
+# Local data and secrets (the image builds its own index and database)
+chromadb_data
+chroma_db
+benchmark/.index
+uploads
+users.db
+.secret_key
+recent_analyses.json
+test_cache.json
+*.log
+
+# Not needed to run the app
+assets
+docs
+tests
+scripts
+scratch
+conversations
+deploy
+*.pptx
+presentation_preview.html
+scratch_chat_summary.txt
+~$*
+chromadb_public

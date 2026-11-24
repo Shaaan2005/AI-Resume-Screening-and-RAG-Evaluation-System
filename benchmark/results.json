@@ -1,0 +1,5689 @@
+{
+  "configs": [
+    {
+      "label": "Dense only (no re-ranking)",
+      "all": {
+        "p5": 0.5666666666666667,
+        "p10": 0.45208333333333334,
+        "mrr": 0.8434027777777777,
+        "ndcg10": 0.5131883250956039
+      },
+      "dev": {
+        "p5": 0.5750000000000001,
+        "p10": 0.4666666666666667,
+        "mrr": 0.8138888888888889,
+        "ndcg10": 0.5209048653128194
+      },
+      "test": {
+        "p5": 0.5583333333333333,
+        "p10": 0.4375,
+        "mrr": 0.8729166666666667,
+        "ndcg10": 0.5054717848783883
+      },
+      "latency_ms": 53.742600000987295,
+      "kwargs": {
+        "rerank": false
+      },
+      "per_query": [
+        {
+          "query": "Accountant experienced in general ledger reconciliation, accounts payable and month-end close",
+          "category": "ACCOUNTANT",
+          "p5": 0.8,
+          "first_relevant_rank": 1,
+          "top5": [
+            "ACCOUNTANT",
+            "ACCOUNTANT",
+            "ACCOUNTANT",
+            "ACCOUNTANT",
+            "AGRICULTURE"
+          ]
+        },
+        {
+          "query": "Need someone to handle bookkeeping, tax preparation and audit support using QuickBooks",
+          "category": "ACCOUNTANT",
+          "p5": 0.8,
+          "first_relevant_rank": 1,
+          "top5": [
+            "ACCOUNTANT",
+            "ACCOUNTANT",
+            "CONSULTANT",
+            "ACCOUNTANT",
+            "ACCOUNTANT"
+          ]
+        },
+        {
+          "query": "Lawyer with litigation experience, legal research and drafting of contracts and pleadings",
+          "category": "ADVOCATE",
+          "p5": 0.2,
+          "first_relevant_rank": 2,
+          "top5": [
+            "AUTOMOBILE",
+            "ADVOCATE",
+            "DIGITAL-MEDIA",
+            "CONSULTANT",
+            "CONSULTANT"
+          ]
+        },
+        {
+          "query": "Looking for an attorney to represent clients in court and advise on case strategy",
+          "category": "ADVOCATE",
+          "p5": 0.2,
+          "first_relevant_rank": 1,
+          "top5": [
+            "ADVOCATE",
+            "BANKING",
+            "BPO",
+            "AGRICULTURE",
+            "AUTOMOBILE"
+          ]
+        },
+        {
+          "query": "Agronomist with crop management, soil testing and irrigation planning experience",
+          "category": "AGRICULTURE",
+          "p5": 0.4,
+          "first_relevant_rank": 1,
+          "top5": [
+            "AGRICULTURE",
+            "AGRICULTURE",
+            "BUSINESS-DEVELOPMENT",
+            "ENGINEERING",
+            "AVIATION"
+          ]
+        },
+        {
+          "query": "Farm operations manager overseeing harvesting, livestock and field equipment",
+          "category": "AGRICULTURE",
+          "p5": 0.4,
+          "first_relevant_rank": 1,
+          "top5": [
+            "AGRICULTURE",
+            "AGRICULTURE",
+            "ADVOCATE",
+            "ADVOCATE",
+            "HR"
+          ]
+        },
+        {
+          "query": "Fashion merchandiser with garment production, textile sourcing and vendor management",
+          "category": "APPAREL",
+          "p5": 0.8,
+          "first_relevant_rank": 1,
+          "top5": [
+            "APPAREL",
+            "DESIGNER",
+            "APPAREL",
+            "APPAREL",
+            "APPAREL"
+          ]
+        },
+        {
+          "query": "Apparel designer creating clothing collections, tech packs and fabric selection",
+          "category": "APPAREL",
+          "p5": 0.4,
+          "first_relevant_rank": 2,
+          "top5": [
+            "DESIGNER",
+            "APPAREL",
+            "APPAREL",
+            "DESIGNER",
+            "DESIGNER"
+          ]
+        },
+        {
+          "query": "Artist with painting, drawing and exhibition experience in fine arts",
+          "category": "ARTS",
+          "p5": 0.4,
+          "first_relevant_rank": 1,
+          "top5": [
+            "ARTS",
+            "DESIGNER",
+            "ARTS",
+            "HR",
+            "DESIGNER"
+          ]
+        },
+        {
+          "query": "Arts program coordinator for gallery curation, art education and community workshops",
+          "category": "ARTS",
+          "p5": 0.6,
+          "first_relevant_rank": 1,
+          "top5": [
+            "ARTS",
+            "DESIGNER",
+            "ARTS",
+            "ARTS",
+            "HR"
+          ]
+        },
+        {
+          "query": "Automotive technician skilled in engine diagnostics, brake repair and vehicle maintenance",
+          "category": "AUTOMOBILE",
+          "p5": 0.2,
+          "first_relevant_rank": 2,
+          "top5": [
+            "AVIATION",
+            "AUTOMOBILE",
+            "ENGINEERING",
+            "AVIATION",
+            "APPAREL"
+          ]
+        },
+        {
+          "query": "Car dealership service advisor handling repair orders and parts for vehicles",
+          "category": "AUTOMOBILE",
+          "p5": 0.4,
+          "first_relevant_rank": 1,
+          "top5": [
+            "AUTOMOBILE",
+            "AUTOMOBILE",
+            "ADVOCATE",
+            "BANKING",
+            "ADVOCATE"
+          ]
+        },
+        {
+          "query": "Aircraft maintenance technician with FAA certification and avionics troubleshooting",
+          "category": "AVIATION",
+          "p5": 0.8,
+          "first_relevant_rank": 1,
+          "top5": [
+            "AVIATION",
+            "AVIATION",
+            "INFORMATION-TECHNOLOGY",
+            "AVIATION",
+            "AVIATION"
+          ]
+        },
+        {
+          "query": "Airline operations specialist for flight scheduling, ground handling and safety compliance",
+          "category": "AVIATION",
+          "p5": 0.6,
+          "first_relevant_rank": 2,
+          "top5": [
+            "INFORMATION-TECHNOLOGY",
+            "AVIATION",
+            "AUTOMOBILE",
+            "AVIATION",
+            "AVIATION"
+          ]
+        },
+        {
+          "query": "Bank teller or personal banker handling deposits, loans and customer accounts",
+          "category": "BANKING",
+          "p5": 0.4,
+          "first_relevant_rank": 2,
+          "top5": [
+            "ACCOUNTANT",
+            "BANKING",
+            "BANKING",
+            "FINANCE",
+            "TEACHER"
+          ]
+        },
+        {
+          "query": "Branch banking officer for credit analysis, loan processing and KYC compliance",
+          "category": "BANKING",
+          "p5": 0.4,
+          "first_relevant_rank": 1,
+          "top5": [
+            "BANKING",
+            "ACCOUNTANT",
+            "BANKING",
+            "FINANCE",
+            "FINANCE"
+          ]
+        },
+        {
+          "query": "Call center representative handling inbound customer calls and resolving complaints",
+          "category": "BPO",
+          "p5": 0.2,
+          "first_relevant_rank": 5,
+          "top5": [
+            "DESIGNER",
+            "APPAREL",
+            "AUTOMOBILE",
+            "AUTOMOBILE",
+            "BPO"
+          ]
+        },
+        {
+          "query": "Customer support agent for a business process outsourcing team meeting SLA targets",
+          "category": "BPO",
+          "p5": 0.4,
+          "first_relevant_rank": 1,
+          "top5": [
+            "BPO",
+            "DIGITAL-MEDIA",
+            "BANKING",
+            "BPO",
+            "SALES"
+          ]
+        },
+        {
+          "query": "Business development manager for partnerships, lead generation and new market expansion",
+          "category": "BUSINESS-DEVELOPMENT",
+          "p5": 1.0,
+          "first_relevant_rank": 1,
+          "top5": [
+            "BUSINESS-DEVELOPMENT",
+            "BUSINESS-DEVELOPMENT",
+            "BUSINESS-DEVELOPMENT",
+            "BUSINESS-DEVELOPMENT",
+            "BUSINESS-DEVELOPMENT"
+          ]
+        },
+        {
+          "query": "Someone to build client relationships, pitch proposals and grow revenue pipeline",
+          "category": "BUSINESS-DEVELOPMENT",
+          "p5": 0.2,
+          "first_relevant_rank": 5,
+          "top5": [
+            "CONSULTANT",
+            "ENGINEERING",
+            "DESIGNER",
+            "DIGITAL-MEDIA",
+            "BUSINESS-DEVELOPMENT"
+          ]
+        },
+        {
+          "query": "Head chef experienced in menu planning, kitchen management and food cost control",
+          "category": "CHEF",
+          "p5": 1.0,
+          "first_relevant_rank": 1,
+          "top5": [
+            "CHEF",
+            "CHEF",
+            "CHEF",
+            "CHEF",
+            "CHEF"
+          ]
+        },
+        {
+          "query": "Line cook or sous chef for food preparation in a busy restaurant kitchen",
+          "category": "CHEF",
+          "p5": 1.0,
+          "first_relevant_rank": 1,
+          "top5": [
+            "CHEF",
+            "CHEF",
+            "CHEF",
+            "CHEF",
+            "CHEF"
+          ]
+        },
+        {
+          "query": "Construction site supervisor managing subcontractors, safety and building schedules",
+          "category": "CONSTRUCTION",
+          "p5": 1.0,
+          "first_relevant_rank": 1,
+          "top5": [
+            "CONSTRUCTION",
+            "CONSTRUCTION",
+            "CONSTRUCTION",
+            "CONSTRUCTION",
+            "CONSTRUCTION"
+          ]
+        },
+        {
+          "query": "Project manager for commercial construction with estimating and blueprint reading",
+          "category": "CONSTRUCTION",
+          "p5": 0.8,
+          "first_relevant_rank": 1,
+          "top5": [
+            "CONSTRUCTION",
+            "CONSTRUCTION",
+            "ENGINEERING",
+            "CONSTRUCTION",
+            "CONSTRUCTION"
+          ]
+        },
+        {
+          "query": "Management consultant for strategy, process improvement and client advisory engagements",
+          "category": "CONSULTANT",
+          "p5": 0.6,
+          "first_relevant_rank": 1,
+          "top5": [
+            "CONSULTANT",
+            "CONSULTANT",
+            "CONSULTANT",
+            "DIGITAL-MEDIA",
+            "BPO"
+          ]
+        },
+        {
+          "query": "Consultant to analyze business requirements and deliver recommendations to clients",
+          "category": "CONSULTANT",
+          "p5": 0.6,
+          "first_relevant_rank": 1,
+          "top5": [
+            "CONSULTANT",
+            "CONSULTANT",
+            "CONSULTANT",
+            "DIGITAL-MEDIA",
+            "BUSINESS-DEVELOPMENT"
+          ]
+        },
+        {
+          "query": "Graphic designer skilled in Adobe Photoshop, Illustrator and brand identity",
+          "category": "DESIGNER",
+          "p5": 0.2,
+          "first_relevant_rank": 1,
+          "top5": [
+            "DESIGNER",
+            "APPAREL",
+            "ARTS",
+            "ENGINEERING",
+            "SALES"
+          ]
+        },
+        {
+          "query": "Interior or visual designer creating layouts, mockups and design concepts",
+          "category": "DESIGNER",
+          "p5": 0.8,
+          "first_relevant_rank": 1,
+          "top5": [
+            "DESIGNER",
+            "APPAREL",
+            "DESIGNER",
+            "DESIGNER",
+            "DESIGNER"
+          ]
+        },
+        {
+          "query": "Digital media specialist for video production, social media content and editing",
+          "category": "DIGITAL-MEDIA",
+          "p5": 0.8,
+          "first_relevant_rank": 1,
+          "top5": [
+            "DIGITAL-MEDIA",
+            "DIGITAL-MEDIA",
+            "DIGITAL-MEDIA",
+            "PUBLIC-RELATIONS",
+            "DIGITAL-MEDIA"
+          ]
+        },
+        {
+          "query": "Online marketing coordinator running SEO, web content and digital campaigns",
+          "category": "DIGITAL-MEDIA",
+          "p5": 0.4,
+          "first_relevant_rank": 1,
+          "top5": [
+            "DIGITAL-MEDIA",
+            "SALES",
+            "DIGITAL-MEDIA",
+            "AUTOMOBILE",
+            "PUBLIC-RELATIONS"
+          ]
+        },
+        {
+          "query": "Mechanical or electrical engineer with design, testing and AutoCAD experience",
+          "category": "ENGINEERING",
+          "p5": 0.4,
+          "first_relevant_rank": 3,
+          "top5": [
+            "AUTOMOBILE",
+            "AVIATION",
+            "ENGINEERING",
+            "ENGINEERING",
+            "APPAREL"
+          ]
+        },
+        {
+          "query": "Engineer for product development, technical specifications and quality testing",
+          "category": "ENGINEERING",
+          "p5": 0.4,
+          "first_relevant_rank": 1,
+          "top5": [
+            "ENGINEERING",
+            "ENGINEERING",
+            "AVIATION",
+            "DESIGNER",
+            "BPO"
+          ]
+        },
+        {
+          "query": "Financial analyst with budgeting, forecasting and financial modeling skills",
+          "category": "FINANCE",
+          "p5": 0.4,
+          "first_relevant_rank": 2,
+          "top5": [
+            "BANKING",
+            "FINANCE",
+            "FINANCE",
+            "ACCOUNTANT",
+            "ACCOUNTANT"
+          ]
+        },
+        {
+          "query": "Finance manager responsible for financial reporting, variance analysis and controls",
+          "category": "FINANCE",
+          "p5": 0.2,
+          "first_relevant_rank": 4,
+          "top5": [
+            "ACCOUNTANT",
+            "ADVOCATE",
+            "ACCOUNTANT",
+            "FINANCE",
+            "ACCOUNTANT"
+          ]
+        },
+        {
+          "query": "Personal trainer designing exercise programs and coaching clients on strength training",
+          "category": "FITNESS",
+          "p5": 0.8,
+          "first_relevant_rank": 1,
+          "top5": [
+            "FITNESS",
+            "FITNESS",
+            "FITNESS",
+            "FITNESS",
+            "ADVOCATE"
+          ]
+        },
+        {
+          "query": "Fitness instructor leading group classes and promoting health and wellness",
+          "category": "FITNESS",
+          "p5": 1.0,
+          "first_relevant_rank": 1,
+          "top5": [
+            "FITNESS",
+            "FITNESS",
+            "FITNESS",
+            "FITNESS",
+            "FITNESS"
+          ]
+        },
+        {
+          "query": "Registered nurse providing patient care, medication administration and clinical support",
+          "category": "HEALTHCARE",
+          "p5": 0.2,
+          "first_relevant_rank": 2,
+          "top5": [
+            "FITNESS",
+            "HEALTHCARE",
+            "PUBLIC-RELATIONS",
+            "DESIGNER",
+            "SALES"
+          ]
+        },
+        {
+          "query": "Healthcare administrator managing hospital operations and medical records",
+          "category": "HEALTHCARE",
+          "p5": 0.4,
+          "first_relevant_rank": 1,
+          "top5": [
+            "HEALTHCARE",
+            "INFORMATION-TECHNOLOGY",
+            "DIGITAL-MEDIA",
+            "BUSINESS-DEVELOPMENT",
+            "HEALTHCARE"
+          ]
+        },
+        {
+          "query": "HR generalist handling recruitment, onboarding, employee relations and benefits",
+          "category": "HR",
+          "p5": 1.0,
+          "first_relevant_rank": 1,
+          "top5": [
+            "HR",
+            "HR",
+            "HR",
+            "HR",
+            "HR"
+          ]
+        },
+        {
+          "query": "Human resources manager for talent acquisition, payroll and HR policy compliance",
+          "category": "HR",
+          "p5": 0.8,
+          "first_relevant_rank": 1,
+          "top5": [
+            "HR",
+            "HR",
+            "HR",
+            "HR",
+            "HEALTHCARE"
+          ]
+        },
+        {
+          "query": "IT support specialist for network administration, help desk and system troubleshooting",
+          "category": "INFORMATION-TECHNOLOGY",
+          "p5": 0.6,
+          "first_relevant_rank": 2,
+          "top5": [
+            "BPO",
+            "INFORMATION-TECHNOLOGY",
+            "AVIATION",
+            "INFORMATION-TECHNOLOGY",
+            "INFORMATION-TECHNOLOGY"
+          ]
+        },
+        {
+          "query": "Systems administrator managing servers, Active Directory and IT infrastructure",
+          "category": "INFORMATION-TECHNOLOGY",
+          "p5": 0.4,
+          "first_relevant_rank": 2,
+          "top5": [
+            "AVIATION",
+            "INFORMATION-TECHNOLOGY",
+            "CONSULTANT",
+            "INFORMATION-TECHNOLOGY",
+            "BPO"
+          ]
+        },
+        {
+          "query": "Public relations specialist writing press releases and managing media relations",
+          "category": "PUBLIC-RELATIONS",
+          "p5": 0.8,
+          "first_relevant_rank": 1,
+          "top5": [
+            "PUBLIC-RELATIONS",
+            "PUBLIC-RELATIONS",
+            "DIGITAL-MEDIA",
+            "PUBLIC-RELATIONS",
+            "PUBLIC-RELATIONS"
+          ]
+        },
+        {
+          "query": "Communications manager for corporate messaging, events and brand reputation",
+          "category": "PUBLIC-RELATIONS",
+          "p5": 1.0,
+          "first_relevant_rank": 1,
+          "top5": [
+            "PUBLIC-RELATIONS",
+            "PUBLIC-RELATIONS",
+            "PUBLIC-RELATIONS",
+            "PUBLIC-RELATIONS",
+            "PUBLIC-RELATIONS"
+          ]
+        },
+        {
+          "query": "Sales representative with quota attainment, prospecting and closing deals",
+          "category": "SALES",
+          "p5": 0.2,
+          "first_relevant_rank": 1,
+          "top5": [
+            "SALES",
+            "BANKING",
+            "HEALTHCARE",
+            "BUSINESS-DEVELOPMENT",
+            "BPO"
+          ]
+        },
+        {
+          "query": "Retail sales associate providing customer service and driving store sales",
+          "category": "SALES",
+          "p5": 0.6,
+          "first_relevant_rank": 1,
+          "top5": [
+            "SALES",
+            "SALES",
+            "SALES",
+            "DESIGNER",
+            "APPAREL"
+          ]
+        },
+        {
+          "query": "Teacher experienced in lesson planning, classroom management and student assessment",
+          "category": "TEACHER",
+          "p5": 0.6,
+          "first_relevant_rank": 1,
+          "top5": [
+            "TEACHER",
+            "TEACHER",
+            "ARTS",
+            "ARTS",
+            "TEACHER"
+          ]
+        },
+        {
+          "query": "Elementary school educator who develops curriculum and supports student learning",
+          "category": "TEACHER",
+          "p5": 0.6,
+          "first_relevant_rank": 1,
+          "top5": [
+            "TEACHER",
+            "ARTS",
+            "TEACHER",
+            "ARTS",
+            "TEACHER"
+          ]
+        }
+      ]
+    },
+    {
+      "label": "STS cross-encoder + 30% overlap [old]",
+      "all": {
+        "p5": 0.41250000000000003,
+        "p10": 0.38125,
+        "mrr": 0.627281746031746,
+        "ndcg10": 0.40028221084757776
+      },
+      "dev": {
+        "p5": 0.4666666666666667,
+        "p10": 0.37916666666666665,
+        "mrr": 0.7073412698412699,
+        "ndcg10": 0.42248110042692955
+      },
+      "test": {
+        "p5": 0.35833333333333334,
+        "p10": 0.38333333333333336,
+        "mrr": 0.5472222222222222,
+        "ndcg10": 0.378083321268226
+      },
+      "latency_ms": 362.92600000160746,
+      "kwargs": {
+        "rerank": true,
+        "reranker": "cross-encoder/stsb-distilroberta-base",
+        "alpha": 0.3,
+        "keyword_mode": "overlap"
+      },
+      "per_query": [
+        {
+          "query": "Accountant experienced in general ledger reconciliation, accounts payable and month-end close",
+          "category": "ACCOUNTANT",
+          "p5": 0.8,
+          "first_relevant_rank": 1,
+          "top5": [
+            "ACCOUNTANT",
+            "ACCOUNTANT",
+            "ACCOUNTANT",
+            "ACCOUNTANT",
+            "BANKING"
+          ]
+        },
+        {
+          "query": "Need someone to handle bookkeeping, tax preparation and audit support using QuickBooks",
+          "category": "ACCOUNTANT",
+          "p5": 0.2,
+          "first_relevant_rank": 4,
+          "top5": [
+            "HR",
+            "AGRICULTURE",
+            "ADVOCATE",
+            "ACCOUNTANT",
+            "CONSULTANT"
+          ]
+        },
+        {
+          "query": "Lawyer with litigation experience, legal research and drafting of contracts and pleadings",
+          "category": "ADVOCATE",
+          "p5": 0.2,
+          "first_relevant_rank": 1,
+          "top5": [
+            "ADVOCATE",
+            "BPO",
+            "CONSULTANT",
+            "HR",
+            "BUSINESS-DEVELOPMENT"
+          ]
+        },
+        {
+          "query": "Looking for an attorney to represent clients in court and advise on case strategy",
+          "category": "ADVOCATE",
+          "p5": 0.2,
+          "first_relevant_rank": 4,
+          "top5": [
+            "APPAREL",
+            "HEALTHCARE",
+            "AGRICULTURE",
+            "ADVOCATE",
+            "AUTOMOBILE"
+          ]
+        },
+        {
+          "query": "Agronomist with crop management, soil testing and irrigation planning experience",
+          "category": "AGRICULTURE",
+          "p5": 0.4,
+          "first_relevant_rank": 4,
+          "top5": [
+            "TEACHER",
+            "BUSINESS-DEVELOPMENT",
+            "ENGINEERING",
+            "AGRICULTURE",
+            "AGRICULTURE"
+          ]
+        },
+        {
+          "query": "Farm operations manager overseeing harvesting, livestock and field equipment",
+          "category": "AGRICULTURE",
+          "p5": 0.0,
+          "first_relevant_rank": 6,
+          "top5": [
+            "INFORMATION-TECHNOLOGY",
+            "ACCOUNTANT",
+            "CONSTRUCTION",
+            "ACCOUNTANT",
+            "AUTOMOBILE"
+          ]
+        },
+        {
+          "query": "Fashion merchandiser with garment production, textile sourcing and vendor management",
+          "category": "APPAREL",
+          "p5": 0.6,
+          "first_relevant_rank": 1,
+          "top5": [
+            "APPAREL",
+            "DESIGNER",
+            "APPAREL",
+            "APPAREL",
+            "AVIATION"
+          ]
+        },
+        {
+          "query": "Apparel designer creating clothing collections, tech packs and fabric selection",
+          "category": "APPAREL",
+          "p5": 0.6,
+          "first_relevant_rank": 1,
+          "top5": [
+            "APPAREL",
+            "APPAREL",
+            "DESIGNER",
+            "APPAREL",
+            "CONSULTANT"
+          ]
+        },
+        {
+          "query": "Artist with painting, drawing and exhibition experience in fine arts",
+          "category": "ARTS",
+          "p5": 0.0,
+          "first_relevant_rank": 7,
+          "top5": [
+            "APPAREL",
+            "DESIGNER",
+            "APPAREL",
+            "DESIGNER",
+            "CONSULTANT"
+          ]
+        },
+        {
+          "query": "Arts program coordinator for gallery curation, art education and community workshops",
+          "category": "ARTS",
+          "p5": 0.6,
+          "first_relevant_rank": 2,
+          "top5": [
+            "APPAREL",
+            "ARTS",
+            "DIGITAL-MEDIA",
+            "ARTS",
+            "ARTS"
+          ]
+        },
+        {
+          "query": "Automotive technician skilled in engine diagnostics, brake repair and vehicle maintenance",
+          "category": "AUTOMOBILE",
+          "p5": 0.2,
+          "first_relevant_rank": 2,
+          "top5": [
+            "AVIATION",
+            "AUTOMOBILE",
+            "AVIATION",
+            "APPAREL",
+            "ENGINEERING"
+          ]
+        },
+        {
+          "query": "Car dealership service advisor handling repair orders and parts for vehicles",
+          "category": "AUTOMOBILE",
+          "p5": 0.2,
+          "first_relevant_rank": 3,
+          "top5": [
+            "ADVOCATE",
+            "APPAREL",
+            "AUTOMOBILE",
+            "HEALTHCARE",
+            "AVIATION"
+          ]
+        },
+        {
+          "query": "Aircraft maintenance technician with FAA certification and avionics troubleshooting",
+          "category": "AVIATION",
+          "p5": 0.6,
+          "first_relevant_rank": 1,
+          "top5": [
+            "AVIATION",
+            "AVIATION",
+            "AVIATION",
+            "BPO",
+            "ENGINEERING"
+          ]
+        },
+        {
+          "query": "Airline operations specialist for flight scheduling, ground handling and safety compliance",
+          "category": "AVIATION",
+          "p5": 0.6,
+          "first_relevant_rank": 1,
+          "top5": [
+            "AVIATION",
+            "AVIATION",
+            "AVIATION",
+            "INFORMATION-TECHNOLOGY",
+            "ADVOCATE"
+          ]
+        },
+        {
+          "query": "Bank teller or personal banker handling deposits, loans and customer accounts",
+          "category": "BANKING",
+          "p5": 0.6,
+          "first_relevant_rank": 1,
+          "top5": [
+            "BANKING",
+            "BANKING",
+            "BANKING",
+            "ACCOUNTANT",
+            "FINANCE"
+          ]
+        },
+        {
+          "query": "Branch banking officer for credit analysis, loan processing and KYC compliance",
+          "category": "BANKING",
+          "p5": 0.6,
+          "first_relevant_rank": 2,
+          "top5": [
+            "ACCOUNTANT",
+            "BANKING",
+            "BANKING",
+            "BUSINESS-DEVELOPMENT",
+            "BANKING"
+          ]
+        },
+        {
+          "query": "Call center representative handling inbound customer calls and resolving complaints",
+          "category": "BPO",
+          "p5": 0.2,
+          "first_relevant_rank": 2,
+          "top5": [
+            "HEALTHCARE",
+            "BPO",
+            "APPAREL",
+            "APPAREL",
+            "ADVOCATE"
+          ]
+        },
+        {
+          "query": "Customer support agent for a business process outsourcing team meeting SLA targets",
+          "category": "BPO",
+          "p5": 0.4,
+          "first_relevant_rank": 2,
+          "top5": [
+            "AUTOMOBILE",
+            "BPO",
+            "BPO",
+            "HEALTHCARE",
+            "CONSULTANT"
+          ]
+        },
+        {
+          "query": "Business development manager for partnerships, lead generation and new market expansion",
+          "category": "BUSINESS-DEVELOPMENT",
+          "p5": 0.2,
+          "first_relevant_rank": 2,
+          "top5": [
+            "CONSULTANT",
+            "BUSINESS-DEVELOPMENT",
+            "BANKING",
+            "SALES",
+            "SALES"
+          ]
+        },
+        {
+          "query": "Someone to build client relationships, pitch proposals and grow revenue pipeline",
+          "category": "BUSINESS-DEVELOPMENT",
+          "p5": 0.2,
+          "first_relevant_rank": 5,
+          "top5": [
+            "SALES",
+            "BPO",
+            "ENGINEERING",
+            "BANKING",
+            "BUSINESS-DEVELOPMENT"
+          ]
+        },
+        {
+          "query": "Head chef experienced in menu planning, kitchen management and food cost control",
+          "category": "CHEF",
+          "p5": 0.8,
+          "first_relevant_rank": 1,
+          "top5": [
+            "CHEF",
+            "CHEF",
+            "CHEF",
+            "CHEF",
+            "HEALTHCARE"
+          ]
+        },
+        {
+          "query": "Line cook or sous chef for food preparation in a busy restaurant kitchen",
+          "category": "CHEF",
+          "p5": 1.0,
+          "first_relevant_rank": 1,
+          "top5": [
+            "CHEF",
+            "CHEF",
+            "CHEF",
+            "CHEF",
+            "CHEF"
+          ]
+        },
+        {
+          "query": "Construction site supervisor managing subcontractors, safety and building schedules",
+          "category": "CONSTRUCTION",
+          "p5": 0.8,
+          "first_relevant_rank": 1,
+          "top5": [
+            "CONSTRUCTION",
+            "CONSTRUCTION",
+            "CONSTRUCTION",
+            "CONSTRUCTION",
+            "ENGINEERING"
+          ]
+        },
+        {
+          "query": "Project manager for commercial construction with estimating and blueprint reading",
+          "category": "CONSTRUCTION",
+          "p5": 0.4,
+          "first_relevant_rank": 1,
+          "top5": [
+            "CONSTRUCTION",
+            "CONSTRUCTION",
+            "ENGINEERING",
+            "BPO",
+            "CONSULTANT"
+          ]
+        },
+        {
+          "query": "Management consultant for strategy, process improvement and client advisory engagements",
+          "category": "CONSULTANT",
+          "p5": 0.4,
+          "first_relevant_rank": 1,
+          "top5": [
+            "CONSULTANT",
+            "FINANCE",
+            "BPO",
+            "CONSULTANT",
+            "ENGINEERING"
+          ]
+        },
+        {
+          "query": "Consultant to analyze business requirements and deliver recommendations to clients",
+          "category": "CONSULTANT",
+          "p5": 0.0,
+          "first_relevant_rank": 6,
+          "top5": [
+            "DIGITAL-MEDIA",
+            "DIGITAL-MEDIA",
+            "BPO",
+            "ACCOUNTANT",
+            "HEALTHCARE"
+          ]
+        },
+        {
+          "query": "Graphic designer skilled in Adobe Photoshop, Illustrator and brand identity",
+          "category": "DESIGNER",
+          "p5": 0.4,
+          "first_relevant_rank": 3,
+          "top5": [
+            "BUSINESS-DEVELOPMENT",
+            "APPAREL",
+            "DESIGNER",
+            "DESIGNER",
+            "DIGITAL-MEDIA"
+          ]
+        },
+        {
+          "query": "Interior or visual designer creating layouts, mockups and design concepts",
+          "category": "DESIGNER",
+          "p5": 0.2,
+          "first_relevant_rank": 3,
+          "top5": [
+            "APPAREL",
+            "APPAREL",
+            "DESIGNER",
+            "SALES",
+            "BUSINESS-DEVELOPMENT"
+          ]
+        },
+        {
+          "query": "Digital media specialist for video production, social media content and editing",
+          "category": "DIGITAL-MEDIA",
+          "p5": 0.4,
+          "first_relevant_rank": 2,
+          "top5": [
+            "PUBLIC-RELATIONS",
+            "DIGITAL-MEDIA",
+            "DIGITAL-MEDIA",
+            "CONSULTANT",
+            "PUBLIC-RELATIONS"
+          ]
+        },
+        {
+          "query": "Online marketing coordinator running SEO, web content and digital campaigns",
+          "category": "DIGITAL-MEDIA",
+          "p5": 0.4,
+          "first_relevant_rank": 1,
+          "top5": [
+            "DIGITAL-MEDIA",
+            "CONSULTANT",
+            "BUSINESS-DEVELOPMENT",
+            "CONSULTANT",
+            "DIGITAL-MEDIA"
+          ]
+        },
+        {
+          "query": "Mechanical or electrical engineer with design, testing and AutoCAD experience",
+          "category": "ENGINEERING",
+          "p5": 0.6,
+          "first_relevant_rank": 2,
+          "top5": [
+            "AVIATION",
+            "ENGINEERING",
+            "ENGINEERING",
+            "DESIGNER",
+            "ENGINEERING"
+          ]
+        },
+        {
+          "query": "Engineer for product development, technical specifications and quality testing",
+          "category": "ENGINEERING",
+          "p5": 0.6,
+          "first_relevant_rank": 3,
+          "top5": [
+            "CONSULTANT",
+            "CONSULTANT",
+            "ENGINEERING",
+            "ENGINEERING",
+            "ENGINEERING"
+          ]
+        },
+        {
+          "query": "Financial analyst with budgeting, forecasting and financial modeling skills",
+          "category": "FINANCE",
+          "p5": 0.4,
+          "first_relevant_rank": 2,
+          "top5": [
+            "ADVOCATE",
+            "FINANCE",
+            "FINANCE",
+            "ACCOUNTANT",
+            "BANKING"
+          ]
+        },
+        {
+          "query": "Finance manager responsible for financial reporting, variance analysis and controls",
+          "category": "FINANCE",
+          "p5": 0.0,
+          "first_relevant_rank": 6,
+          "top5": [
+            "ACCOUNTANT",
+            "ACCOUNTANT",
+            "ACCOUNTANT",
+            "ADVOCATE",
+            "ACCOUNTANT"
+          ]
+        },
+        {
+          "query": "Personal trainer designing exercise programs and coaching clients on strength training",
+          "category": "FITNESS",
+          "p5": 0.8,
+          "first_relevant_rank": 2,
+          "top5": [
+            "ADVOCATE",
+            "FITNESS",
+            "FITNESS",
+            "FITNESS",
+            "FITNESS"
+          ]
+        },
+        {
+          "query": "Fitness instructor leading group classes and promoting health and wellness",
+          "category": "FITNESS",
+          "p5": 0.6,
+          "first_relevant_rank": 2,
+          "top5": [
+            "CHEF",
+            "FITNESS",
+            "FITNESS",
+            "FITNESS",
+            "ARTS"
+          ]
+        },
+        {
+          "query": "Registered nurse providing patient care, medication administration and clinical support",
+          "category": "HEALTHCARE",
+          "p5": 0.2,
+          "first_relevant_rank": 2,
+          "top5": [
+            "SALES",
+            "HEALTHCARE",
+            "PUBLIC-RELATIONS",
+            "ADVOCATE",
+            "FITNESS"
+          ]
+        },
+        {
+          "query": "Healthcare administrator managing hospital operations and medical records",
+          "category": "HEALTHCARE",
+          "p5": 0.4,
+          "first_relevant_rank": 1,
+          "top5": [
+            "HEALTHCARE",
+            "PUBLIC-RELATIONS",
+            "HEALTHCARE",
+            "FITNESS",
+            "BUSINESS-DEVELOPMENT"
+          ]
+        },
+        {
+          "query": "HR generalist handling recruitment, onboarding, employee relations and benefits",
+          "category": "HR",
+          "p5": 1.0,
+          "first_relevant_rank": 1,
+          "top5": [
+            "HR",
+            "HR",
+            "HR",
+            "HR",
+            "HR"
+          ]
+        },
+        {
+          "query": "Human resources manager for talent acquisition, payroll and HR policy compliance",
+          "category": "HR",
+          "p5": 0.4,
+          "first_relevant_rank": 3,
+          "top5": [
+            "HEALTHCARE",
+            "BPO",
+            "HR",
+            "HR",
+            "HEALTHCARE"
+          ]
+        },
+        {
+          "query": "IT support specialist for network administration, help desk and system troubleshooting",
+          "category": "INFORMATION-TECHNOLOGY",
+          "p5": 0.2,
+          "first_relevant_rank": 4,
+          "top5": [
+            "AVIATION",
+            "ENGINEERING",
+            "BPO",
+            "INFORMATION-TECHNOLOGY",
+            "BPO"
+          ]
+        },
+        {
+          "query": "Systems administrator managing servers, Active Directory and IT infrastructure",
+          "category": "INFORMATION-TECHNOLOGY",
+          "p5": 0.2,
+          "first_relevant_rank": 2,
+          "top5": [
+            "AVIATION",
+            "INFORMATION-TECHNOLOGY",
+            "BPO",
+            "AVIATION",
+            "ENGINEERING"
+          ]
+        },
+        {
+          "query": "Public relations specialist writing press releases and managing media relations",
+          "category": "PUBLIC-RELATIONS",
+          "p5": 0.8,
+          "first_relevant_rank": 1,
+          "top5": [
+            "PUBLIC-RELATIONS",
+            "PUBLIC-RELATIONS",
+            "DIGITAL-MEDIA",
+            "PUBLIC-RELATIONS",
+            "PUBLIC-RELATIONS"
+          ]
+        },
+        {
+          "query": "Communications manager for corporate messaging, events and brand reputation",
+          "category": "PUBLIC-RELATIONS",
+          "p5": 0.4,
+          "first_relevant_rank": 1,
+          "top5": [
+            "PUBLIC-RELATIONS",
+            "SALES",
+            "PUBLIC-RELATIONS",
+            "BUSINESS-DEVELOPMENT",
+            "CONSULTANT"
+          ]
+        },
+        {
+          "query": "Sales representative with quota attainment, prospecting and closing deals",
+          "category": "SALES",
+          "p5": 0.2,
+          "first_relevant_rank": 1,
+          "top5": [
+            "SALES",
+            "HEALTHCARE",
+            "HEALTHCARE",
+            "BANKING",
+            "BUSINESS-DEVELOPMENT"
+          ]
+        },
+        {
+          "query": "Retail sales associate providing customer service and driving store sales",
+          "category": "SALES",
+          "p5": 0.0,
+          "first_relevant_rank": 10,
+          "top5": [
+            "APPAREL",
+            "APPAREL",
+            "APPAREL",
+            "DESIGNER",
+            "HEALTHCARE"
+          ]
+        },
+        {
+          "query": "Teacher experienced in lesson planning, classroom management and student assessment",
+          "category": "TEACHER",
+          "p5": 0.4,
+          "first_relevant_rank": 1,
+          "top5": [
+            "TEACHER",
+            "ARTS",
+            "ARTS",
+            "TEACHER",
+            "ARTS"
+          ]
+        },
+        {
+          "query": "Elementary school educator who develops curriculum and supports student learning",
+          "category": "TEACHER",
+          "p5": 0.4,
+          "first_relevant_rank": 1,
+          "top5": [
+            "TEACHER",
+            "ARTS",
+            "TEACHER",
+            "ARTS",
+            "ARTS"
+          ]
+        }
+      ]
+    },
+    {
+      "label": "STS cross-encoder only",
+      "all": {
+        "p5": 0.3125,
+        "p10": 0.2729166666666667,
+        "mrr": 0.5714210557960558,
+        "ndcg10": 0.2944202942675421
+      },
+      "dev": {
+        "p5": 0.30833333333333335,
+        "p10": 0.2708333333333333,
+        "mrr": 0.5898989898989899,
+        "ndcg10": 0.2968174991714369
+      },
+      "test": {
+        "p5": 0.31666666666666665,
+        "p10": 0.275,
+        "mrr": 0.5529431216931217,
+        "ndcg10": 0.2920230893636473
+      },
+      "latency_ms": 363.046549995488,
+      "kwargs": {
+        "rerank": true,
+        "reranker": "cross-encoder/stsb-distilroberta-base",
+        "alpha": 0.0
+      },
+      "per_query": [
+        {
+          "query": "Accountant experienced in general ledger reconciliation, accounts payable and month-end close",
+          "category": "ACCOUNTANT",
+          "p5": 0.6,
+          "first_relevant_rank": 1,
+          "top5": [
+            "ACCOUNTANT",
+            "ACCOUNTANT",
+            "CONSULTANT",
+            "ACCOUNTANT",
+            "AGRICULTURE"
+          ]
+        },
+        {
+          "query": "Need someone to handle bookkeeping, tax preparation and audit support using QuickBooks",
+          "category": "ACCOUNTANT",
+          "p5": 0.2,
+          "first_relevant_rank": 5,
+          "top5": [
+            "HR",
+            "HR",
+            "CONSULTANT",
+            "AGRICULTURE",
+            "ACCOUNTANT"
+          ]
+        },
+        {
+          "query": "Lawyer with litigation experience, legal research and drafting of contracts and pleadings",
+          "category": "ADVOCATE",
+          "p5": 0.2,
+          "first_relevant_rank": 2,
+          "top5": [
+            "HEALTHCARE",
+            "ADVOCATE",
+            "BPO",
+            "CONSULTANT",
+            "HR"
+          ]
+        },
+        {
+          "query": "Looking for an attorney to represent clients in court and advise on case strategy",
+          "category": "ADVOCATE",
+          "p5": 0.4,
+          "first_relevant_rank": 1,
+          "top5": [
+            "ADVOCATE",
+            "APPAREL",
+            "ADVOCATE",
+            "TEACHER",
+            "ENGINEERING"
+          ]
+        },
+        {
+          "query": "Agronomist with crop management, soil testing and irrigation planning experience",
+          "category": "AGRICULTURE",
+          "p5": 0.2,
+          "first_relevant_rank": 3,
+          "top5": [
+            "APPAREL",
+            "CONSTRUCTION",
+            "AGRICULTURE",
+            "TEACHER",
+            "BPO"
+          ]
+        },
+        {
+          "query": "Farm operations manager overseeing harvesting, livestock and field equipment",
+          "category": "AGRICULTURE",
+          "p5": 0.2,
+          "first_relevant_rank": 5,
+          "top5": [
+            "ACCOUNTANT",
+            "ACCOUNTANT",
+            "AVIATION",
+            "HR",
+            "AGRICULTURE"
+          ]
+        },
+        {
+          "query": "Fashion merchandiser with garment production, textile sourcing and vendor management",
+          "category": "APPAREL",
+          "p5": 0.6,
+          "first_relevant_rank": 1,
+          "top5": [
+            "APPAREL",
+            "APPAREL",
+            "APPAREL",
+            "HEALTHCARE",
+            "ADVOCATE"
+          ]
+        },
+        {
+          "query": "Apparel designer creating clothing collections, tech packs and fabric selection",
+          "category": "APPAREL",
+          "p5": 0.4,
+          "first_relevant_rank": 1,
+          "top5": [
+            "APPAREL",
+            "CONSULTANT",
+            "SALES",
+            "APPAREL",
+            "HEALTHCARE"
+          ]
+        },
+        {
+          "query": "Artist with painting, drawing and exhibition experience in fine arts",
+          "category": "ARTS",
+          "p5": 0.0,
+          "first_relevant_rank": 6,
+          "top5": [
+            "APPAREL",
+            "APPAREL",
+            "CONSULTANT",
+            "DESIGNER",
+            "TEACHER"
+          ]
+        },
+        {
+          "query": "Arts program coordinator for gallery curation, art education and community workshops",
+          "category": "ARTS",
+          "p5": 0.6,
+          "first_relevant_rank": 1,
+          "top5": [
+            "ARTS",
+            "ARTS",
+            "PUBLIC-RELATIONS",
+            "APPAREL",
+            "ARTS"
+          ]
+        },
+        {
+          "query": "Automotive technician skilled in engine diagnostics, brake repair and vehicle maintenance",
+          "category": "AUTOMOBILE",
+          "p5": 0.2,
+          "first_relevant_rank": 1,
+          "top5": [
+            "AUTOMOBILE",
+            "AVIATION",
+            "BPO",
+            "APPAREL",
+            "AVIATION"
+          ]
+        },
+        {
+          "query": "Car dealership service advisor handling repair orders and parts for vehicles",
+          "category": "AUTOMOBILE",
+          "p5": 0.2,
+          "first_relevant_rank": 4,
+          "top5": [
+            "APPAREL",
+            "ADVOCATE",
+            "HEALTHCARE",
+            "AUTOMOBILE",
+            "AVIATION"
+          ]
+        },
+        {
+          "query": "Aircraft maintenance technician with FAA certification and avionics troubleshooting",
+          "category": "AVIATION",
+          "p5": 0.4,
+          "first_relevant_rank": 1,
+          "top5": [
+            "AVIATION",
+            "AVIATION",
+            "BPO",
+            "FINANCE",
+            "ENGINEERING"
+          ]
+        },
+        {
+          "query": "Airline operations specialist for flight scheduling, ground handling and safety compliance",
+          "category": "AVIATION",
+          "p5": 0.4,
+          "first_relevant_rank": 1,
+          "top5": [
+            "AVIATION",
+            "AVIATION",
+            "ACCOUNTANT",
+            "BPO",
+            "APPAREL"
+          ]
+        },
+        {
+          "query": "Bank teller or personal banker handling deposits, loans and customer accounts",
+          "category": "BANKING",
+          "p5": 0.2,
+          "first_relevant_rank": 1,
+          "top5": [
+            "BANKING",
+            "ACCOUNTANT",
+            "ACCOUNTANT",
+            "FINANCE",
+            "ADVOCATE"
+          ]
+        },
+        {
+          "query": "Branch banking officer for credit analysis, loan processing and KYC compliance",
+          "category": "BANKING",
+          "p5": 0.6,
+          "first_relevant_rank": 1,
+          "top5": [
+            "BANKING",
+            "BANKING",
+            "BANKING",
+            "FINANCE",
+            "ACCOUNTANT"
+          ]
+        },
+        {
+          "query": "Call center representative handling inbound customer calls and resolving complaints",
+          "category": "BPO",
+          "p5": 0.2,
+          "first_relevant_rank": 4,
+          "top5": [
+            "APPAREL",
+            "AUTOMOBILE",
+            "ADVOCATE",
+            "BPO",
+            "AUTOMOBILE"
+          ]
+        },
+        {
+          "query": "Customer support agent for a business process outsourcing team meeting SLA targets",
+          "category": "BPO",
+          "p5": 0.4,
+          "first_relevant_rank": 2,
+          "top5": [
+            "AUTOMOBILE",
+            "BPO",
+            "BANKING",
+            "BPO",
+            "BUSINESS-DEVELOPMENT"
+          ]
+        },
+        {
+          "query": "Business development manager for partnerships, lead generation and new market expansion",
+          "category": "BUSINESS-DEVELOPMENT",
+          "p5": 0.4,
+          "first_relevant_rank": 1,
+          "top5": [
+            "BUSINESS-DEVELOPMENT",
+            "SALES",
+            "CONSULTANT",
+            "BPO",
+            "BUSINESS-DEVELOPMENT"
+          ]
+        },
+        {
+          "query": "Someone to build client relationships, pitch proposals and grow revenue pipeline",
+          "category": "BUSINESS-DEVELOPMENT",
+          "p5": 0.4,
+          "first_relevant_rank": 4,
+          "top5": [
+            "CONSULTANT",
+            "CONSULTANT",
+            "SALES",
+            "BUSINESS-DEVELOPMENT",
+            "BUSINESS-DEVELOPMENT"
+          ]
+        },
+        {
+          "query": "Head chef experienced in menu planning, kitchen management and food cost control",
+          "category": "CHEF",
+          "p5": 0.8,
+          "first_relevant_rank": 1,
+          "top5": [
+            "CHEF",
+            "HEALTHCARE",
+            "CHEF",
+            "CHEF",
+            "CHEF"
+          ]
+        },
+        {
+          "query": "Line cook or sous chef for food preparation in a busy restaurant kitchen",
+          "category": "CHEF",
+          "p5": 0.6,
+          "first_relevant_rank": 1,
+          "top5": [
+            "CHEF",
+            "HEALTHCARE",
+            "CHEF",
+            "CHEF",
+            "CONSTRUCTION"
+          ]
+        },
+        {
+          "query": "Construction site supervisor managing subcontractors, safety and building schedules",
+          "category": "CONSTRUCTION",
+          "p5": 0.4,
+          "first_relevant_rank": 3,
+          "top5": [
+            "ENGINEERING",
+            "ENGINEERING",
+            "CONSTRUCTION",
+            "CONSTRUCTION",
+            "AGRICULTURE"
+          ]
+        },
+        {
+          "query": "Project manager for commercial construction with estimating and blueprint reading",
+          "category": "CONSTRUCTION",
+          "p5": 0.2,
+          "first_relevant_rank": 4,
+          "top5": [
+            "ENGINEERING",
+            "BPO",
+            "CONSULTANT",
+            "CONSTRUCTION",
+            "HEALTHCARE"
+          ]
+        },
+        {
+          "query": "Management consultant for strategy, process improvement and client advisory engagements",
+          "category": "CONSULTANT",
+          "p5": 0.2,
+          "first_relevant_rank": 2,
+          "top5": [
+            "ENGINEERING",
+            "CONSULTANT",
+            "BANKING",
+            "BUSINESS-DEVELOPMENT",
+            "BPO"
+          ]
+        },
+        {
+          "query": "Consultant to analyze business requirements and deliver recommendations to clients",
+          "category": "CONSULTANT",
+          "p5": 0.2,
+          "first_relevant_rank": 2,
+          "top5": [
+            "HEALTHCARE",
+            "CONSULTANT",
+            "BUSINESS-DEVELOPMENT",
+            "BPO",
+            "DIGITAL-MEDIA"
+          ]
+        },
+        {
+          "query": "Graphic designer skilled in Adobe Photoshop, Illustrator and brand identity",
+          "category": "DESIGNER",
+          "p5": 0.0,
+          "first_relevant_rank": 11,
+          "top5": [
+            "BUSINESS-DEVELOPMENT",
+            "CONSULTANT",
+            "APPAREL",
+            "APPAREL",
+            "DIGITAL-MEDIA"
+          ]
+        },
+        {
+          "query": "Interior or visual designer creating layouts, mockups and design concepts",
+          "category": "DESIGNER",
+          "p5": 0.0,
+          "first_relevant_rank": 12,
+          "top5": [
+            "BUSINESS-DEVELOPMENT",
+            "SALES",
+            "APPAREL",
+            "APPAREL",
+            "AGRICULTURE"
+          ]
+        },
+        {
+          "query": "Digital media specialist for video production, social media content and editing",
+          "category": "DIGITAL-MEDIA",
+          "p5": 0.2,
+          "first_relevant_rank": 5,
+          "top5": [
+            "PUBLIC-RELATIONS",
+            "CONSULTANT",
+            "APPAREL",
+            "BUSINESS-DEVELOPMENT",
+            "DIGITAL-MEDIA"
+          ]
+        },
+        {
+          "query": "Online marketing coordinator running SEO, web content and digital campaigns",
+          "category": "DIGITAL-MEDIA",
+          "p5": 0.2,
+          "first_relevant_rank": 2,
+          "top5": [
+            "CONSULTANT",
+            "DIGITAL-MEDIA",
+            "ENGINEERING",
+            "PUBLIC-RELATIONS",
+            "PUBLIC-RELATIONS"
+          ]
+        },
+        {
+          "query": "Mechanical or electrical engineer with design, testing and AutoCAD experience",
+          "category": "ENGINEERING",
+          "p5": 0.2,
+          "first_relevant_rank": 3,
+          "top5": [
+            "AVIATION",
+            "CONSTRUCTION",
+            "ENGINEERING",
+            "BPO",
+            "AVIATION"
+          ]
+        },
+        {
+          "query": "Engineer for product development, technical specifications and quality testing",
+          "category": "ENGINEERING",
+          "p5": 0.4,
+          "first_relevant_rank": 4,
+          "top5": [
+            "AVIATION",
+            "CONSULTANT",
+            "CONSULTANT",
+            "ENGINEERING",
+            "ENGINEERING"
+          ]
+        },
+        {
+          "query": "Financial analyst with budgeting, forecasting and financial modeling skills",
+          "category": "FINANCE",
+          "p5": 0.2,
+          "first_relevant_rank": 4,
+          "top5": [
+            "BANKING",
+            "ADVOCATE",
+            "ACCOUNTANT",
+            "FINANCE",
+            "ACCOUNTANT"
+          ]
+        },
+        {
+          "query": "Finance manager responsible for financial reporting, variance analysis and controls",
+          "category": "FINANCE",
+          "p5": 0.2,
+          "first_relevant_rank": 5,
+          "top5": [
+            "ACCOUNTANT",
+            "ACCOUNTANT",
+            "ACCOUNTANT",
+            "ADVOCATE",
+            "FINANCE"
+          ]
+        },
+        {
+          "query": "Personal trainer designing exercise programs and coaching clients on strength training",
+          "category": "FITNESS",
+          "p5": 0.6,
+          "first_relevant_rank": 1,
+          "top5": [
+            "FITNESS",
+            "FITNESS",
+            "BUSINESS-DEVELOPMENT",
+            "PUBLIC-RELATIONS",
+            "FITNESS"
+          ]
+        },
+        {
+          "query": "Fitness instructor leading group classes and promoting health and wellness",
+          "category": "FITNESS",
+          "p5": 0.4,
+          "first_relevant_rank": 3,
+          "top5": [
+            "ARTS",
+            "CHEF",
+            "FITNESS",
+            "FITNESS",
+            "ARTS"
+          ]
+        },
+        {
+          "query": "Registered nurse providing patient care, medication administration and clinical support",
+          "category": "HEALTHCARE",
+          "p5": 0.6,
+          "first_relevant_rank": 1,
+          "top5": [
+            "HEALTHCARE",
+            "HEALTHCARE",
+            "HEALTHCARE",
+            "BUSINESS-DEVELOPMENT",
+            "SALES"
+          ]
+        },
+        {
+          "query": "Healthcare administrator managing hospital operations and medical records",
+          "category": "HEALTHCARE",
+          "p5": 0.6,
+          "first_relevant_rank": 1,
+          "top5": [
+            "HEALTHCARE",
+            "BUSINESS-DEVELOPMENT",
+            "HEALTHCARE",
+            "HEALTHCARE",
+            "PUBLIC-RELATIONS"
+          ]
+        },
+        {
+          "query": "HR generalist handling recruitment, onboarding, employee relations and benefits",
+          "category": "HR",
+          "p5": 0.2,
+          "first_relevant_rank": 4,
+          "top5": [
+            "HEALTHCARE",
+            "AUTOMOBILE",
+            "HEALTHCARE",
+            "HR",
+            "ADVOCATE"
+          ]
+        },
+        {
+          "query": "Human resources manager for talent acquisition, payroll and HR policy compliance",
+          "category": "HR",
+          "p5": 0.4,
+          "first_relevant_rank": 1,
+          "top5": [
+            "HR",
+            "CONSULTANT",
+            "HEALTHCARE",
+            "HR",
+            "ADVOCATE"
+          ]
+        },
+        {
+          "query": "IT support specialist for network administration, help desk and system troubleshooting",
+          "category": "INFORMATION-TECHNOLOGY",
+          "p5": 0.2,
+          "first_relevant_rank": 5,
+          "top5": [
+            "AVIATION",
+            "BPO",
+            "CONSULTANT",
+            "BPO",
+            "INFORMATION-TECHNOLOGY"
+          ]
+        },
+        {
+          "query": "Systems administrator managing servers, Active Directory and IT infrastructure",
+          "category": "INFORMATION-TECHNOLOGY",
+          "p5": 0.0,
+          "first_relevant_rank": 7,
+          "top5": [
+            "ENGINEERING",
+            "AVIATION",
+            "ACCOUNTANT",
+            "ARTS",
+            "CONSULTANT"
+          ]
+        },
+        {
+          "query": "Public relations specialist writing press releases and managing media relations",
+          "category": "PUBLIC-RELATIONS",
+          "p5": 0.2,
+          "first_relevant_rank": 1,
+          "top5": [
+            "PUBLIC-RELATIONS",
+            "CONSULTANT",
+            "DIGITAL-MEDIA",
+            "SALES",
+            "TEACHER"
+          ]
+        },
+        {
+          "query": "Communications manager for corporate messaging, events and brand reputation",
+          "category": "PUBLIC-RELATIONS",
+          "p5": 0.2,
+          "first_relevant_rank": 1,
+          "top5": [
+            "PUBLIC-RELATIONS",
+            "CONSULTANT",
+            "BANKING",
+            "DIGITAL-MEDIA",
+            "ARTS"
+          ]
+        },
+        {
+          "query": "Sales representative with quota attainment, prospecting and closing deals",
+          "category": "SALES",
+          "p5": 0.2,
+          "first_relevant_rank": 4,
+          "top5": [
+            "HEALTHCARE",
+            "BUSINESS-DEVELOPMENT",
+            "BANKING",
+            "SALES",
+            "HEALTHCARE"
+          ]
+        },
+        {
+          "query": "Retail sales associate providing customer service and driving store sales",
+          "category": "SALES",
+          "p5": 0.0,
+          "first_relevant_rank": 9,
+          "top5": [
+            "HEALTHCARE",
+            "APPAREL",
+            "ARTS",
+            "APPAREL",
+            "APPAREL"
+          ]
+        },
+        {
+          "query": "Teacher experienced in lesson planning, classroom management and student assessment",
+          "category": "TEACHER",
+          "p5": 0.4,
+          "first_relevant_rank": 2,
+          "top5": [
+            "ARTS",
+            "TEACHER",
+            "TEACHER",
+            "ARTS",
+            "ARTS"
+          ]
+        },
+        {
+          "query": "Elementary school educator who develops curriculum and supports student learning",
+          "category": "TEACHER",
+          "p5": 0.4,
+          "first_relevant_rank": 2,
+          "top5": [
+            "ARTS",
+            "TEACHER",
+            "TEACHER",
+            "ARTS",
+            "ARTS"
+          ]
+        }
+      ]
+    },
+    {
+      "label": "MS MARCO MiniLM only",
+      "all": {
+        "p5": 0.5541666666666667,
+        "p10": 0.45,
+        "mrr": 0.8050595238095238,
+        "ndcg10": 0.5017071735046013
+      },
+      "dev": {
+        "p5": 0.5666666666666667,
+        "p10": 0.4375,
+        "mrr": 0.8055555555555556,
+        "ndcg10": 0.49647540155195163
+      },
+      "test": {
+        "p5": 0.5416666666666666,
+        "p10": 0.4625,
+        "mrr": 0.8045634920634921,
+        "ndcg10": 0.5069389454572509
+      },
+      "latency_ms": 180.12479999742936,
+      "kwargs": {
+        "rerank": true,
+        "reranker": "cross-encoder/ms-marco-MiniLM-L-6-v2",
+        "alpha": 0.0
+      },
+      "per_query": [
+        {
+          "query": "Accountant experienced in general ledger reconciliation, accounts payable and month-end close",
+          "category": "ACCOUNTANT",
+          "p5": 0.8,
+          "first_relevant_rank": 1,
+          "top5": [
+            "ACCOUNTANT",
+            "ACCOUNTANT",
+            "BANKING",
+            "ACCOUNTANT",
+            "ACCOUNTANT"
+          ]
+        },
+        {
+          "query": "Need someone to handle bookkeeping, tax preparation and audit support using QuickBooks",
+          "category": "ACCOUNTANT",
+          "p5": 0.4,
+          "first_relevant_rank": 1,
+          "top5": [
+            "ACCOUNTANT",
+            "ACCOUNTANT",
+            "AGRICULTURE",
+            "AUTOMOBILE",
+            "CONSULTANT"
+          ]
+        },
+        {
+          "query": "Lawyer with litigation experience, legal research and drafting of contracts and pleadings",
+          "category": "ADVOCATE",
+          "p5": 0.2,
+          "first_relevant_rank": 4,
+          "top5": [
+            "AGRICULTURE",
+            "BPO",
+            "AUTOMOBILE",
+            "ADVOCATE",
+            "DIGITAL-MEDIA"
+          ]
+        },
+        {
+          "query": "Looking for an attorney to represent clients in court and advise on case strategy",
+          "category": "ADVOCATE",
+          "p5": 0.0,
+          "first_relevant_rank": 7,
+          "top5": [
+            "HEALTHCARE",
+            "BANKING",
+            "AUTOMOBILE",
+            "APPAREL",
+            "AUTOMOBILE"
+          ]
+        },
+        {
+          "query": "Agronomist with crop management, soil testing and irrigation planning experience",
+          "category": "AGRICULTURE",
+          "p5": 0.8,
+          "first_relevant_rank": 1,
+          "top5": [
+            "AGRICULTURE",
+            "AGRICULTURE",
+            "AGRICULTURE",
+            "AGRICULTURE",
+            "CONSTRUCTION"
+          ]
+        },
+        {
+          "query": "Farm operations manager overseeing harvesting, livestock and field equipment",
+          "category": "AGRICULTURE",
+          "p5": 0.4,
+          "first_relevant_rank": 1,
+          "top5": [
+            "AGRICULTURE",
+            "CONSTRUCTION",
+            "APPAREL",
+            "AGRICULTURE",
+            "AVIATION"
+          ]
+        },
+        {
+          "query": "Fashion merchandiser with garment production, textile sourcing and vendor management",
+          "category": "APPAREL",
+          "p5": 0.8,
+          "first_relevant_rank": 2,
+          "top5": [
+            "DESIGNER",
+            "APPAREL",
+            "APPAREL",
+            "APPAREL",
+            "APPAREL"
+          ]
+        },
+        {
+          "query": "Apparel designer creating clothing collections, tech packs and fabric selection",
+          "category": "APPAREL",
+          "p5": 0.6,
+          "first_relevant_rank": 2,
+          "top5": [
+            "DESIGNER",
+            "APPAREL",
+            "APPAREL",
+            "DESIGNER",
+            "APPAREL"
+          ]
+        },
+        {
+          "query": "Artist with painting, drawing and exhibition experience in fine arts",
+          "category": "ARTS",
+          "p5": 0.2,
+          "first_relevant_rank": 1,
+          "top5": [
+            "ARTS",
+            "DESIGNER",
+            "DESIGNER",
+            "APPAREL",
+            "HR"
+          ]
+        },
+        {
+          "query": "Arts program coordinator for gallery curation, art education and community workshops",
+          "category": "ARTS",
+          "p5": 0.8,
+          "first_relevant_rank": 1,
+          "top5": [
+            "ARTS",
+            "ARTS",
+            "ARTS",
+            "TEACHER",
+            "ARTS"
+          ]
+        },
+        {
+          "query": "Automotive technician skilled in engine diagnostics, brake repair and vehicle maintenance",
+          "category": "AUTOMOBILE",
+          "p5": 0.4,
+          "first_relevant_rank": 2,
+          "top5": [
+            "AVIATION",
+            "AUTOMOBILE",
+            "AVIATION",
+            "AVIATION",
+            "AUTOMOBILE"
+          ]
+        },
+        {
+          "query": "Car dealership service advisor handling repair orders and parts for vehicles",
+          "category": "AUTOMOBILE",
+          "p5": 0.4,
+          "first_relevant_rank": 1,
+          "top5": [
+            "AUTOMOBILE",
+            "AUTOMOBILE",
+            "APPAREL",
+            "ADVOCATE",
+            "APPAREL"
+          ]
+        },
+        {
+          "query": "Aircraft maintenance technician with FAA certification and avionics troubleshooting",
+          "category": "AVIATION",
+          "p5": 0.8,
+          "first_relevant_rank": 1,
+          "top5": [
+            "AVIATION",
+            "AVIATION",
+            "INFORMATION-TECHNOLOGY",
+            "AVIATION",
+            "AVIATION"
+          ]
+        },
+        {
+          "query": "Airline operations specialist for flight scheduling, ground handling and safety compliance",
+          "category": "AVIATION",
+          "p5": 0.6,
+          "first_relevant_rank": 1,
+          "top5": [
+            "AVIATION",
+            "INFORMATION-TECHNOLOGY",
+            "AUTOMOBILE",
+            "AVIATION",
+            "AVIATION"
+          ]
+        },
+        {
+          "query": "Bank teller or personal banker handling deposits, loans and customer accounts",
+          "category": "BANKING",
+          "p5": 0.4,
+          "first_relevant_rank": 1,
+          "top5": [
+            "BANKING",
+            "ACCOUNTANT",
+            "BANKING",
+            "FINANCE",
+            "ACCOUNTANT"
+          ]
+        },
+        {
+          "query": "Branch banking officer for credit analysis, loan processing and KYC compliance",
+          "category": "BANKING",
+          "p5": 0.6,
+          "first_relevant_rank": 1,
+          "top5": [
+            "BANKING",
+            "BANKING",
+            "ACCOUNTANT",
+            "BUSINESS-DEVELOPMENT",
+            "BANKING"
+          ]
+        },
+        {
+          "query": "Call center representative handling inbound customer calls and resolving complaints",
+          "category": "BPO",
+          "p5": 0.4,
+          "first_relevant_rank": 1,
+          "top5": [
+            "BPO",
+            "DESIGNER",
+            "AUTOMOBILE",
+            "ADVOCATE",
+            "BPO"
+          ]
+        },
+        {
+          "query": "Customer support agent for a business process outsourcing team meeting SLA targets",
+          "category": "BPO",
+          "p5": 0.4,
+          "first_relevant_rank": 1,
+          "top5": [
+            "BPO",
+            "DIGITAL-MEDIA",
+            "BUSINESS-DEVELOPMENT",
+            "BPO",
+            "AUTOMOBILE"
+          ]
+        },
+        {
+          "query": "Business development manager for partnerships, lead generation and new market expansion",
+          "category": "BUSINESS-DEVELOPMENT",
+          "p5": 0.4,
+          "first_relevant_rank": 1,
+          "top5": [
+            "BUSINESS-DEVELOPMENT",
+            "BUSINESS-DEVELOPMENT",
+            "CONSULTANT",
+            "SALES",
+            "DIGITAL-MEDIA"
+          ]
+        },
+        {
+          "query": "Someone to build client relationships, pitch proposals and grow revenue pipeline",
+          "category": "BUSINESS-DEVELOPMENT",
+          "p5": 0.6,
+          "first_relevant_rank": 2,
+          "top5": [
+            "SALES",
+            "BUSINESS-DEVELOPMENT",
+            "BPO",
+            "BUSINESS-DEVELOPMENT",
+            "BUSINESS-DEVELOPMENT"
+          ]
+        },
+        {
+          "query": "Head chef experienced in menu planning, kitchen management and food cost control",
+          "category": "CHEF",
+          "p5": 1.0,
+          "first_relevant_rank": 1,
+          "top5": [
+            "CHEF",
+            "CHEF",
+            "CHEF",
+            "CHEF",
+            "CHEF"
+          ]
+        },
+        {
+          "query": "Line cook or sous chef for food preparation in a busy restaurant kitchen",
+          "category": "CHEF",
+          "p5": 1.0,
+          "first_relevant_rank": 1,
+          "top5": [
+            "CHEF",
+            "CHEF",
+            "CHEF",
+            "CHEF",
+            "CHEF"
+          ]
+        },
+        {
+          "query": "Construction site supervisor managing subcontractors, safety and building schedules",
+          "category": "CONSTRUCTION",
+          "p5": 0.8,
+          "first_relevant_rank": 1,
+          "top5": [
+            "CONSTRUCTION",
+            "CONSTRUCTION",
+            "CONSTRUCTION",
+            "CONSTRUCTION",
+            "ADVOCATE"
+          ]
+        },
+        {
+          "query": "Project manager for commercial construction with estimating and blueprint reading",
+          "category": "CONSTRUCTION",
+          "p5": 0.8,
+          "first_relevant_rank": 1,
+          "top5": [
+            "CONSTRUCTION",
+            "CONSTRUCTION",
+            "CONSTRUCTION",
+            "CONSTRUCTION",
+            "ENGINEERING"
+          ]
+        },
+        {
+          "query": "Management consultant for strategy, process improvement and client advisory engagements",
+          "category": "CONSULTANT",
+          "p5": 0.6,
+          "first_relevant_rank": 1,
+          "top5": [
+            "CONSULTANT",
+            "BUSINESS-DEVELOPMENT",
+            "CONSULTANT",
+            "CONSULTANT",
+            "BPO"
+          ]
+        },
+        {
+          "query": "Consultant to analyze business requirements and deliver recommendations to clients",
+          "category": "CONSULTANT",
+          "p5": 0.2,
+          "first_relevant_rank": 2,
+          "top5": [
+            "BUSINESS-DEVELOPMENT",
+            "CONSULTANT",
+            "ACCOUNTANT",
+            "BPO",
+            "DIGITAL-MEDIA"
+          ]
+        },
+        {
+          "query": "Graphic designer skilled in Adobe Photoshop, Illustrator and brand identity",
+          "category": "DESIGNER",
+          "p5": 0.8,
+          "first_relevant_rank": 2,
+          "top5": [
+            "APPAREL",
+            "DESIGNER",
+            "DESIGNER",
+            "DESIGNER",
+            "DESIGNER"
+          ]
+        },
+        {
+          "query": "Interior or visual designer creating layouts, mockups and design concepts",
+          "category": "DESIGNER",
+          "p5": 0.6,
+          "first_relevant_rank": 2,
+          "top5": [
+            "APPAREL",
+            "DESIGNER",
+            "DESIGNER",
+            "APPAREL",
+            "DESIGNER"
+          ]
+        },
+        {
+          "query": "Digital media specialist for video production, social media content and editing",
+          "category": "DIGITAL-MEDIA",
+          "p5": 0.6,
+          "first_relevant_rank": 1,
+          "top5": [
+            "DIGITAL-MEDIA",
+            "PUBLIC-RELATIONS",
+            "DIGITAL-MEDIA",
+            "DIGITAL-MEDIA",
+            "CONSULTANT"
+          ]
+        },
+        {
+          "query": "Online marketing coordinator running SEO, web content and digital campaigns",
+          "category": "DIGITAL-MEDIA",
+          "p5": 0.6,
+          "first_relevant_rank": 1,
+          "top5": [
+            "DIGITAL-MEDIA",
+            "BUSINESS-DEVELOPMENT",
+            "DIGITAL-MEDIA",
+            "CONSULTANT",
+            "DIGITAL-MEDIA"
+          ]
+        },
+        {
+          "query": "Mechanical or electrical engineer with design, testing and AutoCAD experience",
+          "category": "ENGINEERING",
+          "p5": 0.6,
+          "first_relevant_rank": 1,
+          "top5": [
+            "ENGINEERING",
+            "ENGINEERING",
+            "AUTOMOBILE",
+            "CONSTRUCTION",
+            "ENGINEERING"
+          ]
+        },
+        {
+          "query": "Engineer for product development, technical specifications and quality testing",
+          "category": "ENGINEERING",
+          "p5": 0.6,
+          "first_relevant_rank": 1,
+          "top5": [
+            "ENGINEERING",
+            "ENGINEERING",
+            "DESIGNER",
+            "DESIGNER",
+            "ENGINEERING"
+          ]
+        },
+        {
+          "query": "Financial analyst with budgeting, forecasting and financial modeling skills",
+          "category": "FINANCE",
+          "p5": 0.2,
+          "first_relevant_rank": 2,
+          "top5": [
+            "BANKING",
+            "FINANCE",
+            "ACCOUNTANT",
+            "ADVOCATE",
+            "BANKING"
+          ]
+        },
+        {
+          "query": "Finance manager responsible for financial reporting, variance analysis and controls",
+          "category": "FINANCE",
+          "p5": 0.2,
+          "first_relevant_rank": 3,
+          "top5": [
+            "ACCOUNTANT",
+            "ADVOCATE",
+            "FINANCE",
+            "BANKING",
+            "ACCOUNTANT"
+          ]
+        },
+        {
+          "query": "Personal trainer designing exercise programs and coaching clients on strength training",
+          "category": "FITNESS",
+          "p5": 0.6,
+          "first_relevant_rank": 1,
+          "top5": [
+            "FITNESS",
+            "FITNESS",
+            "ADVOCATE",
+            "FITNESS",
+            "INFORMATION-TECHNOLOGY"
+          ]
+        },
+        {
+          "query": "Fitness instructor leading group classes and promoting health and wellness",
+          "category": "FITNESS",
+          "p5": 1.0,
+          "first_relevant_rank": 1,
+          "top5": [
+            "FITNESS",
+            "FITNESS",
+            "FITNESS",
+            "FITNESS",
+            "FITNESS"
+          ]
+        },
+        {
+          "query": "Registered nurse providing patient care, medication administration and clinical support",
+          "category": "HEALTHCARE",
+          "p5": 0.2,
+          "first_relevant_rank": 3,
+          "top5": [
+            "ADVOCATE",
+            "FITNESS",
+            "HEALTHCARE",
+            "DESIGNER",
+            "SALES"
+          ]
+        },
+        {
+          "query": "Healthcare administrator managing hospital operations and medical records",
+          "category": "HEALTHCARE",
+          "p5": 0.4,
+          "first_relevant_rank": 1,
+          "top5": [
+            "HEALTHCARE",
+            "PUBLIC-RELATIONS",
+            "HEALTHCARE",
+            "AUTOMOBILE",
+            "ADVOCATE"
+          ]
+        },
+        {
+          "query": "HR generalist handling recruitment, onboarding, employee relations and benefits",
+          "category": "HR",
+          "p5": 0.8,
+          "first_relevant_rank": 1,
+          "top5": [
+            "HR",
+            "HR",
+            "HR",
+            "HR",
+            "BPO"
+          ]
+        },
+        {
+          "query": "Human resources manager for talent acquisition, payroll and HR policy compliance",
+          "category": "HR",
+          "p5": 0.6,
+          "first_relevant_rank": 1,
+          "top5": [
+            "HR",
+            "HR",
+            "HEALTHCARE",
+            "HR",
+            "BPO"
+          ]
+        },
+        {
+          "query": "IT support specialist for network administration, help desk and system troubleshooting",
+          "category": "INFORMATION-TECHNOLOGY",
+          "p5": 0.4,
+          "first_relevant_rank": 2,
+          "top5": [
+            "AVIATION",
+            "INFORMATION-TECHNOLOGY",
+            "BPO",
+            "ENGINEERING",
+            "INFORMATION-TECHNOLOGY"
+          ]
+        },
+        {
+          "query": "Systems administrator managing servers, Active Directory and IT infrastructure",
+          "category": "INFORMATION-TECHNOLOGY",
+          "p5": 0.4,
+          "first_relevant_rank": 2,
+          "top5": [
+            "CONSULTANT",
+            "INFORMATION-TECHNOLOGY",
+            "INFORMATION-TECHNOLOGY",
+            "AVIATION",
+            "BPO"
+          ]
+        },
+        {
+          "query": "Public relations specialist writing press releases and managing media relations",
+          "category": "PUBLIC-RELATIONS",
+          "p5": 0.8,
+          "first_relevant_rank": 1,
+          "top5": [
+            "PUBLIC-RELATIONS",
+            "PUBLIC-RELATIONS",
+            "PUBLIC-RELATIONS",
+            "PUBLIC-RELATIONS",
+            "DIGITAL-MEDIA"
+          ]
+        },
+        {
+          "query": "Communications manager for corporate messaging, events and brand reputation",
+          "category": "PUBLIC-RELATIONS",
+          "p5": 0.8,
+          "first_relevant_rank": 1,
+          "top5": [
+            "PUBLIC-RELATIONS",
+            "SALES",
+            "PUBLIC-RELATIONS",
+            "PUBLIC-RELATIONS",
+            "PUBLIC-RELATIONS"
+          ]
+        },
+        {
+          "query": "Sales representative with quota attainment, prospecting and closing deals",
+          "category": "SALES",
+          "p5": 0.2,
+          "first_relevant_rank": 4,
+          "top5": [
+            "BANKING",
+            "BUSINESS-DEVELOPMENT",
+            "HEALTHCARE",
+            "SALES",
+            "DESIGNER"
+          ]
+        },
+        {
+          "query": "Retail sales associate providing customer service and driving store sales",
+          "category": "SALES",
+          "p5": 0.4,
+          "first_relevant_rank": 1,
+          "top5": [
+            "SALES",
+            "FINANCE",
+            "APPAREL",
+            "SALES",
+            "APPAREL"
+          ]
+        },
+        {
+          "query": "Teacher experienced in lesson planning, classroom management and student assessment",
+          "category": "TEACHER",
+          "p5": 0.8,
+          "first_relevant_rank": 1,
+          "top5": [
+            "TEACHER",
+            "TEACHER",
+            "ARTS",
+            "TEACHER",
+            "TEACHER"
+          ]
+        },
+        {
+          "query": "Elementary school educator who develops curriculum and supports student learning",
+          "category": "TEACHER",
+          "p5": 0.6,
+          "first_relevant_rank": 3,
+          "top5": [
+            "ARTS",
+            "ARTS",
+            "TEACHER",
+            "TEACHER",
+            "TEACHER"
+          ]
+        }
+      ]
+    },
+    {
+      "label": "MS MARCO MiniLM + 30% overlap",
+      "all": {
+        "p5": 0.5083333333333333,
+        "p10": 0.425,
+        "mrr": 0.8005050505050505,
+        "ndcg10": 0.4732924465457083
+      },
+      "dev": {
+        "p5": 0.5333333333333333,
+        "p10": 0.43333333333333335,
+        "mrr": 0.8368055555555556,
+        "ndcg10": 0.48753353901630847
+      },
+      "test": {
+        "p5": 0.48333333333333334,
+        "p10": 0.4166666666666667,
+        "mrr": 0.7642045454545454,
+        "ndcg10": 0.4590513540751081
+      },
+      "latency_ms": 184.46750000293832,
+      "kwargs": {
+        "rerank": true,
+        "reranker": "cross-encoder/ms-marco-MiniLM-L-6-v2",
+        "alpha": 0.3,
+        "keyword_mode": "overlap"
+      },
+      "per_query": [
+        {
+          "query": "Accountant experienced in general ledger reconciliation, accounts payable and month-end close",
+          "category": "ACCOUNTANT",
+          "p5": 0.8,
+          "first_relevant_rank": 1,
+          "top5": [
+            "ACCOUNTANT",
+            "BANKING",
+            "ACCOUNTANT",
+            "ACCOUNTANT",
+            "ACCOUNTANT"
+          ]
+        },
+        {
+          "query": "Need someone to handle bookkeeping, tax preparation and audit support using QuickBooks",
+          "category": "ACCOUNTANT",
+          "p5": 0.4,
+          "first_relevant_rank": 1,
+          "top5": [
+            "ACCOUNTANT",
+            "ACCOUNTANT",
+            "AGRICULTURE",
+            "HR",
+            "ADVOCATE"
+          ]
+        },
+        {
+          "query": "Lawyer with litigation experience, legal research and drafting of contracts and pleadings",
+          "category": "ADVOCATE",
+          "p5": 0.2,
+          "first_relevant_rank": 4,
+          "top5": [
+            "AGRICULTURE",
+            "BPO",
+            "CONSULTANT",
+            "ADVOCATE",
+            "CONSULTANT"
+          ]
+        },
+        {
+          "query": "Looking for an attorney to represent clients in court and advise on case strategy",
+          "category": "ADVOCATE",
+          "p5": 0.0,
+          "first_relevant_rank": 11,
+          "top5": [
+            "APPAREL",
+            "DESIGNER",
+            "HEALTHCARE",
+            "AGRICULTURE",
+            "AUTOMOBILE"
+          ]
+        },
+        {
+          "query": "Agronomist with crop management, soil testing and irrigation planning experience",
+          "category": "AGRICULTURE",
+          "p5": 0.2,
+          "first_relevant_rank": 1,
+          "top5": [
+            "AGRICULTURE",
+            "ENGINEERING",
+            "BUSINESS-DEVELOPMENT",
+            "INFORMATION-TECHNOLOGY",
+            "CONSTRUCTION"
+          ]
+        },
+        {
+          "query": "Farm operations manager overseeing harvesting, livestock and field equipment",
+          "category": "AGRICULTURE",
+          "p5": 0.2,
+          "first_relevant_rank": 1,
+          "top5": [
+            "AGRICULTURE",
+            "CONSTRUCTION",
+            "INFORMATION-TECHNOLOGY",
+            "AUTOMOBILE",
+            "APPAREL"
+          ]
+        },
+        {
+          "query": "Fashion merchandiser with garment production, textile sourcing and vendor management",
+          "category": "APPAREL",
+          "p5": 0.6,
+          "first_relevant_rank": 2,
+          "top5": [
+            "DESIGNER",
+            "APPAREL",
+            "APPAREL",
+            "AVIATION",
+            "APPAREL"
+          ]
+        },
+        {
+          "query": "Apparel designer creating clothing collections, tech packs and fabric selection",
+          "category": "APPAREL",
+          "p5": 0.4,
+          "first_relevant_rank": 2,
+          "top5": [
+            "DESIGNER",
+            "APPAREL",
+            "APPAREL",
+            "DESIGNER",
+            "DESIGNER"
+          ]
+        },
+        {
+          "query": "Artist with painting, drawing and exhibition experience in fine arts",
+          "category": "ARTS",
+          "p5": 0.2,
+          "first_relevant_rank": 1,
+          "top5": [
+            "ARTS",
+            "DESIGNER",
+            "DESIGNER",
+            "APPAREL",
+            "HR"
+          ]
+        },
+        {
+          "query": "Arts program coordinator for gallery curation, art education and community workshops",
+          "category": "ARTS",
+          "p5": 0.6,
+          "first_relevant_rank": 1,
+          "top5": [
+            "ARTS",
+            "ARTS",
+            "TEACHER",
+            "ARTS",
+            "DIGITAL-MEDIA"
+          ]
+        },
+        {
+          "query": "Automotive technician skilled in engine diagnostics, brake repair and vehicle maintenance",
+          "category": "AUTOMOBILE",
+          "p5": 0.2,
+          "first_relevant_rank": 2,
+          "top5": [
+            "AVIATION",
+            "AUTOMOBILE",
+            "AVIATION",
+            "AVIATION",
+            "APPAREL"
+          ]
+        },
+        {
+          "query": "Car dealership service advisor handling repair orders and parts for vehicles",
+          "category": "AUTOMOBILE",
+          "p5": 0.4,
+          "first_relevant_rank": 1,
+          "top5": [
+            "AUTOMOBILE",
+            "AUTOMOBILE",
+            "AVIATION",
+            "ADVOCATE",
+            "APPAREL"
+          ]
+        },
+        {
+          "query": "Aircraft maintenance technician with FAA certification and avionics troubleshooting",
+          "category": "AVIATION",
+          "p5": 0.8,
+          "first_relevant_rank": 1,
+          "top5": [
+            "AVIATION",
+            "AVIATION",
+            "INFORMATION-TECHNOLOGY",
+            "AVIATION",
+            "AVIATION"
+          ]
+        },
+        {
+          "query": "Airline operations specialist for flight scheduling, ground handling and safety compliance",
+          "category": "AVIATION",
+          "p5": 0.6,
+          "first_relevant_rank": 1,
+          "top5": [
+            "AVIATION",
+            "INFORMATION-TECHNOLOGY",
+            "AVIATION",
+            "AUTOMOBILE",
+            "AVIATION"
+          ]
+        },
+        {
+          "query": "Bank teller or personal banker handling deposits, loans and customer accounts",
+          "category": "BANKING",
+          "p5": 0.4,
+          "first_relevant_rank": 1,
+          "top5": [
+            "BANKING",
+            "ACCOUNTANT",
+            "BANKING",
+            "FINANCE",
+            "ACCOUNTANT"
+          ]
+        },
+        {
+          "query": "Branch banking officer for credit analysis, loan processing and KYC compliance",
+          "category": "BANKING",
+          "p5": 0.4,
+          "first_relevant_rank": 1,
+          "top5": [
+            "BANKING",
+            "ACCOUNTANT",
+            "BANKING",
+            "BUSINESS-DEVELOPMENT",
+            "ACCOUNTANT"
+          ]
+        },
+        {
+          "query": "Call center representative handling inbound customer calls and resolving complaints",
+          "category": "BPO",
+          "p5": 0.4,
+          "first_relevant_rank": 1,
+          "top5": [
+            "BPO",
+            "DESIGNER",
+            "AUTOMOBILE",
+            "ADVOCATE",
+            "BPO"
+          ]
+        },
+        {
+          "query": "Customer support agent for a business process outsourcing team meeting SLA targets",
+          "category": "BPO",
+          "p5": 0.4,
+          "first_relevant_rank": 1,
+          "top5": [
+            "BPO",
+            "DIGITAL-MEDIA",
+            "BPO",
+            "AUTOMOBILE",
+            "AUTOMOBILE"
+          ]
+        },
+        {
+          "query": "Business development manager for partnerships, lead generation and new market expansion",
+          "category": "BUSINESS-DEVELOPMENT",
+          "p5": 0.4,
+          "first_relevant_rank": 1,
+          "top5": [
+            "BUSINESS-DEVELOPMENT",
+            "BUSINESS-DEVELOPMENT",
+            "CONSULTANT",
+            "SALES",
+            "CONSULTANT"
+          ]
+        },
+        {
+          "query": "Someone to build client relationships, pitch proposals and grow revenue pipeline",
+          "category": "BUSINESS-DEVELOPMENT",
+          "p5": 0.4,
+          "first_relevant_rank": 2,
+          "top5": [
+            "SALES",
+            "BUSINESS-DEVELOPMENT",
+            "BPO",
+            "BUSINESS-DEVELOPMENT",
+            "BPO"
+          ]
+        },
+        {
+          "query": "Head chef experienced in menu planning, kitchen management and food cost control",
+          "category": "CHEF",
+          "p5": 1.0,
+          "first_relevant_rank": 1,
+          "top5": [
+            "CHEF",
+            "CHEF",
+            "CHEF",
+            "CHEF",
+            "CHEF"
+          ]
+        },
+        {
+          "query": "Line cook or sous chef for food preparation in a busy restaurant kitchen",
+          "category": "CHEF",
+          "p5": 1.0,
+          "first_relevant_rank": 1,
+          "top5": [
+            "CHEF",
+            "CHEF",
+            "CHEF",
+            "CHEF",
+            "CHEF"
+          ]
+        },
+        {
+          "query": "Construction site supervisor managing subcontractors, safety and building schedules",
+          "category": "CONSTRUCTION",
+          "p5": 1.0,
+          "first_relevant_rank": 1,
+          "top5": [
+            "CONSTRUCTION",
+            "CONSTRUCTION",
+            "CONSTRUCTION",
+            "CONSTRUCTION",
+            "CONSTRUCTION"
+          ]
+        },
+        {
+          "query": "Project manager for commercial construction with estimating and blueprint reading",
+          "category": "CONSTRUCTION",
+          "p5": 0.8,
+          "first_relevant_rank": 1,
+          "top5": [
+            "CONSTRUCTION",
+            "CONSTRUCTION",
+            "CONSTRUCTION",
+            "SALES",
+            "CONSTRUCTION"
+          ]
+        },
+        {
+          "query": "Management consultant for strategy, process improvement and client advisory engagements",
+          "category": "CONSULTANT",
+          "p5": 0.6,
+          "first_relevant_rank": 1,
+          "top5": [
+            "CONSULTANT",
+            "BUSINESS-DEVELOPMENT",
+            "CONSULTANT",
+            "CONSULTANT",
+            "BPO"
+          ]
+        },
+        {
+          "query": "Consultant to analyze business requirements and deliver recommendations to clients",
+          "category": "CONSULTANT",
+          "p5": 0.2,
+          "first_relevant_rank": 3,
+          "top5": [
+            "BUSINESS-DEVELOPMENT",
+            "ACCOUNTANT",
+            "CONSULTANT",
+            "BPO",
+            "DIGITAL-MEDIA"
+          ]
+        },
+        {
+          "query": "Graphic designer skilled in Adobe Photoshop, Illustrator and brand identity",
+          "category": "DESIGNER",
+          "p5": 0.6,
+          "first_relevant_rank": 2,
+          "top5": [
+            "APPAREL",
+            "DESIGNER",
+            "DESIGNER",
+            "DESIGNER",
+            "BUSINESS-DEVELOPMENT"
+          ]
+        },
+        {
+          "query": "Interior or visual designer creating layouts, mockups and design concepts",
+          "category": "DESIGNER",
+          "p5": 0.6,
+          "first_relevant_rank": 2,
+          "top5": [
+            "APPAREL",
+            "DESIGNER",
+            "DESIGNER",
+            "APPAREL",
+            "DESIGNER"
+          ]
+        },
+        {
+          "query": "Digital media specialist for video production, social media content and editing",
+          "category": "DIGITAL-MEDIA",
+          "p5": 0.6,
+          "first_relevant_rank": 1,
+          "top5": [
+            "DIGITAL-MEDIA",
+            "PUBLIC-RELATIONS",
+            "DIGITAL-MEDIA",
+            "DIGITAL-MEDIA",
+            "CONSULTANT"
+          ]
+        },
+        {
+          "query": "Online marketing coordinator running SEO, web content and digital campaigns",
+          "category": "DIGITAL-MEDIA",
+          "p5": 0.6,
+          "first_relevant_rank": 1,
+          "top5": [
+            "DIGITAL-MEDIA",
+            "BUSINESS-DEVELOPMENT",
+            "DIGITAL-MEDIA",
+            "CONSULTANT",
+            "DIGITAL-MEDIA"
+          ]
+        },
+        {
+          "query": "Mechanical or electrical engineer with design, testing and AutoCAD experience",
+          "category": "ENGINEERING",
+          "p5": 0.6,
+          "first_relevant_rank": 1,
+          "top5": [
+            "ENGINEERING",
+            "ENGINEERING",
+            "AUTOMOBILE",
+            "CONSTRUCTION",
+            "ENGINEERING"
+          ]
+        },
+        {
+          "query": "Engineer for product development, technical specifications and quality testing",
+          "category": "ENGINEERING",
+          "p5": 0.6,
+          "first_relevant_rank": 1,
+          "top5": [
+            "ENGINEERING",
+            "ENGINEERING",
+            "DESIGNER",
+            "DESIGNER",
+            "ENGINEERING"
+          ]
+        },
+        {
+          "query": "Financial analyst with budgeting, forecasting and financial modeling skills",
+          "category": "FINANCE",
+          "p5": 0.2,
+          "first_relevant_rank": 1,
+          "top5": [
+            "FINANCE",
+            "ACCOUNTANT",
+            "ADVOCATE",
+            "BANKING",
+            "BANKING"
+          ]
+        },
+        {
+          "query": "Finance manager responsible for financial reporting, variance analysis and controls",
+          "category": "FINANCE",
+          "p5": 0.2,
+          "first_relevant_rank": 3,
+          "top5": [
+            "ACCOUNTANT",
+            "ADVOCATE",
+            "FINANCE",
+            "ACCOUNTANT",
+            "BANKING"
+          ]
+        },
+        {
+          "query": "Personal trainer designing exercise programs and coaching clients on strength training",
+          "category": "FITNESS",
+          "p5": 0.8,
+          "first_relevant_rank": 1,
+          "top5": [
+            "FITNESS",
+            "FITNESS",
+            "ADVOCATE",
+            "FITNESS",
+            "FITNESS"
+          ]
+        },
+        {
+          "query": "Fitness instructor leading group classes and promoting health and wellness",
+          "category": "FITNESS",
+          "p5": 0.6,
+          "first_relevant_rank": 1,
+          "top5": [
+            "FITNESS",
+            "FITNESS",
+            "FITNESS",
+            "CHEF",
+            "ADVOCATE"
+          ]
+        },
+        {
+          "query": "Registered nurse providing patient care, medication administration and clinical support",
+          "category": "HEALTHCARE",
+          "p5": 0.2,
+          "first_relevant_rank": 3,
+          "top5": [
+            "ADVOCATE",
+            "FITNESS",
+            "HEALTHCARE",
+            "DESIGNER",
+            "SALES"
+          ]
+        },
+        {
+          "query": "Healthcare administrator managing hospital operations and medical records",
+          "category": "HEALTHCARE",
+          "p5": 0.4,
+          "first_relevant_rank": 1,
+          "top5": [
+            "HEALTHCARE",
+            "PUBLIC-RELATIONS",
+            "HEALTHCARE",
+            "AUTOMOBILE",
+            "ADVOCATE"
+          ]
+        },
+        {
+          "query": "HR generalist handling recruitment, onboarding, employee relations and benefits",
+          "category": "HR",
+          "p5": 0.8,
+          "first_relevant_rank": 1,
+          "top5": [
+            "HR",
+            "HR",
+            "HR",
+            "HR",
+            "BPO"
+          ]
+        },
+        {
+          "query": "Human resources manager for talent acquisition, payroll and HR policy compliance",
+          "category": "HR",
+          "p5": 0.6,
+          "first_relevant_rank": 1,
+          "top5": [
+            "HR",
+            "HEALTHCARE",
+            "HR",
+            "HR",
+            "BPO"
+          ]
+        },
+        {
+          "query": "IT support specialist for network administration, help desk and system troubleshooting",
+          "category": "INFORMATION-TECHNOLOGY",
+          "p5": 0.4,
+          "first_relevant_rank": 2,
+          "top5": [
+            "ENGINEERING",
+            "INFORMATION-TECHNOLOGY",
+            "AVIATION",
+            "INFORMATION-TECHNOLOGY",
+            "CONSULTANT"
+          ]
+        },
+        {
+          "query": "Systems administrator managing servers, Active Directory and IT infrastructure",
+          "category": "INFORMATION-TECHNOLOGY",
+          "p5": 0.4,
+          "first_relevant_rank": 4,
+          "top5": [
+            "CONSULTANT",
+            "AVIATION",
+            "BPO",
+            "INFORMATION-TECHNOLOGY",
+            "INFORMATION-TECHNOLOGY"
+          ]
+        },
+        {
+          "query": "Public relations specialist writing press releases and managing media relations",
+          "category": "PUBLIC-RELATIONS",
+          "p5": 0.8,
+          "first_relevant_rank": 1,
+          "top5": [
+            "PUBLIC-RELATIONS",
+            "PUBLIC-RELATIONS",
+            "PUBLIC-RELATIONS",
+            "PUBLIC-RELATIONS",
+            "DIGITAL-MEDIA"
+          ]
+        },
+        {
+          "query": "Communications manager for corporate messaging, events and brand reputation",
+          "category": "PUBLIC-RELATIONS",
+          "p5": 0.8,
+          "first_relevant_rank": 1,
+          "top5": [
+            "PUBLIC-RELATIONS",
+            "SALES",
+            "PUBLIC-RELATIONS",
+            "PUBLIC-RELATIONS",
+            "PUBLIC-RELATIONS"
+          ]
+        },
+        {
+          "query": "Sales representative with quota attainment, prospecting and closing deals",
+          "category": "SALES",
+          "p5": 0.4,
+          "first_relevant_rank": 2,
+          "top5": [
+            "BANKING",
+            "SALES",
+            "HEALTHCARE",
+            "BUSINESS-DEVELOPMENT",
+            "SALES"
+          ]
+        },
+        {
+          "query": "Retail sales associate providing customer service and driving store sales",
+          "category": "SALES",
+          "p5": 0.4,
+          "first_relevant_rank": 2,
+          "top5": [
+            "FINANCE",
+            "SALES",
+            "APPAREL",
+            "SALES",
+            "APPAREL"
+          ]
+        },
+        {
+          "query": "Teacher experienced in lesson planning, classroom management and student assessment",
+          "category": "TEACHER",
+          "p5": 0.6,
+          "first_relevant_rank": 1,
+          "top5": [
+            "TEACHER",
+            "ARTS",
+            "TEACHER",
+            "TEACHER",
+            "ARTS"
+          ]
+        },
+        {
+          "query": "Elementary school educator who develops curriculum and supports student learning",
+          "category": "TEACHER",
+          "p5": 0.6,
+          "first_relevant_rank": 3,
+          "top5": [
+            "ARTS",
+            "ARTS",
+            "TEACHER",
+            "TEACHER",
+            "TEACHER"
+          ]
+        }
+      ]
+    },
+    {
+      "label": "MS MARCO MiniLM + 30% BM25",
+      "all": {
+        "p5": 0.5291666666666667,
+        "p10": 0.4291666666666667,
+        "mrr": 0.7986111111111112,
+        "ndcg10": 0.4766564372831987
+      },
+      "dev": {
+        "p5": 0.55,
+        "p10": 0.4166666666666667,
+        "mrr": 0.8020833333333334,
+        "ndcg10": 0.4733754705269123
+      },
+      "test": {
+        "p5": 0.5083333333333333,
+        "p10": 0.44166666666666665,
+        "mrr": 0.7951388888888888,
+        "ndcg10": 0.479937404039485
+      },
+      "latency_ms": 185.61429999681422,
+      "kwargs": {
+        "rerank": true,
+        "reranker": "cross-encoder/ms-marco-MiniLM-L-6-v2",
+        "alpha": 0.3,
+        "keyword_mode": "bm25"
+      },
+      "per_query": [
+        {
+          "query": "Accountant experienced in general ledger reconciliation, accounts payable and month-end close",
+          "category": "ACCOUNTANT",
+          "p5": 0.8,
+          "first_relevant_rank": 2,
+          "top5": [
+            "BANKING",
+            "ACCOUNTANT",
+            "ACCOUNTANT",
+            "ACCOUNTANT",
+            "ACCOUNTANT"
+          ]
+        },
+        {
+          "query": "Need someone to handle bookkeeping, tax preparation and audit support using QuickBooks",
+          "category": "ACCOUNTANT",
+          "p5": 0.4,
+          "first_relevant_rank": 1,
+          "top5": [
+            "ACCOUNTANT",
+            "ACCOUNTANT",
+            "AGRICULTURE",
+            "HR",
+            "ADVOCATE"
+          ]
+        },
+        {
+          "query": "Lawyer with litigation experience, legal research and drafting of contracts and pleadings",
+          "category": "ADVOCATE",
+          "p5": 0.0,
+          "first_relevant_rank": 12,
+          "top5": [
+            "AGRICULTURE",
+            "HR",
+            "BPO",
+            "CONSULTANT",
+            "CONSULTANT"
+          ]
+        },
+        {
+          "query": "Looking for an attorney to represent clients in court and advise on case strategy",
+          "category": "ADVOCATE",
+          "p5": 0.0,
+          "first_relevant_rank": 6,
+          "top5": [
+            "HEALTHCARE",
+            "BPO",
+            "BPO",
+            "AGRICULTURE",
+            "AUTOMOBILE"
+          ]
+        },
+        {
+          "query": "Agronomist with crop management, soil testing and irrigation planning experience",
+          "category": "AGRICULTURE",
+          "p5": 0.2,
+          "first_relevant_rank": 1,
+          "top5": [
+            "AGRICULTURE",
+            "ENGINEERING",
+            "CONSTRUCTION",
+            "BUSINESS-DEVELOPMENT",
+            "ENGINEERING"
+          ]
+        },
+        {
+          "query": "Farm operations manager overseeing harvesting, livestock and field equipment",
+          "category": "AGRICULTURE",
+          "p5": 0.2,
+          "first_relevant_rank": 1,
+          "top5": [
+            "AGRICULTURE",
+            "AVIATION",
+            "CONSTRUCTION",
+            "ADVOCATE",
+            "APPAREL"
+          ]
+        },
+        {
+          "query": "Fashion merchandiser with garment production, textile sourcing and vendor management",
+          "category": "APPAREL",
+          "p5": 0.6,
+          "first_relevant_rank": 2,
+          "top5": [
+            "DESIGNER",
+            "APPAREL",
+            "APPAREL",
+            "APPAREL",
+            "AGRICULTURE"
+          ]
+        },
+        {
+          "query": "Apparel designer creating clothing collections, tech packs and fabric selection",
+          "category": "APPAREL",
+          "p5": 0.4,
+          "first_relevant_rank": 2,
+          "top5": [
+            "DESIGNER",
+            "APPAREL",
+            "APPAREL",
+            "DESIGNER",
+            "DESIGNER"
+          ]
+        },
+        {
+          "query": "Artist with painting, drawing and exhibition experience in fine arts",
+          "category": "ARTS",
+          "p5": 0.2,
+          "first_relevant_rank": 1,
+          "top5": [
+            "ARTS",
+            "DESIGNER",
+            "DESIGNER",
+            "DESIGNER",
+            "DESIGNER"
+          ]
+        },
+        {
+          "query": "Arts program coordinator for gallery curation, art education and community workshops",
+          "category": "ARTS",
+          "p5": 0.6,
+          "first_relevant_rank": 1,
+          "top5": [
+            "ARTS",
+            "TEACHER",
+            "APPAREL",
+            "ARTS",
+            "ARTS"
+          ]
+        },
+        {
+          "query": "Automotive technician skilled in engine diagnostics, brake repair and vehicle maintenance",
+          "category": "AUTOMOBILE",
+          "p5": 0.4,
+          "first_relevant_rank": 2,
+          "top5": [
+            "AVIATION",
+            "AUTOMOBILE",
+            "AVIATION",
+            "AVIATION",
+            "AUTOMOBILE"
+          ]
+        },
+        {
+          "query": "Car dealership service advisor handling repair orders and parts for vehicles",
+          "category": "AUTOMOBILE",
+          "p5": 0.4,
+          "first_relevant_rank": 1,
+          "top5": [
+            "AUTOMOBILE",
+            "AVIATION",
+            "AUTOMOBILE",
+            "ADVOCATE",
+            "INFORMATION-TECHNOLOGY"
+          ]
+        },
+        {
+          "query": "Aircraft maintenance technician with FAA certification and avionics troubleshooting",
+          "category": "AVIATION",
+          "p5": 0.6,
+          "first_relevant_rank": 1,
+          "top5": [
+            "AVIATION",
+            "AVIATION",
+            "INFORMATION-TECHNOLOGY",
+            "AUTOMOBILE",
+            "AVIATION"
+          ]
+        },
+        {
+          "query": "Airline operations specialist for flight scheduling, ground handling and safety compliance",
+          "category": "AVIATION",
+          "p5": 0.4,
+          "first_relevant_rank": 1,
+          "top5": [
+            "AVIATION",
+            "INFORMATION-TECHNOLOGY",
+            "FINANCE",
+            "AUTOMOBILE",
+            "AVIATION"
+          ]
+        },
+        {
+          "query": "Bank teller or personal banker handling deposits, loans and customer accounts",
+          "category": "BANKING",
+          "p5": 0.6,
+          "first_relevant_rank": 1,
+          "top5": [
+            "BANKING",
+            "BANKING",
+            "FINANCE",
+            "ACCOUNTANT",
+            "BANKING"
+          ]
+        },
+        {
+          "query": "Branch banking officer for credit analysis, loan processing and KYC compliance",
+          "category": "BANKING",
+          "p5": 0.6,
+          "first_relevant_rank": 1,
+          "top5": [
+            "BANKING",
+            "BANKING",
+            "ACCOUNTANT",
+            "BUSINESS-DEVELOPMENT",
+            "BANKING"
+          ]
+        },
+        {
+          "query": "Call center representative handling inbound customer calls and resolving complaints",
+          "category": "BPO",
+          "p5": 0.4,
+          "first_relevant_rank": 1,
+          "top5": [
+            "BPO",
+            "DESIGNER",
+            "AUTOMOBILE",
+            "ADVOCATE",
+            "BPO"
+          ]
+        },
+        {
+          "query": "Customer support agent for a business process outsourcing team meeting SLA targets",
+          "category": "BPO",
+          "p5": 0.6,
+          "first_relevant_rank": 1,
+          "top5": [
+            "BPO",
+            "DIGITAL-MEDIA",
+            "BPO",
+            "BANKING",
+            "BPO"
+          ]
+        },
+        {
+          "query": "Business development manager for partnerships, lead generation and new market expansion",
+          "category": "BUSINESS-DEVELOPMENT",
+          "p5": 0.4,
+          "first_relevant_rank": 1,
+          "top5": [
+            "BUSINESS-DEVELOPMENT",
+            "BUSINESS-DEVELOPMENT",
+            "CONSULTANT",
+            "CONSULTANT",
+            "SALES"
+          ]
+        },
+        {
+          "query": "Someone to build client relationships, pitch proposals and grow revenue pipeline",
+          "category": "BUSINESS-DEVELOPMENT",
+          "p5": 0.4,
+          "first_relevant_rank": 2,
+          "top5": [
+            "SALES",
+            "BUSINESS-DEVELOPMENT",
+            "BPO",
+            "BUSINESS-DEVELOPMENT",
+            "ENGINEERING"
+          ]
+        },
+        {
+          "query": "Head chef experienced in menu planning, kitchen management and food cost control",
+          "category": "CHEF",
+          "p5": 1.0,
+          "first_relevant_rank": 1,
+          "top5": [
+            "CHEF",
+            "CHEF",
+            "CHEF",
+            "CHEF",
+            "CHEF"
+          ]
+        },
+        {
+          "query": "Line cook or sous chef for food preparation in a busy restaurant kitchen",
+          "category": "CHEF",
+          "p5": 1.0,
+          "first_relevant_rank": 1,
+          "top5": [
+            "CHEF",
+            "CHEF",
+            "CHEF",
+            "CHEF",
+            "CHEF"
+          ]
+        },
+        {
+          "query": "Construction site supervisor managing subcontractors, safety and building schedules",
+          "category": "CONSTRUCTION",
+          "p5": 1.0,
+          "first_relevant_rank": 1,
+          "top5": [
+            "CONSTRUCTION",
+            "CONSTRUCTION",
+            "CONSTRUCTION",
+            "CONSTRUCTION",
+            "CONSTRUCTION"
+          ]
+        },
+        {
+          "query": "Project manager for commercial construction with estimating and blueprint reading",
+          "category": "CONSTRUCTION",
+          "p5": 0.8,
+          "first_relevant_rank": 1,
+          "top5": [
+            "CONSTRUCTION",
+            "CONSTRUCTION",
+            "CONSTRUCTION",
+            "AUTOMOBILE",
+            "CONSTRUCTION"
+          ]
+        },
+        {
+          "query": "Management consultant for strategy, process improvement and client advisory engagements",
+          "category": "CONSULTANT",
+          "p5": 0.6,
+          "first_relevant_rank": 1,
+          "top5": [
+            "CONSULTANT",
+            "BUSINESS-DEVELOPMENT",
+            "CONSULTANT",
+            "CONSULTANT",
+            "BPO"
+          ]
+        },
+        {
+          "query": "Consultant to analyze business requirements and deliver recommendations to clients",
+          "category": "CONSULTANT",
+          "p5": 0.2,
+          "first_relevant_rank": 1,
+          "top5": [
+            "CONSULTANT",
+            "ACCOUNTANT",
+            "BUSINESS-DEVELOPMENT",
+            "BPO",
+            "DIGITAL-MEDIA"
+          ]
+        },
+        {
+          "query": "Graphic designer skilled in Adobe Photoshop, Illustrator and brand identity",
+          "category": "DESIGNER",
+          "p5": 0.8,
+          "first_relevant_rank": 2,
+          "top5": [
+            "APPAREL",
+            "DESIGNER",
+            "DESIGNER",
+            "DESIGNER",
+            "DESIGNER"
+          ]
+        },
+        {
+          "query": "Interior or visual designer creating layouts, mockups and design concepts",
+          "category": "DESIGNER",
+          "p5": 0.6,
+          "first_relevant_rank": 2,
+          "top5": [
+            "APPAREL",
+            "DESIGNER",
+            "DESIGNER",
+            "APPAREL",
+            "DESIGNER"
+          ]
+        },
+        {
+          "query": "Digital media specialist for video production, social media content and editing",
+          "category": "DIGITAL-MEDIA",
+          "p5": 0.6,
+          "first_relevant_rank": 1,
+          "top5": [
+            "DIGITAL-MEDIA",
+            "DIGITAL-MEDIA",
+            "PUBLIC-RELATIONS",
+            "DIGITAL-MEDIA",
+            "CONSULTANT"
+          ]
+        },
+        {
+          "query": "Online marketing coordinator running SEO, web content and digital campaigns",
+          "category": "DIGITAL-MEDIA",
+          "p5": 0.6,
+          "first_relevant_rank": 1,
+          "top5": [
+            "DIGITAL-MEDIA",
+            "BUSINESS-DEVELOPMENT",
+            "DIGITAL-MEDIA",
+            "CONSULTANT",
+            "DIGITAL-MEDIA"
+          ]
+        },
+        {
+          "query": "Mechanical or electrical engineer with design, testing and AutoCAD experience",
+          "category": "ENGINEERING",
+          "p5": 0.6,
+          "first_relevant_rank": 1,
+          "top5": [
+            "ENGINEERING",
+            "ENGINEERING",
+            "AUTOMOBILE",
+            "CONSTRUCTION",
+            "ENGINEERING"
+          ]
+        },
+        {
+          "query": "Engineer for product development, technical specifications and quality testing",
+          "category": "ENGINEERING",
+          "p5": 0.6,
+          "first_relevant_rank": 1,
+          "top5": [
+            "ENGINEERING",
+            "ENGINEERING",
+            "DESIGNER",
+            "DESIGNER",
+            "ENGINEERING"
+          ]
+        },
+        {
+          "query": "Financial analyst with budgeting, forecasting and financial modeling skills",
+          "category": "FINANCE",
+          "p5": 0.4,
+          "first_relevant_rank": 1,
+          "top5": [
+            "FINANCE",
+            "ADVOCATE",
+            "ACCOUNTANT",
+            "BANKING",
+            "FINANCE"
+          ]
+        },
+        {
+          "query": "Finance manager responsible for financial reporting, variance analysis and controls",
+          "category": "FINANCE",
+          "p5": 0.2,
+          "first_relevant_rank": 3,
+          "top5": [
+            "ACCOUNTANT",
+            "ADVOCATE",
+            "FINANCE",
+            "ACCOUNTANT",
+            "BANKING"
+          ]
+        },
+        {
+          "query": "Personal trainer designing exercise programs and coaching clients on strength training",
+          "category": "FITNESS",
+          "p5": 0.8,
+          "first_relevant_rank": 1,
+          "top5": [
+            "FITNESS",
+            "FITNESS",
+            "ADVOCATE",
+            "FITNESS",
+            "FITNESS"
+          ]
+        },
+        {
+          "query": "Fitness instructor leading group classes and promoting health and wellness",
+          "category": "FITNESS",
+          "p5": 0.8,
+          "first_relevant_rank": 1,
+          "top5": [
+            "FITNESS",
+            "FITNESS",
+            "FITNESS",
+            "CHEF",
+            "FITNESS"
+          ]
+        },
+        {
+          "query": "Registered nurse providing patient care, medication administration and clinical support",
+          "category": "HEALTHCARE",
+          "p5": 0.2,
+          "first_relevant_rank": 3,
+          "top5": [
+            "FITNESS",
+            "ADVOCATE",
+            "HEALTHCARE",
+            "DESIGNER",
+            "SALES"
+          ]
+        },
+        {
+          "query": "Healthcare administrator managing hospital operations and medical records",
+          "category": "HEALTHCARE",
+          "p5": 0.6,
+          "first_relevant_rank": 1,
+          "top5": [
+            "HEALTHCARE",
+            "PUBLIC-RELATIONS",
+            "HEALTHCARE",
+            "AUTOMOBILE",
+            "HEALTHCARE"
+          ]
+        },
+        {
+          "query": "HR generalist handling recruitment, onboarding, employee relations and benefits",
+          "category": "HR",
+          "p5": 0.8,
+          "first_relevant_rank": 1,
+          "top5": [
+            "HR",
+            "HR",
+            "HR",
+            "HR",
+            "BPO"
+          ]
+        },
+        {
+          "query": "Human resources manager for talent acquisition, payroll and HR policy compliance",
+          "category": "HR",
+          "p5": 0.6,
+          "first_relevant_rank": 1,
+          "top5": [
+            "HR",
+            "HR",
+            "HEALTHCARE",
+            "HR",
+            "BPO"
+          ]
+        },
+        {
+          "query": "IT support specialist for network administration, help desk and system troubleshooting",
+          "category": "INFORMATION-TECHNOLOGY",
+          "p5": 0.4,
+          "first_relevant_rank": 3,
+          "top5": [
+            "ENGINEERING",
+            "BPO",
+            "INFORMATION-TECHNOLOGY",
+            "AVIATION",
+            "INFORMATION-TECHNOLOGY"
+          ]
+        },
+        {
+          "query": "Systems administrator managing servers, Active Directory and IT infrastructure",
+          "category": "INFORMATION-TECHNOLOGY",
+          "p5": 0.4,
+          "first_relevant_rank": 4,
+          "top5": [
+            "CONSULTANT",
+            "BPO",
+            "AVIATION",
+            "INFORMATION-TECHNOLOGY",
+            "INFORMATION-TECHNOLOGY"
+          ]
+        },
+        {
+          "query": "Public relations specialist writing press releases and managing media relations",
+          "category": "PUBLIC-RELATIONS",
+          "p5": 0.8,
+          "first_relevant_rank": 1,
+          "top5": [
+            "PUBLIC-RELATIONS",
+            "PUBLIC-RELATIONS",
+            "PUBLIC-RELATIONS",
+            "PUBLIC-RELATIONS",
+            "DIGITAL-MEDIA"
+          ]
+        },
+        {
+          "query": "Communications manager for corporate messaging, events and brand reputation",
+          "category": "PUBLIC-RELATIONS",
+          "p5": 0.8,
+          "first_relevant_rank": 1,
+          "top5": [
+            "PUBLIC-RELATIONS",
+            "SALES",
+            "PUBLIC-RELATIONS",
+            "PUBLIC-RELATIONS",
+            "PUBLIC-RELATIONS"
+          ]
+        },
+        {
+          "query": "Sales representative with quota attainment, prospecting and closing deals",
+          "category": "SALES",
+          "p5": 0.4,
+          "first_relevant_rank": 1,
+          "top5": [
+            "SALES",
+            "BANKING",
+            "HEALTHCARE",
+            "HEALTHCARE",
+            "SALES"
+          ]
+        },
+        {
+          "query": "Retail sales associate providing customer service and driving store sales",
+          "category": "SALES",
+          "p5": 0.4,
+          "first_relevant_rank": 2,
+          "top5": [
+            "FINANCE",
+            "SALES",
+            "APPAREL",
+            "SALES",
+            "APPAREL"
+          ]
+        },
+        {
+          "query": "Teacher experienced in lesson planning, classroom management and student assessment",
+          "category": "TEACHER",
+          "p5": 0.6,
+          "first_relevant_rank": 2,
+          "top5": [
+            "ARTS",
+            "TEACHER",
+            "TEACHER",
+            "ARTS",
+            "TEACHER"
+          ]
+        },
+        {
+          "query": "Elementary school educator who develops curriculum and supports student learning",
+          "category": "TEACHER",
+          "p5": 0.6,
+          "first_relevant_rank": 3,
+          "top5": [
+            "ARTS",
+            "ARTS",
+            "TEACHER",
+            "TEACHER",
+            "TEACHER"
+          ]
+        }
+      ]
+    },
+    {
+      "label": "BGE reranker base only",
+      "all": {
+        "p5": 0.5083333333333333,
+        "p10": 0.42291666666666666,
+        "mrr": 0.7599206349206349,
+        "ndcg10": 0.4687403158557868
+      },
+      "dev": {
+        "p5": 0.5083333333333333,
+        "p10": 0.4375,
+        "mrr": 0.7847222222222222,
+        "ndcg10": 0.48991526839197785
+      },
+      "test": {
+        "p5": 0.5083333333333333,
+        "p10": 0.4083333333333333,
+        "mrr": 0.7351190476190477,
+        "ndcg10": 0.44756536331959573
+      },
+      "latency_ms": 668.9284500025678,
+      "kwargs": {
+        "rerank": true,
+        "reranker": "BAAI/bge-reranker-base",
+        "alpha": 0.0
+      },
+      "per_query": [
+        {
+          "query": "Accountant experienced in general ledger reconciliation, accounts payable and month-end close",
+          "category": "ACCOUNTANT",
+          "p5": 0.8,
+          "first_relevant_rank": 1,
+          "top5": [
+            "ACCOUNTANT",
+            "ACCOUNTANT",
+            "BANKING",
+            "ACCOUNTANT",
+            "ACCOUNTANT"
+          ]
+        },
+        {
+          "query": "Need someone to handle bookkeeping, tax preparation and audit support using QuickBooks",
+          "category": "ACCOUNTANT",
+          "p5": 0.6,
+          "first_relevant_rank": 2,
+          "top5": [
+            "AGRICULTURE",
+            "ACCOUNTANT",
+            "ACCOUNTANT",
+            "AUTOMOBILE",
+            "ACCOUNTANT"
+          ]
+        },
+        {
+          "query": "Lawyer with litigation experience, legal research and drafting of contracts and pleadings",
+          "category": "ADVOCATE",
+          "p5": 0.0,
+          "first_relevant_rank": 10,
+          "top5": [
+            "AGRICULTURE",
+            "BPO",
+            "APPAREL",
+            "ENGINEERING",
+            "BANKING"
+          ]
+        },
+        {
+          "query": "Looking for an attorney to represent clients in court and advise on case strategy",
+          "category": "ADVOCATE",
+          "p5": 0.0,
+          "first_relevant_rank": 7,
+          "top5": [
+            "BANKING",
+            "AGRICULTURE",
+            "BPO",
+            "HEALTHCARE",
+            "APPAREL"
+          ]
+        },
+        {
+          "query": "Agronomist with crop management, soil testing and irrigation planning experience",
+          "category": "AGRICULTURE",
+          "p5": 0.6,
+          "first_relevant_rank": 1,
+          "top5": [
+            "AGRICULTURE",
+            "AGRICULTURE",
+            "AGRICULTURE",
+            "PUBLIC-RELATIONS",
+            "ENGINEERING"
+          ]
+        },
+        {
+          "query": "Farm operations manager overseeing harvesting, livestock and field equipment",
+          "category": "AGRICULTURE",
+          "p5": 0.4,
+          "first_relevant_rank": 2,
+          "top5": [
+            "AUTOMOBILE",
+            "AGRICULTURE",
+            "AGRICULTURE",
+            "AVIATION",
+            "CONSTRUCTION"
+          ]
+        },
+        {
+          "query": "Fashion merchandiser with garment production, textile sourcing and vendor management",
+          "category": "APPAREL",
+          "p5": 0.4,
+          "first_relevant_rank": 2,
+          "top5": [
+            "DESIGNER",
+            "APPAREL",
+            "PUBLIC-RELATIONS",
+            "APPAREL",
+            "ADVOCATE"
+          ]
+        },
+        {
+          "query": "Apparel designer creating clothing collections, tech packs and fabric selection",
+          "category": "APPAREL",
+          "p5": 0.6,
+          "first_relevant_rank": 2,
+          "top5": [
+            "DESIGNER",
+            "APPAREL",
+            "APPAREL",
+            "PUBLIC-RELATIONS",
+            "APPAREL"
+          ]
+        },
+        {
+          "query": "Artist with painting, drawing and exhibition experience in fine arts",
+          "category": "ARTS",
+          "p5": 0.2,
+          "first_relevant_rank": 2,
+          "top5": [
+            "DESIGNER",
+            "ARTS",
+            "HR",
+            "APPAREL",
+            "DESIGNER"
+          ]
+        },
+        {
+          "query": "Arts program coordinator for gallery curation, art education and community workshops",
+          "category": "ARTS",
+          "p5": 0.4,
+          "first_relevant_rank": 1,
+          "top5": [
+            "ARTS",
+            "ARTS",
+            "APPAREL",
+            "HR",
+            "TEACHER"
+          ]
+        },
+        {
+          "query": "Automotive technician skilled in engine diagnostics, brake repair and vehicle maintenance",
+          "category": "AUTOMOBILE",
+          "p5": 0.6,
+          "first_relevant_rank": 1,
+          "top5": [
+            "AUTOMOBILE",
+            "AUTOMOBILE",
+            "CONSTRUCTION",
+            "AUTOMOBILE",
+            "HR"
+          ]
+        },
+        {
+          "query": "Car dealership service advisor handling repair orders and parts for vehicles",
+          "category": "AUTOMOBILE",
+          "p5": 0.6,
+          "first_relevant_rank": 1,
+          "top5": [
+            "AUTOMOBILE",
+            "ADVOCATE",
+            "AUTOMOBILE",
+            "INFORMATION-TECHNOLOGY",
+            "AUTOMOBILE"
+          ]
+        },
+        {
+          "query": "Aircraft maintenance technician with FAA certification and avionics troubleshooting",
+          "category": "AVIATION",
+          "p5": 0.6,
+          "first_relevant_rank": 1,
+          "top5": [
+            "AVIATION",
+            "AVIATION",
+            "AUTOMOBILE",
+            "INFORMATION-TECHNOLOGY",
+            "AVIATION"
+          ]
+        },
+        {
+          "query": "Airline operations specialist for flight scheduling, ground handling and safety compliance",
+          "category": "AVIATION",
+          "p5": 0.4,
+          "first_relevant_rank": 2,
+          "top5": [
+            "INFORMATION-TECHNOLOGY",
+            "AVIATION",
+            "AUTOMOBILE",
+            "AVIATION",
+            "ADVOCATE"
+          ]
+        },
+        {
+          "query": "Bank teller or personal banker handling deposits, loans and customer accounts",
+          "category": "BANKING",
+          "p5": 0.6,
+          "first_relevant_rank": 1,
+          "top5": [
+            "BANKING",
+            "BANKING",
+            "CONSULTANT",
+            "BANKING",
+            "BUSINESS-DEVELOPMENT"
+          ]
+        },
+        {
+          "query": "Branch banking officer for credit analysis, loan processing and KYC compliance",
+          "category": "BANKING",
+          "p5": 0.2,
+          "first_relevant_rank": 1,
+          "top5": [
+            "BANKING",
+            "BUSINESS-DEVELOPMENT",
+            "FINANCE",
+            "ACCOUNTANT",
+            "ACCOUNTANT"
+          ]
+        },
+        {
+          "query": "Call center representative handling inbound customer calls and resolving complaints",
+          "category": "BPO",
+          "p5": 0.4,
+          "first_relevant_rank": 1,
+          "top5": [
+            "BPO",
+            "AUTOMOBILE",
+            "BPO",
+            "DESIGNER",
+            "ADVOCATE"
+          ]
+        },
+        {
+          "query": "Customer support agent for a business process outsourcing team meeting SLA targets",
+          "category": "BPO",
+          "p5": 0.8,
+          "first_relevant_rank": 1,
+          "top5": [
+            "BPO",
+            "BPO",
+            "BPO",
+            "AUTOMOBILE",
+            "BPO"
+          ]
+        },
+        {
+          "query": "Business development manager for partnerships, lead generation and new market expansion",
+          "category": "BUSINESS-DEVELOPMENT",
+          "p5": 0.8,
+          "first_relevant_rank": 1,
+          "top5": [
+            "BUSINESS-DEVELOPMENT",
+            "BUSINESS-DEVELOPMENT",
+            "BUSINESS-DEVELOPMENT",
+            "BPO",
+            "BUSINESS-DEVELOPMENT"
+          ]
+        },
+        {
+          "query": "Someone to build client relationships, pitch proposals and grow revenue pipeline",
+          "category": "BUSINESS-DEVELOPMENT",
+          "p5": 0.4,
+          "first_relevant_rank": 4,
+          "top5": [
+            "BPO",
+            "SALES",
+            "CONSULTANT",
+            "BUSINESS-DEVELOPMENT",
+            "BUSINESS-DEVELOPMENT"
+          ]
+        },
+        {
+          "query": "Head chef experienced in menu planning, kitchen management and food cost control",
+          "category": "CHEF",
+          "p5": 1.0,
+          "first_relevant_rank": 1,
+          "top5": [
+            "CHEF",
+            "CHEF",
+            "CHEF",
+            "CHEF",
+            "CHEF"
+          ]
+        },
+        {
+          "query": "Line cook or sous chef for food preparation in a busy restaurant kitchen",
+          "category": "CHEF",
+          "p5": 1.0,
+          "first_relevant_rank": 1,
+          "top5": [
+            "CHEF",
+            "CHEF",
+            "CHEF",
+            "CHEF",
+            "CHEF"
+          ]
+        },
+        {
+          "query": "Construction site supervisor managing subcontractors, safety and building schedules",
+          "category": "CONSTRUCTION",
+          "p5": 0.6,
+          "first_relevant_rank": 1,
+          "top5": [
+            "CONSTRUCTION",
+            "CONSTRUCTION",
+            "ENGINEERING",
+            "SALES",
+            "CONSTRUCTION"
+          ]
+        },
+        {
+          "query": "Project manager for commercial construction with estimating and blueprint reading",
+          "category": "CONSTRUCTION",
+          "p5": 1.0,
+          "first_relevant_rank": 1,
+          "top5": [
+            "CONSTRUCTION",
+            "CONSTRUCTION",
+            "CONSTRUCTION",
+            "CONSTRUCTION",
+            "CONSTRUCTION"
+          ]
+        },
+        {
+          "query": "Management consultant for strategy, process improvement and client advisory engagements",
+          "category": "CONSULTANT",
+          "p5": 0.2,
+          "first_relevant_rank": 2,
+          "top5": [
+            "BPO",
+            "CONSULTANT",
+            "BPO",
+            "BPO",
+            "BPO"
+          ]
+        },
+        {
+          "query": "Consultant to analyze business requirements and deliver recommendations to clients",
+          "category": "CONSULTANT",
+          "p5": 0.2,
+          "first_relevant_rank": 1,
+          "top5": [
+            "CONSULTANT",
+            "BPO",
+            "ACCOUNTANT",
+            "DIGITAL-MEDIA",
+            "ENGINEERING"
+          ]
+        },
+        {
+          "query": "Graphic designer skilled in Adobe Photoshop, Illustrator and brand identity",
+          "category": "DESIGNER",
+          "p5": 0.6,
+          "first_relevant_rank": 2,
+          "top5": [
+            "BUSINESS-DEVELOPMENT",
+            "DESIGNER",
+            "DESIGNER",
+            "DESIGNER",
+            "APPAREL"
+          ]
+        },
+        {
+          "query": "Interior or visual designer creating layouts, mockups and design concepts",
+          "category": "DESIGNER",
+          "p5": 0.4,
+          "first_relevant_rank": 2,
+          "top5": [
+            "APPAREL",
+            "DESIGNER",
+            "DESIGNER",
+            "BUSINESS-DEVELOPMENT",
+            "HR"
+          ]
+        },
+        {
+          "query": "Digital media specialist for video production, social media content and editing",
+          "category": "DIGITAL-MEDIA",
+          "p5": 0.6,
+          "first_relevant_rank": 1,
+          "top5": [
+            "DIGITAL-MEDIA",
+            "DIGITAL-MEDIA",
+            "DIGITAL-MEDIA",
+            "CONSULTANT",
+            "PUBLIC-RELATIONS"
+          ]
+        },
+        {
+          "query": "Online marketing coordinator running SEO, web content and digital campaigns",
+          "category": "DIGITAL-MEDIA",
+          "p5": 0.2,
+          "first_relevant_rank": 2,
+          "top5": [
+            "BUSINESS-DEVELOPMENT",
+            "DIGITAL-MEDIA",
+            "CONSULTANT",
+            "INFORMATION-TECHNOLOGY",
+            "SALES"
+          ]
+        },
+        {
+          "query": "Mechanical or electrical engineer with design, testing and AutoCAD experience",
+          "category": "ENGINEERING",
+          "p5": 0.8,
+          "first_relevant_rank": 1,
+          "top5": [
+            "ENGINEERING",
+            "ENGINEERING",
+            "AUTOMOBILE",
+            "ENGINEERING",
+            "ENGINEERING"
+          ]
+        },
+        {
+          "query": "Engineer for product development, technical specifications and quality testing",
+          "category": "ENGINEERING",
+          "p5": 0.6,
+          "first_relevant_rank": 1,
+          "top5": [
+            "ENGINEERING",
+            "ENGINEERING",
+            "DESIGNER",
+            "AUTOMOBILE",
+            "ENGINEERING"
+          ]
+        },
+        {
+          "query": "Financial analyst with budgeting, forecasting and financial modeling skills",
+          "category": "FINANCE",
+          "p5": 0.2,
+          "first_relevant_rank": 5,
+          "top5": [
+            "BANKING",
+            "ACCOUNTANT",
+            "ADVOCATE",
+            "BANKING",
+            "FINANCE"
+          ]
+        },
+        {
+          "query": "Finance manager responsible for financial reporting, variance analysis and controls",
+          "category": "FINANCE",
+          "p5": 0.4,
+          "first_relevant_rank": 2,
+          "top5": [
+            "ADVOCATE",
+            "FINANCE",
+            "ACCOUNTANT",
+            "ACCOUNTANT",
+            "FINANCE"
+          ]
+        },
+        {
+          "query": "Personal trainer designing exercise programs and coaching clients on strength training",
+          "category": "FITNESS",
+          "p5": 0.4,
+          "first_relevant_rank": 1,
+          "top5": [
+            "FITNESS",
+            "FITNESS",
+            "ADVOCATE",
+            "INFORMATION-TECHNOLOGY",
+            "BANKING"
+          ]
+        },
+        {
+          "query": "Fitness instructor leading group classes and promoting health and wellness",
+          "category": "FITNESS",
+          "p5": 0.8,
+          "first_relevant_rank": 1,
+          "top5": [
+            "FITNESS",
+            "FITNESS",
+            "FITNESS",
+            "ARTS",
+            "FITNESS"
+          ]
+        },
+        {
+          "query": "Registered nurse providing patient care, medication administration and clinical support",
+          "category": "HEALTHCARE",
+          "p5": 0.2,
+          "first_relevant_rank": 3,
+          "top5": [
+            "FITNESS",
+            "ADVOCATE",
+            "HEALTHCARE",
+            "SALES",
+            "DESIGNER"
+          ]
+        },
+        {
+          "query": "Healthcare administrator managing hospital operations and medical records",
+          "category": "HEALTHCARE",
+          "p5": 0.6,
+          "first_relevant_rank": 1,
+          "top5": [
+            "HEALTHCARE",
+            "PUBLIC-RELATIONS",
+            "HEALTHCARE",
+            "HEALTHCARE",
+            "ADVOCATE"
+          ]
+        },
+        {
+          "query": "HR generalist handling recruitment, onboarding, employee relations and benefits",
+          "category": "HR",
+          "p5": 0.8,
+          "first_relevant_rank": 1,
+          "top5": [
+            "HR",
+            "HR",
+            "HR",
+            "HR",
+            "BPO"
+          ]
+        },
+        {
+          "query": "Human resources manager for talent acquisition, payroll and HR policy compliance",
+          "category": "HR",
+          "p5": 0.6,
+          "first_relevant_rank": 1,
+          "top5": [
+            "HR",
+            "HR",
+            "ACCOUNTANT",
+            "HEALTHCARE",
+            "HR"
+          ]
+        },
+        {
+          "query": "IT support specialist for network administration, help desk and system troubleshooting",
+          "category": "INFORMATION-TECHNOLOGY",
+          "p5": 0.2,
+          "first_relevant_rank": 5,
+          "top5": [
+            "BPO",
+            "ENGINEERING",
+            "AVIATION",
+            "CONSULTANT",
+            "INFORMATION-TECHNOLOGY"
+          ]
+        },
+        {
+          "query": "Systems administrator managing servers, Active Directory and IT infrastructure",
+          "category": "INFORMATION-TECHNOLOGY",
+          "p5": 0.6,
+          "first_relevant_rank": 2,
+          "top5": [
+            "CONSULTANT",
+            "INFORMATION-TECHNOLOGY",
+            "AVIATION",
+            "INFORMATION-TECHNOLOGY",
+            "INFORMATION-TECHNOLOGY"
+          ]
+        },
+        {
+          "query": "Public relations specialist writing press releases and managing media relations",
+          "category": "PUBLIC-RELATIONS",
+          "p5": 0.8,
+          "first_relevant_rank": 1,
+          "top5": [
+            "PUBLIC-RELATIONS",
+            "PUBLIC-RELATIONS",
+            "PUBLIC-RELATIONS",
+            "PUBLIC-RELATIONS",
+            "SALES"
+          ]
+        },
+        {
+          "query": "Communications manager for corporate messaging, events and brand reputation",
+          "category": "PUBLIC-RELATIONS",
+          "p5": 0.4,
+          "first_relevant_rank": 1,
+          "top5": [
+            "PUBLIC-RELATIONS",
+            "DIGITAL-MEDIA",
+            "CONSULTANT",
+            "ACCOUNTANT",
+            "PUBLIC-RELATIONS"
+          ]
+        },
+        {
+          "query": "Sales representative with quota attainment, prospecting and closing deals",
+          "category": "SALES",
+          "p5": 0.2,
+          "first_relevant_rank": 1,
+          "top5": [
+            "SALES",
+            "FITNESS",
+            "BANKING",
+            "ACCOUNTANT",
+            "BUSINESS-DEVELOPMENT"
+          ]
+        },
+        {
+          "query": "Retail sales associate providing customer service and driving store sales",
+          "category": "SALES",
+          "p5": 0.4,
+          "first_relevant_rank": 4,
+          "top5": [
+            "APPAREL",
+            "FINANCE",
+            "APPAREL",
+            "SALES",
+            "SALES"
+          ]
+        },
+        {
+          "query": "Teacher experienced in lesson planning, classroom management and student assessment",
+          "category": "TEACHER",
+          "p5": 0.6,
+          "first_relevant_rank": 1,
+          "top5": [
+            "TEACHER",
+            "ARTS",
+            "TEACHER",
+            "ARTS",
+            "TEACHER"
+          ]
+        },
+        {
+          "query": "Elementary school educator who develops curriculum and supports student learning",
+          "category": "TEACHER",
+          "p5": 0.6,
+          "first_relevant_rank": 1,
+          "top5": [
+            "TEACHER",
+            "TEACHER",
+            "ARTS",
+            "ARTS",
+            "TEACHER"
+          ]
+        }
+      ]
+    },
+    {
+      "label": "BGE reranker base + 30% BM25",
+      "all": {
+        "p5": 0.5125,
+        "p10": 0.4270833333333333,
+        "mrr": 0.7836805555555556,
+        "ndcg10": 0.4728793341364959
+      },
+      "dev": {
+        "p5": 0.5083333333333333,
+        "p10": 0.425,
+        "mrr": 0.7722222222222223,
+        "ndcg10": 0.4719843371101126
+      },
+      "test": {
+        "p5": 0.5166666666666667,
+        "p10": 0.4291666666666667,
+        "mrr": 0.7951388888888888,
+        "ndcg10": 0.4737743311628792
+      },
+      "latency_ms": 644.9597000028007,
+      "kwargs": {
+        "rerank": true,
+        "reranker": "BAAI/bge-reranker-base",
+        "alpha": 0.3,
+        "keyword_mode": "bm25"
+      },
+      "per_query": [
+        {
+          "query": "Accountant experienced in general ledger reconciliation, accounts payable and month-end close",
+          "category": "ACCOUNTANT",
+          "p5": 0.8,
+          "first_relevant_rank": 2,
+          "top5": [
+            "BANKING",
+            "ACCOUNTANT",
+            "ACCOUNTANT",
+            "ACCOUNTANT",
+            "ACCOUNTANT"
+          ]
+        },
+        {
+          "query": "Need someone to handle bookkeeping, tax preparation and audit support using QuickBooks",
+          "category": "ACCOUNTANT",
+          "p5": 0.6,
+          "first_relevant_rank": 1,
+          "top5": [
+            "ACCOUNTANT",
+            "AGRICULTURE",
+            "ACCOUNTANT",
+            "HR",
+            "ACCOUNTANT"
+          ]
+        },
+        {
+          "query": "Lawyer with litigation experience, legal research and drafting of contracts and pleadings",
+          "category": "ADVOCATE",
+          "p5": 0.0,
+          "first_relevant_rank": 12,
+          "top5": [
+            "AGRICULTURE",
+            "HR",
+            "BPO",
+            "CONSULTANT",
+            "CONSULTANT"
+          ]
+        },
+        {
+          "query": "Looking for an attorney to represent clients in court and advise on case strategy",
+          "category": "ADVOCATE",
+          "p5": 0.0,
+          "first_relevant_rank": 6,
+          "top5": [
+            "HEALTHCARE",
+            "BPO",
+            "AGRICULTURE",
+            "BPO",
+            "AUTOMOBILE"
+          ]
+        },
+        {
+          "query": "Agronomist with crop management, soil testing and irrigation planning experience",
+          "category": "AGRICULTURE",
+          "p5": 0.2,
+          "first_relevant_rank": 1,
+          "top5": [
+            "AGRICULTURE",
+            "ENGINEERING",
+            "CONSTRUCTION",
+            "BUSINESS-DEVELOPMENT",
+            "ENGINEERING"
+          ]
+        },
+        {
+          "query": "Farm operations manager overseeing harvesting, livestock and field equipment",
+          "category": "AGRICULTURE",
+          "p5": 0.2,
+          "first_relevant_rank": 1,
+          "top5": [
+            "AGRICULTURE",
+            "AVIATION",
+            "CONSTRUCTION",
+            "ADVOCATE",
+            "AUTOMOBILE"
+          ]
+        },
+        {
+          "query": "Fashion merchandiser with garment production, textile sourcing and vendor management",
+          "category": "APPAREL",
+          "p5": 0.6,
+          "first_relevant_rank": 2,
+          "top5": [
+            "DESIGNER",
+            "APPAREL",
+            "APPAREL",
+            "PUBLIC-RELATIONS",
+            "APPAREL"
+          ]
+        },
+        {
+          "query": "Apparel designer creating clothing collections, tech packs and fabric selection",
+          "category": "APPAREL",
+          "p5": 0.6,
+          "first_relevant_rank": 2,
+          "top5": [
+            "DESIGNER",
+            "APPAREL",
+            "APPAREL",
+            "DESIGNER",
+            "APPAREL"
+          ]
+        },
+        {
+          "query": "Artist with painting, drawing and exhibition experience in fine arts",
+          "category": "ARTS",
+          "p5": 0.2,
+          "first_relevant_rank": 1,
+          "top5": [
+            "ARTS",
+            "DESIGNER",
+            "DESIGNER",
+            "DESIGNER",
+            "APPAREL"
+          ]
+        },
+        {
+          "query": "Arts program coordinator for gallery curation, art education and community workshops",
+          "category": "ARTS",
+          "p5": 0.6,
+          "first_relevant_rank": 1,
+          "top5": [
+            "ARTS",
+            "ARTS",
+            "APPAREL",
+            "TEACHER",
+            "ARTS"
+          ]
+        },
+        {
+          "query": "Automotive technician skilled in engine diagnostics, brake repair and vehicle maintenance",
+          "category": "AUTOMOBILE",
+          "p5": 0.4,
+          "first_relevant_rank": 1,
+          "top5": [
+            "AUTOMOBILE",
+            "AVIATION",
+            "AUTOMOBILE",
+            "AVIATION",
+            "AVIATION"
+          ]
+        },
+        {
+          "query": "Car dealership service advisor handling repair orders and parts for vehicles",
+          "category": "AUTOMOBILE",
+          "p5": 0.4,
+          "first_relevant_rank": 1,
+          "top5": [
+            "AUTOMOBILE",
+            "ADVOCATE",
+            "AUTOMOBILE",
+            "AVIATION",
+            "INFORMATION-TECHNOLOGY"
+          ]
+        },
+        {
+          "query": "Aircraft maintenance technician with FAA certification and avionics troubleshooting",
+          "category": "AVIATION",
+          "p5": 0.8,
+          "first_relevant_rank": 1,
+          "top5": [
+            "AVIATION",
+            "AVIATION",
+            "AUTOMOBILE",
+            "AVIATION",
+            "AVIATION"
+          ]
+        },
+        {
+          "query": "Airline operations specialist for flight scheduling, ground handling and safety compliance",
+          "category": "AVIATION",
+          "p5": 0.4,
+          "first_relevant_rank": 1,
+          "top5": [
+            "AVIATION",
+            "INFORMATION-TECHNOLOGY",
+            "AUTOMOBILE",
+            "FINANCE",
+            "AVIATION"
+          ]
+        },
+        {
+          "query": "Bank teller or personal banker handling deposits, loans and customer accounts",
+          "category": "BANKING",
+          "p5": 0.6,
+          "first_relevant_rank": 1,
+          "top5": [
+            "BANKING",
+            "BANKING",
+            "BANKING",
+            "CONSULTANT",
+            "BUSINESS-DEVELOPMENT"
+          ]
+        },
+        {
+          "query": "Branch banking officer for credit analysis, loan processing and KYC compliance",
+          "category": "BANKING",
+          "p5": 0.6,
+          "first_relevant_rank": 1,
+          "top5": [
+            "BANKING",
+            "BUSINESS-DEVELOPMENT",
+            "BANKING",
+            "ACCOUNTANT",
+            "BANKING"
+          ]
+        },
+        {
+          "query": "Call center representative handling inbound customer calls and resolving complaints",
+          "category": "BPO",
+          "p5": 0.4,
+          "first_relevant_rank": 1,
+          "top5": [
+            "BPO",
+            "AUTOMOBILE",
+            "BPO",
+            "DESIGNER",
+            "ADVOCATE"
+          ]
+        },
+        {
+          "query": "Customer support agent for a business process outsourcing team meeting SLA targets",
+          "category": "BPO",
+          "p5": 0.6,
+          "first_relevant_rank": 1,
+          "top5": [
+            "BPO",
+            "BPO",
+            "BANKING",
+            "BPO",
+            "AVIATION"
+          ]
+        },
+        {
+          "query": "Business development manager for partnerships, lead generation and new market expansion",
+          "category": "BUSINESS-DEVELOPMENT",
+          "p5": 0.6,
+          "first_relevant_rank": 1,
+          "top5": [
+            "BUSINESS-DEVELOPMENT",
+            "BUSINESS-DEVELOPMENT",
+            "CONSULTANT",
+            "SALES",
+            "BUSINESS-DEVELOPMENT"
+          ]
+        },
+        {
+          "query": "Someone to build client relationships, pitch proposals and grow revenue pipeline",
+          "category": "BUSINESS-DEVELOPMENT",
+          "p5": 0.4,
+          "first_relevant_rank": 3,
+          "top5": [
+            "BPO",
+            "SALES",
+            "BUSINESS-DEVELOPMENT",
+            "BUSINESS-DEVELOPMENT",
+            "ENGINEERING"
+          ]
+        },
+        {
+          "query": "Head chef experienced in menu planning, kitchen management and food cost control",
+          "category": "CHEF",
+          "p5": 1.0,
+          "first_relevant_rank": 1,
+          "top5": [
+            "CHEF",
+            "CHEF",
+            "CHEF",
+            "CHEF",
+            "CHEF"
+          ]
+        },
+        {
+          "query": "Line cook or sous chef for food preparation in a busy restaurant kitchen",
+          "category": "CHEF",
+          "p5": 1.0,
+          "first_relevant_rank": 1,
+          "top5": [
+            "CHEF",
+            "CHEF",
+            "CHEF",
+            "CHEF",
+            "CHEF"
+          ]
+        },
+        {
+          "query": "Construction site supervisor managing subcontractors, safety and building schedules",
+          "category": "CONSTRUCTION",
+          "p5": 0.6,
+          "first_relevant_rank": 1,
+          "top5": [
+            "CONSTRUCTION",
+            "CONSTRUCTION",
+            "ENGINEERING",
+            "CONSTRUCTION",
+            "SALES"
+          ]
+        },
+        {
+          "query": "Project manager for commercial construction with estimating and blueprint reading",
+          "category": "CONSTRUCTION",
+          "p5": 0.8,
+          "first_relevant_rank": 1,
+          "top5": [
+            "CONSTRUCTION",
+            "CONSTRUCTION",
+            "CONSTRUCTION",
+            "AUTOMOBILE",
+            "CONSTRUCTION"
+          ]
+        },
+        {
+          "query": "Management consultant for strategy, process improvement and client advisory engagements",
+          "category": "CONSULTANT",
+          "p5": 0.4,
+          "first_relevant_rank": 1,
+          "top5": [
+            "CONSULTANT",
+            "BPO",
+            "BPO",
+            "FINANCE",
+            "CONSULTANT"
+          ]
+        },
+        {
+          "query": "Consultant to analyze business requirements and deliver recommendations to clients",
+          "category": "CONSULTANT",
+          "p5": 0.2,
+          "first_relevant_rank": 1,
+          "top5": [
+            "CONSULTANT",
+            "ACCOUNTANT",
+            "BPO",
+            "DIGITAL-MEDIA",
+            "HEALTHCARE"
+          ]
+        },
+        {
+          "query": "Graphic designer skilled in Adobe Photoshop, Illustrator and brand identity",
+          "category": "DESIGNER",
+          "p5": 0.6,
+          "first_relevant_rank": 3,
+          "top5": [
+            "BUSINESS-DEVELOPMENT",
+            "APPAREL",
+            "DESIGNER",
+            "DESIGNER",
+            "DESIGNER"
+          ]
+        },
+        {
+          "query": "Interior or visual designer creating layouts, mockups and design concepts",
+          "category": "DESIGNER",
+          "p5": 0.4,
+          "first_relevant_rank": 2,
+          "top5": [
+            "APPAREL",
+            "DESIGNER",
+            "APPAREL",
+            "DESIGNER",
+            "ARTS"
+          ]
+        },
+        {
+          "query": "Digital media specialist for video production, social media content and editing",
+          "category": "DIGITAL-MEDIA",
+          "p5": 0.6,
+          "first_relevant_rank": 1,
+          "top5": [
+            "DIGITAL-MEDIA",
+            "DIGITAL-MEDIA",
+            "DIGITAL-MEDIA",
+            "CONSULTANT",
+            "PUBLIC-RELATIONS"
+          ]
+        },
+        {
+          "query": "Online marketing coordinator running SEO, web content and digital campaigns",
+          "category": "DIGITAL-MEDIA",
+          "p5": 0.4,
+          "first_relevant_rank": 2,
+          "top5": [
+            "BUSINESS-DEVELOPMENT",
+            "DIGITAL-MEDIA",
+            "CONSULTANT",
+            "SALES",
+            "DIGITAL-MEDIA"
+          ]
+        },
+        {
+          "query": "Mechanical or electrical engineer with design, testing and AutoCAD experience",
+          "category": "ENGINEERING",
+          "p5": 0.8,
+          "first_relevant_rank": 1,
+          "top5": [
+            "ENGINEERING",
+            "ENGINEERING",
+            "AUTOMOBILE",
+            "ENGINEERING",
+            "ENGINEERING"
+          ]
+        },
+        {
+          "query": "Engineer for product development, technical specifications and quality testing",
+          "category": "ENGINEERING",
+          "p5": 0.8,
+          "first_relevant_rank": 1,
+          "top5": [
+            "ENGINEERING",
+            "ENGINEERING",
+            "DESIGNER",
+            "ENGINEERING",
+            "ENGINEERING"
+          ]
+        },
+        {
+          "query": "Financial analyst with budgeting, forecasting and financial modeling skills",
+          "category": "FINANCE",
+          "p5": 0.2,
+          "first_relevant_rank": 5,
+          "top5": [
+            "BANKING",
+            "ADVOCATE",
+            "ACCOUNTANT",
+            "BANKING",
+            "FINANCE"
+          ]
+        },
+        {
+          "query": "Finance manager responsible for financial reporting, variance analysis and controls",
+          "category": "FINANCE",
+          "p5": 0.4,
+          "first_relevant_rank": 3,
+          "top5": [
+            "ADVOCATE",
+            "ACCOUNTANT",
+            "FINANCE",
+            "ACCOUNTANT",
+            "FINANCE"
+          ]
+        },
+        {
+          "query": "Personal trainer designing exercise programs and coaching clients on strength training",
+          "category": "FITNESS",
+          "p5": 0.6,
+          "first_relevant_rank": 1,
+          "top5": [
+            "FITNESS",
+            "FITNESS",
+            "ADVOCATE",
+            "FITNESS",
+            "INFORMATION-TECHNOLOGY"
+          ]
+        },
+        {
+          "query": "Fitness instructor leading group classes and promoting health and wellness",
+          "category": "FITNESS",
+          "p5": 0.8,
+          "first_relevant_rank": 1,
+          "top5": [
+            "FITNESS",
+            "FITNESS",
+            "FITNESS",
+            "FITNESS",
+            "ADVOCATE"
+          ]
+        },
+        {
+          "query": "Registered nurse providing patient care, medication administration and clinical support",
+          "category": "HEALTHCARE",
+          "p5": 0.2,
+          "first_relevant_rank": 4,
+          "top5": [
+            "FITNESS",
+            "ADVOCATE",
+            "SALES",
+            "HEALTHCARE",
+            "DESIGNER"
+          ]
+        },
+        {
+          "query": "Healthcare administrator managing hospital operations and medical records",
+          "category": "HEALTHCARE",
+          "p5": 0.8,
+          "first_relevant_rank": 1,
+          "top5": [
+            "HEALTHCARE",
+            "PUBLIC-RELATIONS",
+            "HEALTHCARE",
+            "HEALTHCARE",
+            "HEALTHCARE"
+          ]
+        },
+        {
+          "query": "HR generalist handling recruitment, onboarding, employee relations and benefits",
+          "category": "HR",
+          "p5": 0.8,
+          "first_relevant_rank": 1,
+          "top5": [
+            "HR",
+            "HR",
+            "HR",
+            "HR",
+            "BPO"
+          ]
+        },
+        {
+          "query": "Human resources manager for talent acquisition, payroll and HR policy compliance",
+          "category": "HR",
+          "p5": 0.6,
+          "first_relevant_rank": 1,
+          "top5": [
+            "HR",
+            "HR",
+            "HEALTHCARE",
+            "HR",
+            "ACCOUNTANT"
+          ]
+        },
+        {
+          "query": "IT support specialist for network administration, help desk and system troubleshooting",
+          "category": "INFORMATION-TECHNOLOGY",
+          "p5": 0.0,
+          "first_relevant_rank": 6,
+          "top5": [
+            "ENGINEERING",
+            "BPO",
+            "AVIATION",
+            "CONSULTANT",
+            "BANKING"
+          ]
+        },
+        {
+          "query": "Systems administrator managing servers, Active Directory and IT infrastructure",
+          "category": "INFORMATION-TECHNOLOGY",
+          "p5": 0.4,
+          "first_relevant_rank": 2,
+          "top5": [
+            "CONSULTANT",
+            "INFORMATION-TECHNOLOGY",
+            "AVIATION",
+            "BPO",
+            "INFORMATION-TECHNOLOGY"
+          ]
+        },
+        {
+          "query": "Public relations specialist writing press releases and managing media relations",
+          "category": "PUBLIC-RELATIONS",
+          "p5": 0.8,
+          "first_relevant_rank": 1,
+          "top5": [
+            "PUBLIC-RELATIONS",
+            "PUBLIC-RELATIONS",
+            "PUBLIC-RELATIONS",
+            "PUBLIC-RELATIONS",
+            "SALES"
+          ]
+        },
+        {
+          "query": "Communications manager for corporate messaging, events and brand reputation",
+          "category": "PUBLIC-RELATIONS",
+          "p5": 0.4,
+          "first_relevant_rank": 1,
+          "top5": [
+            "PUBLIC-RELATIONS",
+            "DIGITAL-MEDIA",
+            "SALES",
+            "PUBLIC-RELATIONS",
+            "CONSULTANT"
+          ]
+        },
+        {
+          "query": "Sales representative with quota attainment, prospecting and closing deals",
+          "category": "SALES",
+          "p5": 0.4,
+          "first_relevant_rank": 1,
+          "top5": [
+            "SALES",
+            "HEALTHCARE",
+            "BANKING",
+            "HEALTHCARE",
+            "SALES"
+          ]
+        },
+        {
+          "query": "Retail sales associate providing customer service and driving store sales",
+          "category": "SALES",
+          "p5": 0.4,
+          "first_relevant_rank": 4,
+          "top5": [
+            "FINANCE",
+            "APPAREL",
+            "APPAREL",
+            "SALES",
+            "SALES"
+          ]
+        },
+        {
+          "query": "Teacher experienced in lesson planning, classroom management and student assessment",
+          "category": "TEACHER",
+          "p5": 0.6,
+          "first_relevant_rank": 2,
+          "top5": [
+            "ARTS",
+            "TEACHER",
+            "TEACHER",
+            "ARTS",
+            "TEACHER"
+          ]
+        },
+        {
+          "query": "Elementary school educator who develops curriculum and supports student learning",
+          "category": "TEACHER",
+          "p5": 0.6,
+          "first_relevant_rank": 1,
+          "top5": [
+            "TEACHER",
+            "TEACHER",
+            "ARTS",
+            "TEACHER",
+            "ARTS"
+          ]
+        }
+      ]
+    }
+  ],
+  "alpha_sweep": [
+    {
+      "mode": "overlap",
+      "alpha": 0.0,
+      "dev": {
+        "p5": 0.5666666666666667,
+        "p10": 0.4375,
+        "mrr": 0.8055555555555556,
+        "ndcg10": 0.49647540155195163
+      },
+      "test": {
+        "p5": 0.5416666666666666,
+        "p10": 0.4625,
+        "mrr": 0.8045634920634921,
+        "ndcg10": 0.5069389454572509
+      }
+    },
+    {
+      "mode": "overlap",
+      "alpha": 0.1,
+      "dev": {
+        "p5": 0.5416666666666666,
+        "p10": 0.43333333333333335,
+        "mrr": 0.8229166666666666,
+        "ndcg10": 0.48653992942106583
+      },
+      "test": {
+        "p5": 0.4916666666666667,
+        "p10": 0.42916666666666664,
+        "mrr": 0.80239898989899,
+        "ndcg10": 0.4783079723133614
+      }
+    },
+    {
+      "mode": "overlap",
+      "alpha": 0.2,
+      "dev": {
+        "p5": 0.5416666666666666,
+        "p10": 0.43333333333333335,
+        "mrr": 0.8298611111111112,
+        "ndcg10": 0.48683188289164847
+      },
+      "test": {
+        "p5": 0.4916666666666667,
+        "p10": 0.42083333333333334,
+        "mrr": 0.7642045454545454,
+        "ndcg10": 0.4625175158281171
+      }
+    },
+    {
+      "mode": "overlap",
+      "alpha": 0.3,
+      "dev": {
+        "p5": 0.5333333333333333,
+        "p10": 0.43333333333333335,
+        "mrr": 0.8368055555555556,
+        "ndcg10": 0.48753353901630847
+      },
+      "test": {
+        "p5": 0.48333333333333334,
+        "p10": 0.4166666666666667,
+        "mrr": 0.7642045454545454,
+        "ndcg10": 0.4590513540751081
+      }
+    },
+    {
+      "mode": "overlap",
+      "alpha": 0.5,
+      "dev": {
+        "p5": 0.5333333333333333,
+        "p10": 0.425,
+        "mrr": 0.8576388888888888,
+        "ndcg10": 0.4856540838039145
+      },
+      "test": {
+        "p5": 0.48333333333333334,
+        "p10": 0.42083333333333334,
+        "mrr": 0.7719551282051282,
+        "ndcg10": 0.46017190299751093
+      }
+    },
+    {
+      "mode": "bm25",
+      "alpha": 0.1,
+      "dev": {
+        "p5": 0.5416666666666666,
+        "p10": 0.4125,
+        "mrr": 0.7986111111111112,
+        "ndcg10": 0.46799427287108186
+      },
+      "test": {
+        "p5": 0.5,
+        "p10": 0.44166666666666665,
+        "mrr": 0.7951388888888888,
+        "ndcg10": 0.4854144933351115
+      }
+    },
+    {
+      "mode": "bm25",
+      "alpha": 0.2,
+      "dev": {
+        "p5": 0.5583333333333333,
+        "p10": 0.4166666666666667,
+        "mrr": 0.7777777777777778,
+        "ndcg10": 0.46792412439897724
+      },
+      "test": {
+        "p5": 0.5083333333333333,
+        "p10": 0.44166666666666665,
+        "mrr": 0.7951388888888888,
+        "ndcg10": 0.48279143766497074
+      }
+    },
+    {
+      "mode": "bm25",
+      "alpha": 0.3,
+      "dev": {
+        "p5": 0.55,
+        "p10": 0.4166666666666667,
+        "mrr": 0.8020833333333334,
+        "ndcg10": 0.4733754705269123
+      },
+      "test": {
+        "p5": 0.5083333333333333,
+        "p10": 0.44166666666666665,
+        "mrr": 0.7951388888888888,
+        "ndcg10": 0.479937404039485
+      }
+    },
+    {
+      "mode": "bm25",
+      "alpha": 0.5,
+      "dev": {
+        "p5": 0.5583333333333333,
+        "p10": 0.4125,
+        "mrr": 0.7777777777777778,
+        "ndcg10": 0.4702024164402415
+      },
+      "test": {
+        "p5": 0.5,
+        "p10": 0.44583333333333336,
+        "mrr": 0.7743055555555556,
+        "ndcg10": 0.47839667627229454
+      }
+    }
+  ],
+  "blend": [
+    {
+      "reranker": "cross-encoder/ms-marco-MiniLM-L-6-v2",
+      "dense_weight": 0.0,
+      "all": {
+        "p5": 0.5541666666666667,
+        "p10": 0.45,
+        "mrr": 0.8050595238095238,
+        "ndcg10": 0.5017071735046013
+      },
+      "dev": {
+        "p5": 0.5666666666666667,
+        "p10": 0.4375,
+        "mrr": 0.8055555555555556,
+        "ndcg10": 0.49647540155195163
+      },
+      "test": {
+        "p5": 0.5416666666666666,
+        "p10": 0.4625,
+        "mrr": 0.8045634920634921,
+        "ndcg10": 0.5069389454572509
+      }
+    },
+    {
+      "reranker": "cross-encoder/ms-marco-MiniLM-L-6-v2",
+      "dense_weight": 0.5,
+      "all": {
+        "p5": 0.5708333333333333,
+        "p10": 0.4666666666666667,
+        "mrr": 0.8333333333333334,
+        "ndcg10": 0.5185270150637074
+      },
+      "dev": {
+        "p5": 0.5916666666666667,
+        "p10": 0.4708333333333333,
+        "mrr": 0.7916666666666666,
+        "ndcg10": 0.5156170679269352
+      },
+      "test": {
+        "p5": 0.55,
+        "p10": 0.4625,
+        "mrr": 0.875,
+        "ndcg10": 0.5214369622004795
+      }
+    },
+    {
+      "reranker": "cross-encoder/ms-marco-MiniLM-L-6-v2",
+      "dense_weight": 0.7,
+      "all": {
+        "p5": 0.5833333333333334,
+        "p10": 0.46458333333333335,
+        "mrr": 0.8305555555555556,
+        "ndcg10": 0.5189547062293826
+      },
+      "dev": {
+        "p5": 0.5916666666666667,
+        "p10": 0.4708333333333333,
+        "mrr": 0.7986111111111112,
+        "ndcg10": 0.5199741866657441
+      },
+      "test": {
+        "p5": 0.5750000000000001,
+        "p10": 0.4583333333333333,
+        "mrr": 0.8625,
+        "ndcg10": 0.5179352257930209
+      }
+    },
+    {
+      "reranker": "cross-encoder/ms-marco-MiniLM-L-6-v2",
+      "dense_weight": 0.8,
+      "all": {
+        "p5": 0.5916666666666667,
+        "p10": 0.46875,
+        "mrr": 0.8201388888888889,
+        "ndcg10": 0.5200635330984636
+      },
+      "dev": {
+        "p5": 0.6083333333333334,
+        "p10": 0.4791666666666667,
+        "mrr": 0.7986111111111112,
+        "ndcg10": 0.5273491930845581
+      },
+      "test": {
+        "p5": 0.575,
+        "p10": 0.4583333333333333,
+        "mrr": 0.8416666666666667,
+        "ndcg10": 0.5127778731123692
+      }
+    },
+    {
+      "reranker": "cross-encoder/ms-marco-MiniLM-L-6-v2",
+      "dense_weight": 0.9,
+      "all": {
+        "p5": 0.5791666666666667,
+        "p10": 0.46458333333333335,
+        "mrr": 0.8173611111111111,
+        "ndcg10": 0.5184746393923667
+      },
+      "dev": {
+        "p5": 0.5916666666666667,
+        "p10": 0.48333333333333334,
+        "mrr": 0.7895833333333333,
+        "ndcg10": 0.5283803717248029
+      },
+      "test": {
+        "p5": 0.5666666666666667,
+        "p10": 0.44583333333333336,
+        "mrr": 0.8451388888888889,
+        "ndcg10": 0.5085689070599304
+      }
+    },
+    {
+      "reranker": "cross-encoder/ms-marco-MiniLM-L-6-v2",
+      "dense_weight": 1.0,
+      "all": {
+        "p5": 0.5666666666666667,
+        "p10": 0.45208333333333334,
+        "mrr": 0.8434027777777777,
+        "ndcg10": 0.5131883250956039
+      },
+      "dev": {
+        "p5": 0.5750000000000001,
+        "p10": 0.4666666666666667,
+        "mrr": 0.8138888888888889,
+        "ndcg10": 0.5209048653128194
+      },
+      "test": {
+        "p5": 0.5583333333333333,
+        "p10": 0.4375,
+        "mrr": 0.8729166666666667,
+        "ndcg10": 0.5054717848783883
+      }
+    },
+    {
+      "reranker": "BAAI/bge-reranker-base",
+      "dense_weight": 0.0,
+      "all": {
+        "p5": 0.5083333333333333,
+        "p10": 0.42291666666666666,
+        "mrr": 0.7599206349206349,
+        "ndcg10": 0.4687403158557868
+      },
+      "dev": {
+        "p5": 0.5083333333333333,
+        "p10": 0.4375,
+        "mrr": 0.7847222222222222,
+        "ndcg10": 0.48991526839197785
+      },
+      "test": {
+        "p5": 0.5083333333333333,
+        "p10": 0.4083333333333333,
+        "mrr": 0.7351190476190477,
+        "ndcg10": 0.44756536331959573
+      }
+    },
+    {
+      "reranker": "BAAI/bge-reranker-base",
+      "dense_weight": 0.5,
+      "all": {
+        "p5": 0.55,
+        "p10": 0.46875,
+        "mrr": 0.8043402777777777,
+        "ndcg10": 0.5143468083328403
+      },
+      "dev": {
+        "p5": 0.55,
+        "p10": 0.4875,
+        "mrr": 0.7909722222222222,
+        "ndcg10": 0.5274298548812663
+      },
+      "test": {
+        "p5": 0.55,
+        "p10": 0.45,
+        "mrr": 0.8177083333333334,
+        "ndcg10": 0.5012637617844143
+      }
+    },
+    {
+      "reranker": "BAAI/bge-reranker-base",
+      "dense_weight": 0.7,
+      "all": {
+        "p5": 0.5708333333333333,
+        "p10": 0.475,
+        "mrr": 0.8234375,
+        "ndcg10": 0.5230191982087878
+      },
+      "dev": {
+        "p5": 0.5750000000000001,
+        "p10": 0.49583333333333335,
+        "mrr": 0.7979166666666667,
+        "ndcg10": 0.5379158274253513
+      },
+      "test": {
+        "p5": 0.5666666666666667,
+        "p10": 0.45416666666666666,
+        "mrr": 0.8489583333333334,
+        "ndcg10": 0.5081225689922245
+      }
+    },
+    {
+      "reranker": "BAAI/bge-reranker-base",
+      "dense_weight": 0.8,
+      "all": {
+        "p5": 0.5791666666666667,
+        "p10": 0.46875,
+        "mrr": 0.8253472222222222,
+        "ndcg10": 0.5232167006233231
+      },
+      "dev": {
+        "p5": 0.5833333333333334,
+        "p10": 0.48333333333333334,
+        "mrr": 0.8,
+        "ndcg10": 0.5307773299712528
+      },
+      "test": {
+        "p5": 0.5750000000000001,
+        "p10": 0.45416666666666666,
+        "mrr": 0.8506944444444444,
+        "ndcg10": 0.5156560712753935
+      }
+    },
+    {
+      "reranker": "BAAI/bge-reranker-base",
+      "dense_weight": 0.9,
+      "all": {
+        "p5": 0.5791666666666667,
+        "p10": 0.4625,
+        "mrr": 0.8322916666666667,
+        "ndcg10": 0.5217593690939479
+      },
+      "dev": {
+        "p5": 0.5833333333333334,
+        "p10": 0.475,
+        "mrr": 0.8173611111111111,
+        "ndcg10": 0.5287264444840422
+      },
+      "test": {
+        "p5": 0.575,
+        "p10": 0.45,
+        "mrr": 0.8472222222222222,
+        "ndcg10": 0.5147922937038536
+      }
+    },
+    {
+      "reranker": "BAAI/bge-reranker-base",
+      "dense_weight": 1.0,
+      "all": {
+        "p5": 0.5666666666666667,
+        "p10": 0.45208333333333334,
+        "mrr": 0.8434027777777777,
+        "ndcg10": 0.5131883250956039
+      },
+      "dev": {
+        "p5": 0.5750000000000001,
+        "p10": 0.4666666666666667,
+        "mrr": 0.8138888888888889,
+        "ndcg10": 0.5209048653128194
+      },
+      "test": {
+        "p5": 0.5583333333333333,
+        "p10": 0.4375,
+        "mrr": 0.8729166666666667,
+        "ndcg10": 0.5054717848783883
+      }
+    }
+  ],
+  "pipeline": {
+    "old": {
+      "detect_acc": 1.0,
+      "all": {
+        "p5": 1.0,
+        "p10": 1.0,
+        "mrr": 1.0,
+        "ndcg10": 1.0
+      }
+    },
+    "new": {
+      "detect_acc": 1.0,
+      "all": {
+        "p5": 1.0,
+        "p10": 1.0,
+        "mrr": 1.0,
+        "ndcg10": 1.0
+      }
+    }
+  },
+  "index": {
+    "resumes": 242,
+    "chunks": 1091
+  },
+  "queries": 48,
+  "chosen": {
+    "reranker": "cross-encoder/ms-marco-MiniLM-L-6-v2",
+    "mode": "overlap",
+    "alpha": 0.0
+  },
+  "detection": [
+    {
+      "set": "Name the department (queries.json)",
+      "queries": 48,
+      "accuracy": 1.0
+    },
+    {
+      "set": "Don't name it (queries_unnamed.json)",
+      "queries": 48,
+      "accuracy": 1.0
+    },
+    {
+      "set": "Held out, never tuned on (queries_fresh.json)",
+      "queries": 24,
+      "accuracy": 0.9583333333333334
+    }
+  ]
+}

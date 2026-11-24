@@ -1,5 +1,14 @@
-flask
-pdfplumber
-sentence-transformers
-chromadb
-scikit-learn
+# Everything for local development: the web app, evaluation tools, and tests.
+# Core web app + retrieval pipeline
+-r requirements-app.txt
+
+# Offline RAGAS evaluation (evaluate_ragas.py) - needs a local Ollama server
+pandas==3.0.3
+ragas==0.4.3
+datasets==5.0.0
+langchain-community==0.4.2
+langchain-ollama==1.1.0
+
+# Tests
+pytest==9.2.0
+ftfy>=6.1

@@ -1,0 +1,29 @@
+<script>
+// Form behaviour (works without the animation scripts)
+(function(){
+    const pw = document.getElementById('password');
+    const btn = document.querySelector('.pw-btn');
+    btn.addEventListener('click', () => {
+        const show = pw.type === 'password';
+        pw.type = show ? 'text' : 'password';
+        btn.textContent = show ? 'Hide' : 'Show';
+        btn.setAttribute('aria-pressed', show);
+        btn.setAttribute('aria-label', show ? 'Hide password' : 'Show password');
+    });
+    // Register: live check of the server's password rule (8+ characters, a letter and a number)
+    const rules = document.getElementById('pwRules');
+    if(rules){
+        const tests = {len: v => v.length >= 8, letter: v => /[A-Za-z]/.test(v), digit: v => /\d/.test(v)};
+        pw.addEventListener('input', () => rules.querySelectorAll('li').forEach(li =>
+            li.classList.toggle('ok', tests[li.dataset.rule](pw.value))));
+    }
+    // One submit only, with a spinner
+    const form = document.querySelector('.auth-form');
+    const submit = form.querySelector('[type=submit]');
+    form.addEventListener('submit', () => {
+        submit.classList.add('loading');
+        setTimeout(() => { submit.disabled = true; }, 0);   // after the browser has taken the submit
+    });
+    window.addEventListener('pageshow', () => { submit.disabled = false; submit.classList.remove('loading'); });
+})();
+</script>

@@ -1,0 +1,45 @@
+# Security & Database
+.secret_key
+users.db
+.pytest_cache/
+~$*
+
+# Python bytecode & cache
+__pycache__/
+*.py[cod]
+*$py.class
+*.so
+
+# Environment & IDE
+.venv/
+venv/
+ENV/
+.idea/
+.vscode/
+
+# Project Data & Log Files
+chromadb_data/
+*.log
+uploads/*.pdf
+uploads/*.docx
+
+# Cache files
+test_cache.json
+scratch_chat_summary.txt
+scratch/
+verify_syntax.py
+recent_analyses.json
+*.pptx
+AI_Resume_Screening_Presentation.pptx
+presentation_preview.html
+
+
+
+# Stale vector store (code uses chromadb_data/) and local AI chat logs
+chroma_db/
+conversations/
+
+# Benchmark vector index (rebuilt by benchmark/run_benchmark.py)
+benchmark/.index/
+demo_users.db
+chromadb_public/

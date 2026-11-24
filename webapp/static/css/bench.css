@@ -1,0 +1,50 @@
+/* Benchmark page. Loaded after result.css (crumbs, panels, blocks, tags). */
+.bench-head{padding-bottom:28px;margin-bottom:28px;border-bottom:1px solid var(--line)}
+.bench-title{font-size:clamp(40px,6.4vw,88px);font-weight:600;letter-spacing:-.05em;line-height:.95;margin:14px 0 16px}
+.bench-title span{color:var(--lime)}
+.bench-sub{font-size:17px;color:var(--text-2);max-width:560px}
+.empty-state{color:var(--text-2);font-size:16px}
+code{font-family:var(--mono);font-size:.9em;color:var(--lime);background:var(--lime-dim);border-radius:5px;padding:1px 6px}
+
+/* KPI tiles: value in text colour; the gauge carries the single lime hue */
+.kpi-row{display:grid;grid-template-columns:repeat(4,1fr);gap:16px}
+.kpi{display:flex;flex-direction:column;gap:12px}
+.kpi-label{font-family:var(--mono);font-size:12px;letter-spacing:.1em;text-transform:uppercase;color:var(--text-2)}
+.kpi-value{font-family:var(--mono);font-size:clamp(34px,3.6vw,46px);font-weight:600;letter-spacing:-.05em;line-height:1;color:var(--text)}
+.kpi-value small{font-size:.42em;color:var(--muted);font-weight:500;letter-spacing:0}
+.gauge{height:4px;border-radius:4px;background:rgba(255,255,255,.07);overflow:hidden}
+.gauge i{display:block;height:100%;background:var(--lime);border-radius:4px;transform-origin:left}
+.gauge.muted{visibility:hidden}
+.kpi-sub{font-size:13px;color:var(--muted)}
+.up,.down{font-family:var(--mono);font-weight:600}
+.up{color:var(--lime)}
+.down{color:var(--coral)}
+
+.note{font-size:15px;color:var(--text-2);line-height:1.65;margin-bottom:14px;max-width:820px}
+.note strong{color:var(--text)}
+.block .table-wrap{margin-top:8px}
+
+/* Tables */
+.bench-table th.num,.bench-table td.num{text-align:right}
+.bench-table td{font-size:14px}
+.bench-table td.num{font-family:var(--mono)}
+.setup{font-weight:600}
+.setup-row.current{background:linear-gradient(90deg,rgba(198,255,61,.07),transparent 60%)}
+.setup-row.current td:first-child{box-shadow:inset 3px 0 0 var(--lime)}
+.ndcg{white-space:nowrap}
+.ndcg b{font-weight:600;color:var(--text)}
+.ndcg-bar{display:inline-block;vertical-align:middle;width:90px;height:4px;border-radius:4px;background:rgba(255,255,255,.07);overflow:hidden;margin-right:12px}
+.ndcg-bar i{display:block;height:100%;background:var(--lime);border-radius:4px;transform-origin:left}
+.tag{margin-left:6px}
+.tag-current{color:var(--on-lime);background:var(--lime);border-color:var(--lime)}
+.tag-original{color:var(--text-2);background:transparent;border-color:var(--line-2)}
+.tag-dept{margin:0;color:var(--text-2);background:transparent;border-color:var(--line-2)}
+.query-cell{font-weight:500;color:var(--text)}
+.cats{display:flex;flex-wrap:wrap;gap:5px}
+.cats .tag{margin:0;font-size:10px;padding:2px 7px;letter-spacing:.04em}
+.tag-hit::before{content:'✓';margin-right:5px}
+.tag-miss{color:var(--muted);background:transparent;border-color:var(--line-2)}
+.tag-miss::before{content:'✗';margin-right:5px}
+
+@media (max-width:999px){.kpi-row{grid-template-columns:1fr 1fr}}
+@media (max-width:520px){.kpi-row{gap:10px}.kpi{padding:18px}.kpi-value{font-size:30px}}

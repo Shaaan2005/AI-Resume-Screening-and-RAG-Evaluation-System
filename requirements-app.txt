@@ -1,0 +1,15 @@
+# Web app + retrieval pipeline only (what the Docker image / Hugging Face Space installs).
+# For local development, install requirements.txt, which includes this file.
+Flask==3.1.3
+Werkzeug==3.1.8
+pdfplumber==0.11.9
+python-docx==1.2.0
+sentence-transformers==5.5.1
+chromadb==1.5.9
+scikit-learn==1.9.0
+numpy==2.4.6
+rank_bm25==0.2.2  # optional BM25 keyword scoring (benchmark / RESUME_RERANK mode)
+gunicorn==27.0.1  # production server used in the Docker image (Linux)
+# torch is pulled in by sentence-transformers; install the CPU or CUDA build
+# that matches your machine from https://pytorch.org if the default is wrong.
+ftfy>=6.1

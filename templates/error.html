@@ -1,0 +1,40 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>{{ code }} · {{ title }}</title>
+<meta name="description" content="AI resume screening: semantic search over resumes and job-description matching.">
+{% include 'partials/head.html' %}
+<style>
+.motion [data-intro]{visibility:hidden}
+.err{min-height:100vh;min-height:100svh;display:flex;flex-direction:column;align-items:center;justify-content:center;text-align:center;padding:96px 20px 60px}
+.err-top{position:fixed;top:0;left:0;right:0;padding:20px clamp(16px,4vw,40px)}
+/* The code is scanned: an outlined copy on top of a filled copy; the beam reveals the fill */
+.code{position:relative;font-family:var(--mono);font-size:clamp(110px,26vw,280px);font-weight:700;letter-spacing:-.06em;line-height:.9;user-select:none}
+.code .outline{color:transparent;-webkit-text-stroke:1.5px rgba(255,255,255,.28)}
+.code .fill{position:absolute;inset:0;color:var(--lime);clip-path:inset(0 0 0 0)}
+.code .beam{position:absolute;left:-6%;right:-6%;top:0;height:3px;background:var(--lime);box-shadow:0 0 18px 4px rgba(198,255,61,.55);opacity:0;will-change:transform}
+.err h1{font-size:clamp(28px,4vw,44px);font-weight:600;letter-spacing:-.03em;margin:28px 0 12px}
+.err p{font-size:17px;color:var(--text-2);max-width:520px;line-height:1.6;margin-bottom:32px}
+</style>
+</head>
+<body>
+<div class="glow" aria-hidden="true"></div>
+<div class="err-top">
+    <a href="/" class="brand" aria-label="AI Resume Screening home">
+        <svg class="brand-mark" viewBox="0 0 32 32" aria-hidden="true"><rect width="32" height="32" rx="8" fill="#c6ff3d"/><path d="M10 7h8l4 4v14H10z" fill="none" stroke="#0a0d05" stroke-width="2" stroke-linejoin="round"/><path d="M6.5 17h19" stroke="#0a0d05" stroke-width="2.4" stroke-linecap="round"/></svg>
+        <span class="brand-name">Resume<em>Screening</em></span>
+    </a>
+</div>
+<main class="err">
+    <div class="code" data-intro aria-hidden="true"><span class="outline">{{ code }}</span><span class="fill">{{ code }}</span><span class="beam"></span></div>
+    <p class="eyebrow" data-intro style="margin:22px 0 0"><span class="idx">●</span> Error {{ code }}</p>
+    <h1 data-intro>{{ title }}</h1>
+    <p data-intro>{{ message }}</p>
+    <a href="/" class="btn btn-primary" data-intro>&larr; Return to Dashboard</a>
+</main>
+{% include 'partials/scripts.html' %}
+<script defer src="{{ url_for('static', filename='js/error.js') }}"></script>
+</body>
+</html>

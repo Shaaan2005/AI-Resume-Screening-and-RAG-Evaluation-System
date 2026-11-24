@@ -4,49 +4,38 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Login</title>
-<link rel="preconnect" href="https://fonts.googleapis.com">
-<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet">
-<style>
-*{margin:0;padding:0;box-sizing:border-box}
-body{font-family:'Inter',sans-serif;background:#1a2e39;min-height:100vh;display:flex;align-items:center;justify-content:center;color:#f7fafc;background-image:radial-gradient(rgba(255,255,255,0.015) 1px,transparent 1px);background-size:24px 24px}
-.auth-card{background:#203743;border-radius:12px;padding:36px 40px 40px;width:380px;position:relative;box-shadow:0 8px 32px rgba(0,0,0,0.2)}
-.auth-card::before{content:'';position:absolute;top:-2px;left:50%;transform:translateX(-50%);width:180px;height:2px;background:linear-gradient(90deg,transparent,#009393,transparent);border-radius:2px}
-.auth-logo{display:flex;align-items:center;justify-content:center;gap:8px;margin-bottom:6px}
-.auth-logo svg{width:32px;height:32px}
-.auth-logo span{font-size:17px;font-weight:700;color:#f7fafc}
-.auth-sub{text-align:center;font-size:13px;color:#9fbed0;margin-bottom:28px}
-.form-group{margin-bottom:16px}
-.form-group label{display:block;font-size:12px;font-weight:600;color:#e2eef4;margin-bottom:5px}
-.form-group input{width:100%;padding:10px 12px;background:#13232d;border:1px solid rgba(255,255,255,0.04);border-radius:6px;font-family:'Inter',sans-serif;font-size:13px;color:#f7fafc;outline:none;transition:all 0.15s}
-.form-group input:focus{border-color:rgba(0,147,147,0.15)}
-.form-group input::placeholder{color:#9fbed0}
-.btn-submit{width:100%;padding:10px 20px;background:#3178f6;color:#fff;font-family:'Inter',sans-serif;font-size:14px;font-weight:600;border:none;border-radius:6px;cursor:pointer;transition:all 0.15s;margin-top:4px}
-.btn-submit:hover{background:#1475e1}
-.auth-footer{text-align:center;margin-top:18px;font-size:13px;color:#9fbed0}
-.auth-footer a{color:#009393;text-decoration:none;font-weight:600}
-.auth-footer a:hover{color:#007a7a}
-.error{background:rgba(255,60,60,0.08);border:1px solid rgba(255,60,60,0.15);color:#ff6b6b;border-radius:6px;padding:8px 12px;font-size:12px;font-weight:500;margin-bottom:16px;text-align:center}
-.pw-toggle{position:relative}
-.pw-toggle .eye{position:absolute;right:10px;top:50%;transform:translateY(-50%);cursor:pointer;color:#9fbed0;font-size:14px;user-select:none;background:none;border:none;padding:0;font-family:'Inter',sans-serif}
-</style>
+<meta name="description" content="AI resume screening: semantic search over resumes and job-description matching.">
+{% include 'partials/head.html' %}
+<link rel="stylesheet" href="{{ url_for('static', filename='css/auth.css') }}">
 </head>
-<body>
-<div class="auth-card">
-<div class="auth-logo">
-<svg viewBox="0 0 36 36" fill="none"><rect width="36" height="36" rx="8" fill="#009393"/><text x="50%" y="55%" dominant-baseline="middle" text-anchor="middle" fill="#13232d" font-size="16" font-weight="800" font-family="Inter">AI</text></svg>
-<span>AI Resume Screening</span>
-</div>
-<div class="auth-sub">Sign in to your account</div>
-{% if error %}<div class="error">{{ error }}</div>{% endif %}
-<form method="POST">
-<div class="form-group"><label>Username</label><input type="text" name="username" placeholder="Enter username" required></div>
-<div class="form-group"><label>Password</label><div class="pw-toggle"><input type="password" name="password" id="password" placeholder="Enter password" required><button type="button" class="eye" onclick="togglePw()">&#128065;</button></div></div>
-<button type="submit" class="btn-submit">Log In</button>
-</form>
-<div class="auth-footer">Don't have an account? <a href="{{ url_for('register') }}">Register</a></div>
-</div>
-<script>
-function togglePw(){var p=document.getElementById('password');p.type=p.type==='password'?'text':'password'}
-</script>
+<body class="auth">
+{% include 'partials/auth_story.html' %}
+<main class="auth-shell">
+    {% include 'partials/auth_aside.html' %}
+    <section class="panel auth-card" aria-labelledby="authTitle" data-intro>
+        <h2 id="authTitle">Welcome back</h2>
+        <p class="auth-sub">Sign in to your account</p>
+        {% if error %}<div class="form-error" role="alert"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true"><circle cx="12" cy="12" r="9"/><path d="M12 7v6M12 16.5v.5"/></svg><span>{{ error }}</span></div>{% endif %}
+        <form method="POST" class="auth-form">
+            <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
+            <div class="afield">
+                <label for="username">Username</label>
+                <div class="control"><input class="text-input" type="text" name="username" id="username" placeholder="Enter username" autocomplete="username" value="{{ request.form.get('username', '') }}" required autofocus></div>
+            </div>
+            <div class="afield">
+                <label for="password">Password</label>
+                <div class="control has-toggle">
+                    <input class="text-input" type="password" name="password" id="password" placeholder="Enter password" autocomplete="current-password" required>
+                    <button type="button" class="pw-btn" aria-controls="password" aria-pressed="false" aria-label="Show password">Show</button>
+                </div>
+            </div>
+            <button type="submit" class="btn btn-primary btn-block"><span class="spinner" aria-hidden="true"></span><span class="btn-text">Log In</span></button>
+        </form>
+        <p class="auth-foot">Don't have an account? <a href="{{ url_for('auth.register') }}">Register</a></p>
+    </section>
+</main>
+{% include 'partials/auth_form_js.html' %}
+{% include 'partials/scripts.html' %}
+<script defer src="{{ url_for('static', filename='js/auth.js') }}"></script>
 </body>
 </html>

@@ -1,0 +1,84 @@
+"""Flask application factory for the AI Resume Screening web app."""
+import os
+import logging
+from datetime import timedelta
+
+from flask import Flask
+from werkzeug.middleware.proxy_fix import ProxyFix
+
+from scoring import band
+from .db import init_db
+from .security import get_or_create_secret_key, register_security
+
+# Project folder: all data paths resolve against it, so starting the app from
+# another directory never creates fresh, empty copies of the database or uploads.
+ROOT = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
+
+
+
+def dept_label(category):
+    """Readable department name; short acronyms (HR, BPO) stay upper case."""
+    return " ".join(w if len(w) <= 3 else w.title() for w in category.split("-"))
+
+def _configure_logging():
+    logging.basicConfig(
+        level=logging.INFO,
+        format="%(asctime)s [%(levelname)s] %(name)s: %(message)s",
+        handlers=[
+            logging.StreamHandler(),
+            logging.FileHandler(os.path.join(ROOT, "app.log"), encoding="utf-8"),
+        ],
+    )
+
+
+def create_app(config=None):
+    """Builds the Flask app. `config` overrides defaults (used by tests)."""
+    _configure_logging()
+
+    root = ROOT
+    app = Flask(__name__, template_folder=os.path.join(root, "templates"))
+
+    app.secret_key = get_or_create_secret_key()
+    app.config.update(
+        SESSION_COOKIE_HTTPONLY=True,
+        SESSION_COOKIE_SAMESITE="Lax",
+        PERMANENT_SESSION_LIFETIME=timedelta(hours=8),
+        MAX_CONTENT_LENGTH=16 * 1024 * 1024,  # 16 MB max upload limit
+        DATABASE=os.path.join(root, "users.db"),
+        UPLOAD_FOLDER=os.path.join(root, "uploads"),
+        BENCHMARK_RESULTS=os.path.join(root, "benchmark", "results.json"),
+        # Public-demo mode (DEMO_MODE=1): uploaded resumes are scored but never
+        # added to the shared search index, the recent-uploads list, or disk.
+        DEMO_MODE=os.environ.get("DEMO_MODE", "0") == "1",
+    )
+    if app.config["DEMO_MODE"]:
+        # Public visitors get their own account database, separate from local users.
+        # Cookies: Hugging Face shows the app inside an iframe, where SameSite=Lax
+        # cookies are dropped and login would silently fail; Secure needs HTTPS,
+        # which every public host and tunnel provides.
+        app.config.update(DATABASE=os.path.join(root, "demo_users.db"),
+                          SESSION_COOKIE_SAMESITE="None", SESSION_COOKIE_SECURE=True)
+        # Demo mode always runs behind one proxy (Cloudflare tunnel or Hugging Face),
+        # so every request arrives from 127.0.0.1. Read the visitor's real IP from the
+        # proxy's X-Forwarded-For; otherwise the login lockout is shared by all
+        # visitors, and anyone could lock any account by failing its password 5 times.
+        app.wsgi_app = ProxyFix(app.wsgi_app, x_for=1, x_proto=1)
+    if config:
+        app.config.update(config)
+
+    os.makedirs(app.config["UPLOAD_FOLDER"], exist_ok=True)
+    init_db(app.config["DATABASE"])
+
+    register_security(app)
+    app.jinja_env.globals["verdict_band"] = band  # colour for a SHORTLIST/CONSIDER/REJECT verdict
+    app.jinja_env.filters["dept_label"] = dept_label  # "INFORMATION-TECHNOLOGY" -> "Information Technology", "HR" stays "HR"
+
+    from .auth import bp as auth_bp
+    from .search import bp as search_bp
+    from .upload import bp as upload_bp
+    from .evaluate import bp as evaluate_bp
+
+    for bp in (auth_bp, search_bp, upload_bp, evaluate_bp):
+        app.register_blueprint(bp)
+
+    return app

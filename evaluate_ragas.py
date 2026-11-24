@@ -2,8 +2,12 @@
 
 Evaluates Context Precision and Context Recall of the resume screening retriever.
 Supports:
-1. Real Ragas evaluation (requires OpenAI Key or running Ollama).
-2. Local Heuristic evaluation (runs instantly offline without external API keys).
+1. Local heuristic evaluation (fast, offline, no API keys) - the default.
+2. Real RAGAS evaluation with an LLM judge: `--judge ollama` (free, local Llama 3, slow)
+   or `--judge openai` (reads OPENAI_API_KEY).
+
+Usage:  python evaluate_ragas.py [--judge none|ollama|openai]
+For ranking quality, prefer benchmark/run_benchmark.py (shown on the /evaluate page).
 """
 import os
 import sys
@@ -22,7 +26,7 @@ except ImportError as e:
     print(f"Error importing search engine components: {e}")
     sys.exit(1)
 
-# List of 10 test queries across different departments for evaluation
+# List of 10 benchmark test queries across diverse departments for evaluation
 TEST_SUITE = [
     {
         "query": "Who has experience in software testing and cross platform development?",
@@ -38,6 +42,41 @@ TEST_SUITE = [
         "query": "Who has experience in human resources recruitment and talent acquisition?",
         "expected_category": "HR",
         "key_skills": ["human resources", "recruitment", "hiring", "talent acquisition"]
+    },
+    {
+        "query": "Who is an accountant skilled in audit, tax compliance, and financial reporting?",
+        "expected_category": "ACCOUNTANT",
+        "key_skills": ["audit", "tax", "accounting", "financial reporting"]
+    },
+    {
+        "query": "Who has expertise in financial modeling, valuation, and investment analysis?",
+        "expected_category": "FINANCE",
+        "key_skills": ["financial analysis", "financial modeling", "valuation", "investment"]
+    },
+    {
+        "query": "Looking for a chef with culinary experience, menu planning, and food safety.",
+        "expected_category": "CHEF",
+        "key_skills": ["cooking", "culinary", "menu planning", "food safety"]
+    },
+    {
+        "query": "Seeking healthcare professional with patient care, clinical diagnosis, and medical records experience.",
+        "expected_category": "HEALTHCARE",
+        "key_skills": ["patient care", "medical", "clinical", "nursing"]
+    },
+    {
+        "query": "Who is a sales executive skilled in lead generation, cold calling, and negotiation?",
+        "expected_category": "SALES",
+        "key_skills": ["sales", "lead generation", "negotiation", "cold calling"]
+    },
+    {
+        "query": "Looking for a lawyer with litigation, legal research, and contract drafting experience.",
+        "expected_category": "ADVOCATE",
+        "key_skills": ["litigation", "legal research", "contract drafting", "lawyer"]
+    },
+    {
+        "query": "Who has experience in digital marketing, SEO, social media, and content strategy?",
+        "expected_category": "DIGITAL-MEDIA",
+        "key_skills": ["digital marketing", "seo", "social media", "content strategy"]
     }
 ]
 
@@ -180,7 +219,7 @@ def get_heuristic_scorecard():
     """Compiles local heuristic precision, recall, and similarity scores.
     Returns: (results_list, avg_precision, avg_recall, avg_similarity)
     """
-    from app import detect_category
+    from query_parsing import detect_category
     collection = get_collection()
     count = collection.count()
     if count == 0:
@@ -193,7 +232,7 @@ def get_heuristic_scorecard():
         key_skills = item["key_skills"]
         
         detected = detect_category(query)
-        rankings = search_candidates(query, category=detected, rerank=True)
+        rankings = search_candidates(query, category=detected)
         contexts = [r["preview"] for r in rankings]
         
         dataset_records.append({
@@ -215,7 +254,7 @@ def get_real_ragas_scorecard(openai_key=None, use_ollama=False):
     """Executes evaluation using the real Ragas library (either OpenAI or local Ollama).
     Returns: (results_list, avg_precision, avg_recall)
     """
-    from app import detect_category
+    from query_parsing import detect_category
     if not use_ollama and openai_key:
         os.environ["OPENAI_API_KEY"] = openai_key
     collection = get_collection()
@@ -230,7 +269,7 @@ def get_real_ragas_scorecard(openai_key=None, use_ollama=False):
         key_skills = item["key_skills"]
         
         detected = detect_category(query)
-        rankings = search_candidates(query, category=detected, rerank=True)
+        rankings = search_candidates(query, category=detected)
         # Limit to the top 2 retrieved resumes for clean department evaluation
         contexts = [r["preview"] for r in rankings[:2]]
         
@@ -266,6 +305,12 @@ def get_real_ragas_scorecard(openai_key=None, use_ollama=False):
     return results, avg_precision, avg_recall
 
 def main():
+    import argparse
+    parser = argparse.ArgumentParser(description="Heuristic + optional LLM-judged (RAGAS) retrieval evaluation.")
+    parser.add_argument("--judge", choices=["none", "ollama", "openai"], default="none",
+                        help="LLM judge for RAGAS: none (default, fast), ollama (free, local), openai (paid)")
+    args = parser.parse_args()
+
     print("=" * 100)
     print("                      RESUME RETRIEVAL PIPELINE EVALUATION")
     print("=" * 100)
@@ -296,27 +341,29 @@ def main():
     print(f"Average Context Recall:    {avg_recall:.4f}")
     print(f"Average Embed Similarity:  {avg_similarity:.4f}")
 
-    # Run real Ragas check
-    from app import detect_category
-    dataset_records = []
-    for item in TEST_SUITE:
-        detected = detect_category(item["query"])
-        rankings = search_candidates(item["query"], category=detected, rerank=True)
-        contexts = [r["preview"] for r in rankings]
-        dataset_records.append({
-            "question": item["query"],
-            "contexts": contexts,
-            "ground_truth": item["expected_category"]
-        })
-        
+    if args.judge == "none":
+        print("\nSkipping the LLM-judged RAGAS run. Add --judge ollama (free, local, slow) "
+              "or --judge openai (needs OPENAI_API_KEY) to run it.")
+        return
+
     print("\n" + "=" * 100)
-    print("                                   RAGAS SYSTEM DETECT")
+    print(f"                    RAGAS (LLM judge: {args.judge}) - this can take 10-20 minutes")
     print("=" * 100)
-    ragas_df = run_ragas_evaluation(dataset_records)
-    
-    if ragas_df is not None:
-        print("\n[RAGAS RESULTS]")
-        print(ragas_df.to_string(index=False))
-    
+    if args.judge == "openai":
+        key = os.environ.get("OPENAI_API_KEY")
+        if not key:
+            print("[ERROR] Set the OPENAI_API_KEY environment variable to use --judge openai.")
+            sys.exit(1)
+        r_results, r_precision, r_recall = get_real_ragas_scorecard(openai_key=key)
+    else:
+        r_results, r_precision, r_recall = get_real_ragas_scorecard(use_ollama=True)
+
+    for i, r in enumerate(r_results, 1):
+        print(f"{i:<2} {r.get('question', r.get('query', ''))}")
+        print(f"   Precision: {r.get('context_precision', 0) or 0:.4f}  Recall: {r.get('context_recall', 0) or 0:.4f}")
+    print(f"\nRAGAS Context Precision: {r_precision:.4f}")
+    print(f"RAGAS Context Recall:    {r_recall:.4f}")
+
+
 if __name__ == "__main__":
     main()
