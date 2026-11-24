@@ -33,6 +33,7 @@
     if (S.reduce) { S.ready = Promise.resolve(); return; }
 
     gsap.registerPlugin(ScrollTrigger);
+    gsap.config({ nullTargetWarn: false });   // optional page parts (notices, ticks) may be absent
     if (window.SplitText) gsap.registerPlugin(SplitText);
 
     // ---- Lenis, on GSAP's clock -------------------------------------------------
