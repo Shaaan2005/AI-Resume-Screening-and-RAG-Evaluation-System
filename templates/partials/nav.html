@@ -1,0 +1,16 @@
+<header class="nav">
+    <a href="/" class="brand" aria-label="AI Resume Screening home">
+        <svg class="brand-mark" viewBox="0 0 32 32" aria-hidden="true"><rect width="32" height="32" rx="8" fill="#c6ff3d"/><path d="M10 7h8l4 4v14H10z" fill="none" stroke="#0a0d05" stroke-width="2" stroke-linejoin="round"/><path d="M6.5 17h19" stroke="#0a0d05" stroke-width="2.4" stroke-linecap="round"/></svg>
+        <span class="brand-name">Resume<em>Screening</em></span>
+    </a>
+    <nav class="nav-right" aria-label="Account">
+        {% if user %}
+        <a href="/evaluate" class="nav-link"><svg class="icon" viewBox="0 0 24 24" aria-hidden="true"><path d="M4 20V10M10 20V4M16 20v-7M22 20H2"/></svg><span>Benchmark</span></a>
+        <span class="nav-user">Hi {{ user.display_name or user.username }}</span>
+        <form action="{{ url_for('auth.logout') }}" method="POST"><input type="hidden" name="csrf_token" value="{{ csrf_token() }}"><button type="submit" class="btn btn-ghost btn-sm">Log Out</button></form>
+        {% else %}
+        <a href="{{ url_for('auth.login') }}" class="btn btn-ghost btn-sm">Log In</a>
+        <a href="{{ url_for('auth.register') }}" class="btn btn-primary btn-sm">Register</a>
+        {% endif %}
+    </nav>
+</header>

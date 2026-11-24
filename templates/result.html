@@ -5,324 +5,140 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>{% if error %}Upload Error{% else %}Analysis Result{% endif %}</title>
 <meta name="description" content="AI resume screening: semantic search over resumes and job-description matching.">
-<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 36 36%22%3E%3Crect width=%2236%22 height=%2236%22 rx=%228%22 fill=%22%23009393%22/%3E%3Ctext x=%2218%22 y=%2224%22 text-anchor=%22middle%22 font-size=%2216%22 font-weight=%22800%22 font-family=%22Arial%22 fill=%22%2313232d%22%3EAI%3C/text%3E%3C/svg%3E">
-<style>:focus-visible{outline:2px solid #3fd0d0 !important;outline-offset:2px}</style>
-<link rel="preconnect" href="https://fonts.googleapis.com">
-<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet">
-<style>
-*{margin:0;padding:0;box-sizing:border-box}
-body{
-    font-family:'Inter',sans-serif;
-    background:#1a2e39;
-    min-height:100vh;
-    color:#f7fafc;
-    -webkit-font-smoothing:antialiased;
-    background-image:
-        radial-gradient(rgba(255,255,255,0.015) 1px,transparent 1px);
-    background-size:24px 24px
-}
-.nav{
-    position:fixed;top:0;left:0;right:0;z-index:100;
-    display:flex;align-items:center;justify-content:space-between;
-    padding:0 32px;height:72px;
-    background:#13232d;
-    border-bottom:1px solid rgba(255,255,255,0.04)
-}
-.nav-left{display:flex;align-items:center}
-.nav-logo{display:flex;align-items:center;gap:10px;text-decoration:none}
-.nav-logo svg{width:36px;height:36px}
-.nav-logo span{font-size:18px;font-weight:700;color:#f7fafc;letter-spacing:-0.2px}
-.nav-right{display:flex;align-items:center;gap:10px}
-.nav-right .btn-login{
-    padding:8px 18px;background:#00a3a3;color:#0d1b22;
-    border:none;border-radius:6px;
-    font-family:'Inter',sans-serif;font-size:13px;font-weight:600;
-    cursor:pointer;transition:all 0.15s;text-decoration:none
-}
-.nav-right .btn-login:hover{background:#00b8b8}
-.nav-right .btn-register{
-    padding:8px 18px;background:#009393;color:#13232d;
-    border:none;border-radius:6px;
-    font-family:'Inter',sans-serif;font-size:13px;font-weight:700;
-    cursor:pointer;transition:all 0.15s;text-decoration:none
-}
-.nav-right .btn-register:hover{background:#007a7a}
-.content{max-width:1200px;margin:0 auto;padding:100px 32px 60px}
-.breadcrumb{display:flex;align-items:center;gap:8px;margin-bottom:18px;font-size:14px}
-.breadcrumb a{color:#e2eef4;text-decoration:none}
-.breadcrumb a:hover{color:#009393}
-.breadcrumb span{color:rgba(255,255,255,0.08)}
-.breadcrumb .current{color:#e2eef4}
-.breadcrumb .back-btn{display:inline-flex;align-items:center;gap:4px;color:#00a3a3;font-weight:600}
-.breadcrumb .back-btn:hover{color:#00b8b8}
-.breadcrumb::before{
-    content:'';display:inline-block;width:3px;height:14px;
-    background:#00a3a3;border-radius:2px;margin-right:4px
-}
-.file-badge{
-    display:flex;align-items:center;gap:8px;
-    background:#203743;border-radius:6px;padding:10px 16px;margin-bottom:20px;
-    font-size:14px;color:#e2eef4;font-weight:500;
-    border-left:3px solid #00a3a3;box-shadow:0 1px 3px rgba(0,0,0,0.12)
-}
-.file-badge .dot{width:6px;height:6px;background:#009393;border-radius:50%}
-.scores-grid{display:grid;grid-template-columns:1fr 1fr 1fr;gap:10px;margin-bottom:20px}
-.score-card{
-    background:#203743;border-radius:6px;padding:16px;text-align:center;
-    position:relative;overflow:hidden
-}
-.score-card::before{
-    content:'';position:absolute;top:0;left:0;right:0;height:2px;
-    background:linear-gradient(90deg,transparent,#00a3a3,#009393,transparent)
-}
-.score-card .label{
-    font-size:11px;font-weight:600;text-transform:uppercase;
-    letter-spacing:0.4px;color:#e2eef4;margin-bottom:6px
-}
-.score-card .value{font-size:32px;font-weight:700;color:#f7fafc;line-height:1}
-.score-card .sub{font-size:13px;color:#a9c4d3;margin-top:8px;line-height:1.45}
-.progress-wrap{margin-top:6px;background:#0d1b22;border-radius:100px;height:9px;overflow:hidden}
-.progress-fill{height:100%;border-radius:100px;transition:width 0.6s ease;background:#00a3a3}
-.rec-badge{
-    display:inline-block;padding:6px 18px;border-radius:4px;
-    font-size:13px;font-weight:700;letter-spacing:0.4px;margin-top:2px
-}
-.rec-badge.shortlist{background:rgba(105,240,174,0.12);color:#69f0ae;border:1px solid rgba(105,240,174,0.4)}
-.rec-badge.consider{background:rgba(255,213,79,0.12);color:#ffd54f;border:1px solid rgba(255,213,79,0.4)}
-.rec-badge.reject{background:rgba(255,138,138,0.12);color:#ff8a8a;border:1px solid rgba(255,138,138,0.4)}
-.card{
-    background:#203743;border-radius:6px;padding:16px 16px 16px 20px;margin-bottom:10px;
-    position:relative;border-left:3px solid rgba(0,147,147,0.2);
-    box-shadow:0 1px 3px rgba(0,0,0,0.12)
-}
-.card-header{display:flex;align-items:center;justify-content:space-between;margin-bottom:8px}
-.card-header h3{font-size:14px;font-weight:600;color:#f7fafc}
-.card-header .count{background:rgba(255,255,255,0.03);color:#e2eef4;font-size:11px;font-weight:600;padding:2px 8px;border-radius:4px}
-.skills-wrap{display:flex;flex-wrap:wrap;gap:5px;list-style:none}
-.skills-wrap li{
-    background:rgba(0,147,147,0.08);color:#f7fafc;
-    font-size:12px;font-weight:500;padding:5px 12px;
-    border-radius:4px;border:1px solid rgba(0,147,147,0.3)
-}
-.jd-box{font-size:13px;color:#e2eef4;line-height:1.6;padding:4px 0;white-space:pre-wrap}
-.jd-toggle{
-    cursor:pointer;font-size:12px;color:#e2eef4;
-    transition:color 0.15s;user-select:none;
-    padding:2px 6px;border-radius:3px;background:rgba(255,255,255,0.02)
-}
-.jd-toggle:hover{color:#009393}
-.table-wrap{border-radius:6px;overflow:hidden}
-table{width:100%;border-collapse:collapse}
-th, td{border:1px solid rgba(255,255,255,0.1)}
-th{
-    text-align:left;padding:10px 14px;
-    font-size:11px;font-weight:600;text-transform:uppercase;
-    letter-spacing:0.4px;color:#e2eef4;
-    background:rgba(0,0,0,0.1);
-    border-bottom:1px solid rgba(255,255,255,0.1)
-}
-td{padding:10px 14px;font-size:13px;color:#e2eef4;border-bottom:1px solid rgba(255,255,255,0.1)}
-tr:nth-child(even) td{background:rgba(255,255,255,0.02)}
-tr:last-child td{border-bottom:1px solid rgba(255,255,255,0.1)}
-.rank-num{
-    display:inline-flex;align-items:center;justify-content:center;
-    width:22px;height:22px;border-radius:4px;
-    font-size:12px;font-weight:700;
-    background:rgba(255,255,255,0.02);color:#e2eef4
-}
-.rank-1{background:rgba(255,183,0,0.04);color:#ffb700}
-.rank-2{background:rgba(148,163,184,0.04);color:#94a3b8}
-.rank-3{background:rgba(255,140,0,0.04);color:#ff8c00}
-.rname{font-weight:500;color:#f7fafc;font-size:13px}
-.dist{font-size:13px;font-weight:600}
-.dist.green{color:#69f0ae}
-.dist.yellow{color:#ffd54f}
-.dist.red{color:#ff6b6b}
-.no-data{color:#e2eef4;font-size:13px;padding:4px 0}
-.pipeline-card{
-    background:#203743;border-radius:6px;padding:12px 20px;margin:4px 0 20px;
-    border-left:3px solid rgba(0,147,147,0.2);box-shadow:0 1px 3px rgba(0,0,0,0.12)
-}
-.pipeline-card .title{font-size:11px;font-weight:600;text-transform:uppercase;letter-spacing:0.4px;color:#e2eef4;margin-bottom:10px}
-.pipeline-flow{display:flex;align-items:center;gap:0;overflow-x:auto;padding-bottom:4px;flex-wrap:wrap}
-.pipeline-step{display:flex;align-items:center;gap:6px;flex-shrink:0;font-size:12px;font-weight:500;color:#f7fafc;padding:5px 12px;background:rgba(0,147,147,0.08);border-radius:4px;border:1px solid rgba(0,147,147,0.3)}
-.pipeline-step .icon{display:none}
-.meter{position:relative;height:8px;background:#0d1b22;border-radius:99px;margin:12px 0 4px;overflow:visible}
-.meter-fill{height:100%;border-radius:99px;background:#ff8a8a}
-.meter-fill.green{background:#69f0ae}.meter-fill.yellow{background:#ffd54f}
-.meter .tick{position:absolute;top:-3px;width:2px;height:14px;background:#d5e4ec;opacity:0.7}
-.meter-legend{display:flex;justify-content:space-between;font-size:12px;color:#a9c4d3;margin-top:4px}
-.value.green{color:#69f0ae}.value.yellow{color:#ffd54f}.value.red{color:#ff8a8a}
-.skills-wrap.missing li{background:rgba(255,138,138,0.08);border-color:rgba(255,138,138,0.4);color:#ffd0d0}
-.pipeline-arrow{flex-shrink:0;color:rgba(255,255,255,0.15);font-size:11px;padding:0 6px}
-.actions{display:flex;gap:10px;margin-top:18px;padding-top:16px;border-top:1px solid rgba(255,255,255,0.04)}
-.btn-primary{
-    display:inline-flex;align-items:center;justify-content:center;gap:6px;
-    padding:12px 26px;background:#00a3a3;color:#0d1b22;
-    font-family:'Inter',sans-serif;font-size:14px;font-weight:600;
-    border:none;border-radius:6px;cursor:pointer;transition:all 0.15s;
-    text-decoration:none
-}
-.btn-primary:hover{background:#00b8b8}
-.btn-secondary{
-    display:inline-flex;align-items:center;justify-content:center;gap:6px;
-    padding:12px 26px;background:transparent;color:#00a3a3;
-    font-family:'Inter',sans-serif;font-size:14px;font-weight:600;
-    border:1px solid rgba(0,163,163,0.15);border-radius:6px;
-    cursor:pointer;transition:all 0.15s;text-decoration:none
-}
-.btn-secondary:hover{background:rgba(0,163,163,0.04);border-color:rgba(0,163,163,0.2)}
-.btn-green{display:inline-flex;align-items:center;justify-content:center;gap:6px;padding:12px 26px;background:#00a3a3;color:#0d1b22;font-family:'Inter',sans-serif;font-size:14px;font-weight:600;border:none;border-radius:6px;cursor:pointer;transition:all 0.15s;text-decoration:none}
-.btn-green:hover{background:#00b8b8}
-.footer{
-    background:#13232d;
-    border-top:1px solid rgba(255,255,255,0.04);
-    padding:40px 32px 32px;
-    margin-top:48px;
-    text-align:center
-}
-.footer p{font-size:12px;color:#e2eef4;margin-bottom:4px}
-.footer .brand{color:#e2eef4;font-size:11px}
-.footer .brand span{color:#009393;font-weight:600}
-.footer-desc{font-size:15px;color:#f0f8ff;line-height:1.5;margin-bottom:16px;font-weight:400}
-@media(max-width:860px){
-    .nav-links{display:none}
-    .scores-grid{grid-template-columns:1fr}
-    .actions{flex-direction:column}
-    .content{padding:90px 16px 40px}
-}
-.nav{border-bottom:1px solid rgba(0,163,163,0.25) !important}
-.nav-link{display:inline-flex;align-items:center;gap:6px;font-size:13px;font-weight:600;color:#d5e4ec;text-decoration:none;padding:6px 2px;border-bottom:2px solid transparent}
-.nav-link:hover{color:#f7fafc;border-bottom-color:#00a3a3}
-.nav-user{font-size:13px;color:#a9c4d3;font-weight:500}
-.btn-outline{padding:7px 16px;background:transparent;color:#d5e4ec;border:1px solid rgba(255,255,255,0.2);border-radius:6px;font-family:inherit;font-size:13px;font-weight:600;cursor:pointer;text-decoration:none}
-.btn-outline:hover{border-color:#00a3a3;color:#f7fafc}
-.footer-inner{max-width:720px;margin:0 auto;text-align:center}
-.footer .footer-desc{font-size:15px;color:#d5e4ec;line-height:1.6;margin-bottom:10px}
-.footer .footer-meta{font-size:13px;color:#a9c4d3}
-.footer .footer-meta a{color:#3fd0d0;text-decoration:none}
-.btn-export{background:transparent;color:#d5e4ec;border:1px solid rgba(255,255,255,0.2);border-radius:4px;padding:4px 10px;font-family:inherit;font-size:12px;font-weight:600;cursor:pointer}
-.btn-export:hover{border-color:#00a3a3;color:#f7fafc}
-.table-wrap{overflow-x:auto !important}
-.table-wrap table{min-width:640px}
-@media(max-width:767px){.nav{padding:0 16px !important}.nav-logo span,.nav-user{display:none}}
-</style>
+{% include 'partials/head.html' %}
+<link rel="stylesheet" href="{{ url_for('static', filename='css/result.css') }}">
 </head>
 <body>
+<a class="skip-link" href="#main">Skip to content</a>
+<div class="glow" aria-hidden="true"></div>
+{% include 'partials/nav.html' %}
 
-<div class="nav">
-    <div class="nav-left">
-        <a href="/" class="nav-logo">
-            <svg viewBox="0 0 36 36" fill="none"><rect width="36" height="36" rx="8" fill="#009393"/><text x="50%" y="55%" dominant-baseline="middle" text-anchor="middle" fill="#13232d" font-size="16" font-weight="800" font-family="Inter">AI</text></svg>
-            <span>AI Resume Screening</span>
-        </a>
-    </div>
-    <div class="nav-right">
-        {% if user %}
-        <a href="/evaluate" class="nav-link"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" aria-hidden="true"><path d="M4 20V10M10 20V4M16 20v-7M22 20H2"/></svg>Benchmark</a>
-        <span class="nav-user">Hi {{ user.display_name or user.username }}</span>
-        <form action="{{ url_for('auth.logout') }}" method="POST" style="margin:0"><input type="hidden" name="csrf_token" value="{{ csrf_token() }}"><button type="submit" class="btn-outline">Log Out</button></form>
-        {% else %}
-        <a href="{{ url_for('auth.login') }}" class="btn-login">Log In</a>
-        <a href="{{ url_for('auth.register') }}" class="btn-register">Register</a>
-        {% endif %}
-    </div>
-
-</div>
-
-<div class="content">
-    <div class="breadcrumb">
-        <a href="/" class="back-btn">&#8592; Back</a>
-        <span>/</span>
-        <span class="current">Analysis</span>
-    </div>
+<main class="page wrap" id="main">
+    <nav class="crumbs" aria-label="Breadcrumb" data-intro>
+        <a href="/">&#8592; Back</a><span class="sep" aria-hidden="true">/</span><span aria-current="page">Analysis</span>
+    </nav>
 
     {% if error %}
-    <div role="alert" style="display:flex;gap:10px;align-items:flex-start;background:rgba(255,138,138,0.1);border:1px solid rgba(255,138,138,0.4);color:#ffb3b3;border-radius:6px;padding:12px 16px;margin-bottom:16px;font-size:14px;font-weight:500"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true" style="flex-shrink:0;margin-top:1px"><circle cx="12" cy="12" r="9"/><path d="M12 7v6M12 16.5v.5"/></svg><span>{{ error }}</span></div>
+    <div class="alert" role="alert"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true"><circle cx="12" cy="12" r="9"/><path d="M12 7v6M12 16.5v.5"/></svg><span>{{ error }}</span></div>
     {% endif %}
-    <div class="file-badge">
-        <span class="dot"></span>
-        {{ filename }}
-        {% if category %}
-        <span style="background:rgba(0,147,147,0.12);color:#009393;font-size:11px;font-weight:700;padding:3px 10px;border-radius:4px;text-transform:uppercase;letter-spacing:0.4px;margin-left:6px">{{ category }}</span>
-        {% endif %}
-        <span style="margin-left:auto;font-size:13px;color:#e2eef4" id="timestamp">{% if saved_at %}Saved {{ saved_at }}{% endif %}</span>
+
+    <div class="file-head" data-intro>
+        <div>
+            <p class="eyebrow"><span class="idx">●</span> {{ 'Upload problem' if error else 'Screened resume' }}</p>
+            <h1 class="file-name">{{ filename or ('Nothing analyzed' if error else 'Resume') }}</h1>
+        </div>
+        <div class="file-meta">
+            {% if category %}<span class="tag">{{ category }}</span>{% endif %}
+            <span id="timestamp">{% if saved_at %}Saved {{ saved_at }}{% endif %}</span>
+        </div>
     </div>
 
     {% if error %}
-    <a href="/" class="btn-submit" style="display:inline-block;text-decoration:none;padding:10px 18px;margin-bottom:20px">&#8592; Fix and try again</a>
+    <a href="/#analyze" class="btn btn-primary">&#8592; Fix and try again</a>
     {% else %}
     {% set band_cls = verdict_band(combined_rec) %}
-    <div class="scores-grid">
-        <div class="score-card overall">
-            <div class="label">Overall match</div>
-            <div class="value {{ band_cls }}">{{ semantic_score }}<span style="font-size:14px;font-weight:400;color:#d5e4ec">%</span></div>
-            <div class="rec-badge {% if combined_rec == 'SHORTLIST' %}shortlist{% elif combined_rec == 'CONSIDER' %}consider{% else %}reject{% endif %}" style="margin-top:8px">{{ combined_rec }}</div>
+    {% set pct = [[semantic_score, 100]|min, 0]|max %}
+    {% set circ = 540.35 %}
+
+    <!-- ============ Verdict ============ -->
+    <section class="panel verdict-panel band-{{ band_cls }}" aria-labelledby="verdictTitle" data-intro>
+        <div class="ring-wrap">
+            <svg class="ring" viewBox="0 0 200 200" aria-hidden="true">
+                <circle class="ring-track" cx="100" cy="100" r="86"/>
+                <circle class="ring-fill" cx="100" cy="100" r="86" stroke-dasharray="{{ circ }}" stroke-dashoffset="{{ '%.2f' % (circ * (1 - pct / 100)) }}" data-offset="{{ '%.2f' % (circ * (1 - pct / 100)) }}"/>
+                {% if consider_at is not none and shortlist_at is not none %}
+                <line class="ring-tick" x1="172" y1="100" x2="194" y2="100" transform="rotate({{ '%.2f' % (([[consider_at, 100]|min, 0]|max) * 3.6) }} 100 100)"/>
+                <line class="ring-tick" x1="172" y1="100" x2="194" y2="100" transform="rotate({{ '%.2f' % (([[shortlist_at, 100]|min, 0]|max) * 3.6) }} 100 100)"/>
+                {% endif %}
+            </svg>
+            <div class="ring-center">
+                <div class="ring-num"><span data-count="{{ semantic_score }}">{{ semantic_score }}</span><small>%</small></div>
+                <div class="ring-label">Overall match</div>
+            </div>
+        </div>
+
+        <div class="verdict-body">
+            <p class="eyebrow" id="verdictTitle">Verdict</p>
+            <div class="stamp-row">
+                <span class="stamp-big">{{ combined_rec }}</span>
+                {% if percentile is not none %}<p class="percentile">Better than <b>{{ percentile }}%</b> of the {{ sample_count }} sample resumes for this job.</p>{% endif %}
+            </div>
             {% if consider_at is not none and shortlist_at is not none %}
             <div class="meter" role="img" aria-label="{{ semantic_score }}%. For this job: CONSIDER from {{ consider_at }}%, SHORTLIST from {{ shortlist_at }}%">
-                <div class="meter-fill {{ band_cls }}" style="width:{{ [semantic_score, 100]|min }}%"></div>
+                <div class="meter-fill" style="transform:scaleX({{ '%.4f' % (pct / 100) }})"></div>
                 <span class="tick" style="left:{{ consider_at }}%"></span><span class="tick" style="left:{{ shortlist_at }}%"></span>
             </div>
             <div class="meter-legend"><span>Reject</span><span>Consider ≥ {{ '%.0f' % consider_at }}</span><span>Shortlist ≥ {{ '%.0f' % shortlist_at }}</span></div>
-            <div class="sub">{% if percentile is not none %}Better than {{ percentile }}% of the {{ sample_count }} sample resumes for this job. {% endif %}The cutoffs depend on the job: the verdict compares this resume with how the sample resumes score.</div>
+            <p class="verdict-note">The cutoffs depend on the job: the verdict compares this resume with how the sample resumes score.</p>
             {% else %}
-            <div class="sub">The overall score is the semantic score below; it alone decides the verdict.</div>
+            <p class="verdict-note">The overall score is the semantic score below; it alone decides the verdict.</p>
             {% endif %}
         </div>
-        <div class="score-card">
-            <div class="label">Semantic similarity</div>
-            <div class="value">{{ semantic_score }}<span style="font-size:14px;font-weight:400;color:#d5e4ec">%</span></div>
-            <div class="progress-wrap"><div class="progress-fill" style="width:{{ semantic_score }}%"></div></div>
-            <div class="sub">How closely the best-matching section of the resume reads like the job description</div>
+    </section>
+
+    <!-- ============ Sub scores ============ -->
+    <div class="sub-grid">
+        <div class="panel sub-card spotlight reveal">
+            <div class="k">Semantic similarity</div>
+            <div class="v"><span data-count="{{ semantic_score }}">{{ semantic_score }}</span><small>%</small></div>
+            <div class="bar"><i style="transform:scaleX({{ '%.4f' % (pct / 100) }})"></i></div>
+            <p>How closely the best-matching section of the resume reads like the job description</p>
         </div>
-        <div class="score-card">
-            <div class="label">Keyword coverage</div>
-            <div class="value">{{ result['score'] }}<span style="font-size:14px;font-weight:400;color:#d5e4ec">%</span></div>
-            <div class="progress-wrap"><div class="progress-fill" style="width:{{ result['score'] }}%"></div></div>
-            <div class="sub">{% if result['basis'] == 'job' %}{{ result['skills']|length }} of the {{ result['wanted'] }} {{ 'skill' if result['wanted'] == 1 else 'skills' }} the job description asks for{% else %}{{ result['skills']|length }} of the role's {{ result['wanted'] }} skills (the job description names none){% endif %} · supporting detail</div>
+        <div class="panel sub-card spotlight reveal">
+            <div class="k">Keyword coverage</div>
+            <div class="v"><span data-count="{{ result['score'] }}">{{ result['score'] }}</span><small>%</small></div>
+            <div class="bar"><i style="transform:scaleX({{ '%.4f' % (([[result['score'], 100]|min, 0]|max) / 100) }})"></i></div>
+            <p>{% if result['basis'] == 'job' %}{{ result['skills']|length }} of the {{ result['wanted'] }} {{ 'skill' if result['wanted'] == 1 else 'skills' }} the job description asks for{% else %}{{ result['skills']|length }} of the role's {{ result['wanted'] }} skills (the job description names none){% endif %} · supporting detail</p>
         </div>
     </div>
 
-    <div class="card">
-        <div class="card-header">
-            <h3>Matched skills</h3>
-            <span class="count">{{ result['skills']|length }}</span>
+    <!-- ============ Skills ============ -->
+    <section class="panel block" aria-labelledby="skillsTitle">
+        <div class="skills-split">
+            <div>
+                <div class="block-head"><h2 id="skillsTitle">Matched skills <span class="count">{{ result['skills']|length }}</span></h2></div>
+                {% if result['skills'] %}
+                <ul class="skills" data-fly aria-label="Matched skills">
+                    {% for skill in result['skills'] %}<li>{{ skill }}</li>{% endfor %}
+                </ul>
+                {% else %}
+                <p class="no-data">None of the wanted skills were found</p>
+                {% endif %}
+            </div>
+            {% if result['basis'] == 'job' %}
+            <div>
+                <div class="block-head"><h2>Missing skills <span class="count">{{ (result['missing'] or [])|length }}</span></h2></div>
+                {% if result['missing'] %}
+                <ul class="skills missing" data-fly aria-label="Missing skills">
+                    {% for skill in result['missing'] %}<li>{{ skill }}</li>{% endfor %}
+                </ul>
+                {% else %}
+                <p class="no-data">Every skill the job description names was found</p>
+                {% endif %}
+            </div>
+            {% endif %}
         </div>
-        {% if result['skills'] %}
-        <ul class="skills-wrap" aria-label="Matched skills">
-            {% for skill in result['skills'] %}<li>{{ skill }}</li>{% endfor %}
-        </ul>
-        {% else %}
-        <p class="no-data">None of the wanted skills were found</p>
-        {% endif %}
-        {% if result['basis'] == 'job' %}
-        <div class="card-header" style="margin-top:14px">
-            <h3>Missing skills</h3>
-            <span class="count">{{ (result['missing'] or [])|length }}</span>
-        </div>
-        {% if result['missing'] %}
-        <ul class="skills-wrap missing" aria-label="Missing skills">
-            {% for skill in result['missing'] %}<li>{{ skill }}</li>{% endfor %}
-        </ul>
-        {% else %}
-        <p class="no-data">Every skill the job description names was found</p>
-        {% endif %}
-        {% endif %}
-    </div>
+    </section>
 
-    <div class="card">
-        <div class="card-header">
-            <h3>Job Description</h3>
-            <span class="jd-toggle" onclick="const el=this.parentElement.nextElementSibling;el.style.display=el.style.display==='none'?'block':'none';this.textContent=el.style.display==='none'?'\u25BC show':'\u25B2 hide'">&#9660;</span>
+    <!-- ============ Job description ============ -->
+    <section class="panel block reveal" aria-labelledby="jdTitle">
+        <div class="block-head">
+            <h2 id="jdTitle">Job Description</h2>
+            <button type="button" class="jd-toggle" aria-expanded="true" aria-controls="jdBox"><span class="chev" aria-hidden="true">▾</span><span class="lbl">Hide</span></button>
         </div>
-        <div class="jd-box" style="display:block">{{ job_description }}</div>
-    </div>
+        <div class="jd-box" id="jdBox">{{ job_description }}</div>
+    </section>
 
-    <div class="card">
-        <div class="card-header">
-            <h3>Candidate Rankings</h3>
-            <div style="display:flex;align-items:center;gap:8px">
-                <select id="recFilter" onchange="filterRankings()" style="background:#13232d;color:#e2eef4;border:1px solid rgba(255,255,255,0.1);border-radius:4px;padding:4px 8px;font-family:'Inter',sans-serif;font-size:11px;outline:none;cursor:pointer">
+    <!-- ============ Rankings ============ -->
+    <section class="block" aria-labelledby="rankTitle">
+        <div class="section-head" style="margin:56px 0 22px">
+            <div>
+                <p class="eyebrow"><span class="idx">↳</span> Same search, whole index</p>
+                <h2 class="reveal-title" id="rankTitle">Candidate Rankings</h2>
+            </div>
+            <div class="tools">
+                <label class="sr-only" for="recFilter">Filter by verdict</label>
+                <select id="recFilter" onchange="filterRankings()">
                     <option value="ALL">All</option>
                     <option value="SHORTLIST">SHORTLIST</option>
                     <option value="CONSIDER">CONSIDER</option>
@@ -333,21 +149,21 @@ tr:last-child td{border-bottom:1px solid rgba(255,255,255,0.1)}
             </div>
         </div>
         {% if rankings %}
-        <div class="table-wrap">
+        <div class="table-wrap rank-table">
         <table id="rankingsTable">
             <thead>
-                <tr><th>Rank</th><th>Resume</th><th>Department</th><th>Score <span style="font-weight:500;font-size:10px;color:#9fbed0">= cos(θ)×100</span></th><th>Rec</th><th>Match</th><th>File</th></tr>
+                <tr><th scope="col">Rank</th><th scope="col">Resume</th><th scope="col">Department</th><th scope="col">Score <span class="formula">= cos(θ)×100</span></th><th scope="col">Rec</th><th scope="col">Match</th><th scope="col">File</th></tr>
             </thead>
             <tbody>
                 {% for r in rankings %}
-                <tr data-recommendation="{{ r['recommendation'] }}">
+                <tr data-recommendation="{{ r['recommendation'] }}" class="rank-row">
                     <td><span class="rank-num {% if r['rank'] == 1 %}rank-1{% elif r['rank'] == 2 %}rank-2{% elif r['rank'] == 3 %}rank-3{% endif %}">{{ r['rank'] }}</span></td>
                     <td><span class="rname">{{ r['resume'] }}</span></td>
-                    <td><span style="font-size:11px;color:#9fbed0;font-weight:500">{% if r['source'] == 'upload' %}Your upload{% if r['duplicate_of'] %} (copy of {{ r['duplicate_of'].partition('/')[2] }}, {{ r['category'] }}){% endif %}{% else %}{{ r['category'] }}{% endif %}</span></td>
-                    <td><span class="dist {{ verdict_band(r['recommendation']) }}" {% if r['percentile'] is not none %}title="Better than {{ r['percentile'] }}% of the sample resumes for this job"{% endif %}>{{ r['similarity'] }}<span style="font-size:10px;color:#9fbed0;font-weight:500"> (θ={{ r['angle'] }}°)</span></span></td>
-                    <td><span class="rec-badge" style="font-size:9px;padding:2px 8px">{{ r['recommendation'] }}</span></td>
-                    <td style="font-size:12px;color:#e2eef4;max-width:140px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis"><span title="{{ r['preview_full'] }}">{{ r['preview'] }}</span></td>
-                    <td><a href="{{ ('/my-uploads/' ~ r['file']) if r['source'] == 'upload' else ('/resume/' ~ r['category'] ~ '/' ~ r['resume']) }}" target="_blank" style="display:inline-flex;align-items:center;gap:4px;background:rgba(0,147,147,0.1);color:#009393;font-size:11px;font-weight:700;padding:4px 10px;border-radius:4px;text-decoration:none;white-space:nowrap;border:1px solid rgba(0,147,147,0.2);transition:all 0.15s" onmouseover="this.style.background='rgba(0,147,147,0.2)'" onmouseout="this.style.background='rgba(0,147,147,0.1)'">Open</a></td>
+                    <td><span class="dept">{% if r['source'] == 'upload' %}Your upload{% if r['duplicate_of'] %} (copy of {{ r['duplicate_of'].partition('/')[2] }}, {{ r['category'] }}){% endif %}{% else %}{{ r['category'] }}{% endif %}</span></td>
+                    <td><span class="dist {{ verdict_band(r['recommendation']) }}" {% if r['percentile'] is not none %}title="Better than {{ r['percentile'] }}% of the sample resumes for this job"{% endif %}>{{ r['similarity'] }}<small> (θ={{ r['angle'] }}°)</small></span></td>
+                    <td><span class="verdict {{ verdict_band(r['recommendation']) }}">{{ r['recommendation'] }}</span></td>
+                    <td><div class="preview"><span title="{{ r['preview_full'] }}">{{ r['preview'] }}</span></div></td>
+                    <td><a class="open-link" href="{{ ('/my-uploads/' ~ r['file']) if r['source'] == 'upload' else ('/resume/' ~ r['category'] ~ '/' ~ r['resume']) }}" target="_blank" rel="noopener">Open <span aria-hidden="true">↗</span></a></td>
                 </tr>
                 {% endfor %}
             </tbody>
@@ -356,42 +172,24 @@ tr:last-child td{border-bottom:1px solid rgba(255,255,255,0.1)}
         {% else %}
         <p class="no-data">No candidates in vector database</p>
         {% endif %}
-    </div>
+    </section>
     {% endif %}
 
-    <div class="pipeline-card">
-        <div class="title">Pipeline</div>
-        <div class="pipeline-flow">
-            <div class="pipeline-step">Resume</div>
-            <span class="pipeline-arrow">&#8594;</span>
-            <div class="pipeline-step">Chunking</div>
-            <span class="pipeline-arrow">&#8594;</span>
-            <div class="pipeline-step">Keyword Match</div>
-            <span class="pipeline-arrow">&#8594;</span>
-            <div class="pipeline-step">Transformer</div>
-            <span class="pipeline-arrow">&#8594;</span>
-            <div class="pipeline-step">Embeddings</div>
-            <span class="pipeline-arrow">&#8594;</span>
-            <div class="pipeline-step">Cosine</div>
-            <span class="pipeline-arrow">&#8594;</span>
-            <div class="pipeline-step">ChromaDB</div>
-            <span class="pipeline-arrow">&#8594;</span>
-            <div class="pipeline-step">Ranking</div>
-        </div>
-    </div>
+    <section class="panel block reveal" aria-labelledby="flowTitle">
+        <div class="block-head"><h2 id="flowTitle">Pipeline</h2></div>
+        <ol class="flow">
+            <li>Resume</li><li>Chunking</li><li>Keyword Match</li><li>Transformer</li><li>Embeddings</li><li>Cosine</li><li>ChromaDB</li><li>Ranking</li>
+        </ol>
+    </section>
 
     <div class="actions">
-        <a href="/" class="btn-primary">Analyze Another</a>
-        <a href="/" class="btn-green">Back to Home</a>
+        <a href="/#analyze" class="btn btn-primary">Analyze Another <span class="arrow" aria-hidden="true">→</span></a>
+        <a href="/" class="btn btn-ghost">Back to Home</a>
     </div>
-</div>
+</main>
 
-<footer class="footer">
-    <div class="footer-inner">
-        <p class="footer-desc">Automated candidate screening: keyword matching, semantic similarity and vector search, with department detection by a cross-encoder.</p>
-        <p class="footer-meta">Flask · Sentence-Transformers · ChromaDB · Made by Utkarsh Rai · <a href="https://github.com/Shaaan2005/AI-Resume-Screening-and-RAG-Evaluation-System" target="_blank" rel="noopener">GitHub</a></p>
-    </div>
-</footer>
+{% include 'partials/footer.html' %}
+
 <script>
 function exportCsv(tableId, filename){
     const rows = [...document.querySelectorAll('#' + tableId + ' tr')].filter(tr => tr.style.display !== 'none');
@@ -410,6 +208,20 @@ function filterRankings(){
         tr.style.display = (val === 'ALL' || tr.dataset.recommendation === val) ? '' : 'none';
     });
 }
+(function(){
+    const t = document.querySelector('.jd-toggle');
+    if(!t) return;
+    t.addEventListener('click', () => {
+        const box = document.getElementById('jdBox');
+        const open = t.getAttribute('aria-expanded') !== 'true';
+        t.setAttribute('aria-expanded', open);
+        box.hidden = !open;
+        t.querySelector('.lbl').textContent = open ? 'Hide' : 'Show';
+        if(window.ScrollTrigger) ScrollTrigger.refresh();
+    });
+})();
 </script>
+{% include 'partials/scripts.html' %}
+<script defer src="{{ url_for('static', filename='js/result.js') }}"></script>
 </body>
 </html>

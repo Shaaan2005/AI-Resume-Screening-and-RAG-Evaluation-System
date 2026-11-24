@@ -41,7 +41,7 @@
 .line{position:relative;font-family:var(--mono);font-size:12.5px;line-height:1.6;padding-left:16px;margin:3px 0}
 .line::before{content:'▸';position:absolute;left:0;color:#9aa1a8}
 .line .real,.line .ghost{display:block;transition:opacity .25s}
-.line .ghost{position:absolute;left:16px;right:0;top:0;color:#9ba3ab;opacity:0;pointer-events:none;white-space:pre-wrap}
+.line .ghost{position:absolute;font-variant-ligatures:none;left:16px;right:0;top:0;color:#9ba3ab;opacity:0;pointer-events:none;white-space:pre-wrap}
 .mark{position:relative;z-index:0;font-weight:700;color:var(--on-lime);white-space:nowrap}
 .mark::before{content:'';position:absolute;inset:-1px -3px;border-radius:4px;background:var(--lime);z-index:-1;transform-origin:left;transition:transform .45s var(--ease-out)}
 .beam{position:absolute;left:-12px;right:-12px;top:0;height:2px;background:var(--lime);box-shadow:0 0 16px 3px rgba(198,255,61,.6);opacity:0;pointer-events:none;will-change:transform}

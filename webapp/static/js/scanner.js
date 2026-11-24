@@ -126,17 +126,24 @@
 
     // ---- Motion: numbers count up when they scroll into view ----------------------
     // <b data-count="1234">1234</b>: the real number is in the HTML; we only replay it.
+    // Decimals follow the server's number ("62.56" counts with 2, "242" with 0).
+    S.countTo = function (el, opts) {
+        if (!M) return null;
+        var raw = el.getAttribute('data-count');
+        var end = parseFloat(raw);
+        if (!isFinite(end)) return null;
+        var decimals = raw.indexOf('.') >= 0 ? raw.split('.')[1].length : 0;
+        var fmt = function (v) { return Number(v).toLocaleString('en-US', { minimumFractionDigits: decimals, maximumFractionDigits: decimals }); };
+        el.textContent = fmt(0);
+        return M.animate(0, end, Object.assign({ duration: 1.6, ease: [0.16, 1, 0.3, 1],
+            onUpdate: function (v) { el.textContent = fmt(v); } }, opts || {}));
+    };
     S.counters = function (selector) {
         if (!M) return;
         document.querySelectorAll(selector).forEach(function (el) {
-            var end = parseFloat(el.getAttribute('data-count'));
-            if (!isFinite(end)) return;
-            var decimals = parseInt(el.getAttribute('data-decimals') || '0', 10);
-            var fmt = function (v) { return Number(v).toLocaleString('en-US', { minimumFractionDigits: decimals, maximumFractionDigits: decimals }); };
-            el.textContent = fmt(0);
-            M.inView(el, function () {
-                M.animate(0, end, { duration: 1.6, ease: [0.16, 1, 0.3, 1], onUpdate: function (v) { el.textContent = fmt(v); } });
-            }, { amount: 0.6 });
+            if (!isFinite(parseFloat(el.getAttribute('data-count')))) return;
+            el.textContent = '0';
+            M.inView(el, function () { S.countTo(el); }, { amount: 0.6 });
         });
     };
 

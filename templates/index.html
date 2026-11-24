@@ -5,18 +5,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>AI Resume Screening</title>
 <meta name="description" content="AI resume screening: semantic search over resumes and job-description matching.">
-<meta name="theme-color" content="#07090c">
-<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 32 32%22%3E%3Crect width=%2232%22 height=%2232%22 rx=%228%22 fill=%22%23c6ff3d%22/%3E%3Cpath d=%22M10 7h8l4 4v14H10z%22 fill=%22none%22 stroke=%22%230a0d05%22 stroke-width=%222%22 stroke-linejoin=%22round%22/%3E%3Cpath d=%22M6.5 17h19%22 stroke=%22%230a0d05%22 stroke-width=%222.4%22 stroke-linecap=%22round%22/%3E%3C/svg%3E">
-<script>
-// Motion allowed: hide the intro elements until the animation takes them over.
-// If the animation scripts never start (offline, blocked), show the page anyway.
-(function(d){if(!matchMedia('(prefers-reduced-motion: reduce)').matches){d.classList.add('motion');setTimeout(function(){if(!(window.Scanner&&window.Scanner.started))d.classList.remove('motion')},2500)}})(document.documentElement);
-</script>
-<link rel="preconnect" href="https://fonts.googleapis.com">
-<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500;600;700&family=Space+Grotesk:wght@400;500;600;700&display=swap" rel="stylesheet">
-<link rel="stylesheet" href="{{ url_for('static', filename='vendor/lenis.css') }}">
-<link rel="stylesheet" href="{{ url_for('static', filename='css/scanner.css') }}">
+{% include 'partials/head.html' %}
 <link rel="stylesheet" href="{{ url_for('static', filename='css/home.css') }}">
 </head>
 <body>
@@ -28,26 +17,10 @@
     <symbol id="i-brain" viewBox="0 0 24 24"><circle cx="12" cy="12" r="3"/><path d="M12 2v4M12 18v4M2 12h4M18 12h4M4.9 4.9l2.8 2.8M16.3 16.3l2.8 2.8M4.9 19.1l2.8-2.8M16.3 7.7l2.8-2.8"/></symbol>
     <symbol id="i-db" viewBox="0 0 24 24"><ellipse cx="12" cy="5" rx="8" ry="3"/><path d="M4 5v6c0 1.7 3.6 3 8 3s8-1.3 8-3V5"/><path d="M4 11v6c0 1.7 3.6 3 8 3s8-1.3 8-3v-6"/></symbol>
     <symbol id="i-file" viewBox="0 0 24 24"><path d="M14 3H6a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V9z"/><path d="M14 3v6h6M8 13h8M8 17h5"/></symbol>
-    <symbol id="i-bars" viewBox="0 0 24 24"><path d="M4 20V10M10 20V4M16 20v-7M22 20H2"/></symbol>
     <symbol id="i-tag" viewBox="0 0 24 24"><path d="M20.6 13.4l-7.2 7.2a2 2 0 0 1-2.8 0L3 13V3h10l7.6 7.6a2 2 0 0 1 0 2.8z"/><circle cx="7.5" cy="7.5" r="1.5"/></symbol>
 </svg>
 
-<header class="nav">
-    <a href="/" class="brand" aria-label="AI Resume Screening home">
-        <svg class="brand-mark" viewBox="0 0 32 32" aria-hidden="true"><rect width="32" height="32" rx="8" fill="#c6ff3d"/><path d="M10 7h8l4 4v14H10z" fill="none" stroke="#0a0d05" stroke-width="2" stroke-linejoin="round"/><path d="M6.5 17h19" stroke="#0a0d05" stroke-width="2.4" stroke-linecap="round"/></svg>
-        <span class="brand-name">Resume<em>Screening</em></span>
-    </a>
-    <nav class="nav-right" aria-label="Account">
-        {% if user %}
-        <a href="/evaluate" class="nav-link"><svg class="icon" aria-hidden="true"><use href="#i-bars"/></svg><span>Benchmark</span></a>
-        <span class="nav-user">Hi {{ user.display_name or user.username }}</span>
-        <form action="{{ url_for('auth.logout') }}" method="POST"><input type="hidden" name="csrf_token" value="{{ csrf_token() }}"><button type="submit" class="btn btn-ghost btn-sm">Log Out</button></form>
-        {% else %}
-        <a href="{{ url_for('auth.login') }}" class="btn btn-ghost btn-sm">Log In</a>
-        <a href="{{ url_for('auth.register') }}" class="btn btn-primary btn-sm">Register</a>
-        {% endif %}
-    </nav>
-</header>
+{% include 'partials/nav.html' %}
 
 <main>
 <!-- ============ Hero: the scanner ============ -->
@@ -281,15 +254,7 @@
 {% endif %}
 </main>
 
-<footer class="footer">
-    <div class="wrap">
-        <div class="footer-big" aria-hidden="true">Screen <span>smarter.</span></div>
-        <div class="footer-row">
-            <p class="footer-desc">Automated candidate screening: keyword matching, semantic similarity and vector search, with department detection by a cross-encoder.</p>
-            <p class="footer-meta">Flask · Sentence-Transformers · ChromaDB · Made by Utkarsh Rai · <a href="https://github.com/Shaaan2005/AI-Resume-Screening-and-RAG-Evaluation-System" target="_blank" rel="noopener">GitHub</a></p>
-        </div>
-    </div>
-</footer>
+{% include 'partials/footer.html' %}
 
 <script>
 (function(){
@@ -416,12 +381,7 @@
     refresh();
 })();
 </script>
-<script defer src="{{ url_for('static', filename='vendor/gsap.min.js') }}"></script>
-<script defer src="{{ url_for('static', filename='vendor/ScrollTrigger.min.js') }}"></script>
-<script defer src="{{ url_for('static', filename='vendor/SplitText.min.js') }}"></script>
-<script defer src="{{ url_for('static', filename='vendor/lenis.min.js') }}"></script>
-<script defer src="{{ url_for('static', filename='vendor/motion.min.js') }}"></script>
-<script defer src="{{ url_for('static', filename='js/scanner.js') }}"></script>
+{% include 'partials/scripts.html' %}
 <script defer src="{{ url_for('static', filename='js/home.js') }}"></script>
 </body>
 </html>
