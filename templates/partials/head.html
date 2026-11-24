@@ -5,6 +5,8 @@
 // Motion allowed: hide the intro elements until the animation takes them over.
 // If the animation scripts never start (offline, blocked), show the page anyway.
 (function(d){if(!matchMedia('(prefers-reduced-motion: reduce)').matches){d.classList.add('motion');setTimeout(function(){if(!(window.Scanner&&window.Scanner.started))d.classList.remove('motion')},2500)}})(document.documentElement);
+// Page transitions: a quick second navigation aborts the running one; that is expected, not an error.
+['pageswap','pagereveal'].forEach(function(t){addEventListener(t,function(e){var v=e.viewTransition;if(v){['ready','finished','updateCallbackDone'].forEach(function(k){v[k]&&v[k].catch(function(){})})}})});
 </script>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>

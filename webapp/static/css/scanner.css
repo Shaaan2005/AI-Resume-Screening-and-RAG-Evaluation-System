@@ -180,13 +180,31 @@ select{cursor:pointer;appearance:none;-webkit-appearance:none;padding-right:36px
 
 @media (max-width:767px){
     :root{--nav-h:58px}
+    textarea,.text-input,select{font-size:16px}   /* below 16px iOS Safari zooms in on focus */
     .brand-name em,.nav-user{display:none}
     .nav-link span{position:absolute;width:1px;height:1px;overflow:hidden;clip:rect(0 0 0 0);white-space:nowrap} /* icon only, name kept for screen readers */
 }
 @media (max-width:420px){.brand-name{display:none}}
 
+/* ---------- Page transitions: the next page is scanned in ----------
+   Cross-document View Transitions (Chrome/Edge 126+, Safari 18.2+). Other browsers
+   simply navigate. A lime beam (present on every page, parked just above the
+   viewport) sweeps down while the new page is revealed behind it. */
+@view-transition{navigation:auto}
+.vt-beam{position:fixed;left:0;right:0;top:-48px;height:3px;background:var(--lime);
+    box-shadow:0 0 22px 6px rgba(198,255,61,.45);pointer-events:none;view-transition-name:scanbeam;z-index:999}
+::view-transition-old(root){animation:vt-out .7s cubic-bezier(.7,0,.25,1) both}
+::view-transition-new(root){animation:vt-in .7s cubic-bezier(.7,0,.25,1) both}
+::view-transition-group(scanbeam){animation:vt-beam .7s cubic-bezier(.7,0,.25,1) both}
+::view-transition-old(scanbeam){display:none}
+::view-transition-new(scanbeam){animation:none}
+@keyframes vt-in{from{clip-path:inset(0 0 100% 0)}to{clip-path:inset(0 0 0 0)}}
+@keyframes vt-out{to{opacity:.25;transform:translateY(-1.5%)}}
+@keyframes vt-beam{from{transform:translateY(0)}to{transform:translateY(calc(100vh + 48px))}}
+
 /* Reduced motion: nothing loops, nothing drifts; pages render in their finished state */
 @media (prefers-reduced-motion:reduce){
     *,*::before,*::after{animation-duration:.001ms !important;animation-iteration-count:1 !important;transition-duration:.001ms !important;scroll-behavior:auto !important}
     .glow{display:none}
+    @view-transition{navigation:none}
 }
