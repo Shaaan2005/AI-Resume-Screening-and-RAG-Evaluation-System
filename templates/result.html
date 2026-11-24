@@ -160,7 +160,7 @@
                     <td><span class="rank-num {% if r['rank'] == 1 %}rank-1{% elif r['rank'] == 2 %}rank-2{% elif r['rank'] == 3 %}rank-3{% endif %}">{{ r['rank'] }}</span></td>
                     <td><span class="rname">{{ r['resume'] }}</span></td>
                     <td><span class="dept">{% if r['source'] == 'upload' %}Your upload{% if r['duplicate_of'] %} (copy of {{ r['duplicate_of'].partition('/')[2] }}, {{ r['category'] }}){% endif %}{% else %}{{ r['category'] }}{% endif %}</span></td>
-                    <td><span class="dist {{ verdict_band(r['recommendation']) }}" {% if r['percentile'] is not none %}title="Better than {{ r['percentile'] }}% of the sample resumes for this job"{% endif %}>{{ r['similarity'] }}<small> (θ={{ r['angle'] }}°)</small></span></td>
+                    <td data-csv="{{ r['similarity'] }}"><span class="dist {{ verdict_band(r['recommendation']) }}" {% if r['percentile'] is not none %}title="Better than {{ r['percentile'] }}% of the sample resumes for this job"{% endif %}>{{ r['similarity'] }}<small> (θ={{ r['angle'] }}°)</small></span></td>
                     <td><span class="verdict {{ verdict_band(r['recommendation']) }}">{{ r['recommendation'] }}</span></td>
                     <td><div class="preview"><span title="{{ r['preview_full'] }}">{{ r['preview'] }}</span></div></td>
                     <td><a class="open-link" href="{{ ('/my-uploads/' ~ r['file']) if r['source'] == 'upload' else ('/resume/' ~ r['category'] ~ '/' ~ r['resume']) }}" target="_blank" rel="noopener">Open <span aria-hidden="true">↗</span></a></td>
@@ -194,7 +194,7 @@
 function exportCsv(tableId, filename){
     const rows = [...document.querySelectorAll('#' + tableId + ' tr')].filter(tr => tr.style.display !== 'none');
     const csv = rows.map(tr => [...tr.querySelectorAll('th,td')].slice(0, -1)
-        .map(c => '"' + (c.querySelector('[title]')?.title || c.innerText).replace(/\s+/g, ' ').trim().replace(/"/g, '""') + '"').join(',')).join('\n');
+        .map(c => '"' + (c.dataset.csv ?? c.querySelector('.preview [title]')?.title ?? c.textContent).replace(/\s+/g, ' ').trim().replace(/"/g, '""') + '"').join(',')).join('\n');
     const a = document.createElement('a');
     a.href = URL.createObjectURL(new Blob([csv], {type: 'text/csv'}));
     a.download = filename;
